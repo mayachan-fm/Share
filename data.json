@@ -1,6 +1,6 @@
 {
   "Minecraft": {
-    "slug" : "Minecraft Bedrock",
+    "slug" : "Minecraft_Bedrock",
     "nama file": "Minecraft bedrock",
     "type file": "APK",
     "kategori": "apk",
@@ -11,15 +11,16 @@
     "tanggal unggah": "20 Juli 2026",
     "description": "Minecraft Bedrock Edition versi 26.33 adalah sebuah pembaruan perbaikan cepat (hotfix). Pembaruan ini dirilis resmi oleh Mojang pada 9 Juli 2026 untuk sebagian besar perangkat. Sementara untuk konsol PlayStation 4 dan Nintendo Switch menyusul pada 10 Juli 2026."
   },
-    "furina_ui"{
-    "nama file": "Furina UI",
-    "link gambar": "https://cdn.phototourl.com/free/2026-07-14-cb2d466e-ed14-42df-832b-081461d6823c.jpg",
-    "link download": "https://www.mediafire.com/file/t6m5rztonuhzxma/FurinaMenuV1_1_1_FIXED.mcpack/download",
-    "description": "UI Menu tema Furina yang keren & ringan untuk Minecraft Bedrock!",
-    "type file": "texturepack",
-    "kategori": "resource",
-    "versi mc": "1.26+",
-    "ukuran": "28.5 MB",
-    "tanggal unggah": "14 Juli 2026"
+  {
+      "slug": "furina_ui",
+      "nama file": "Furina UI",
+      "link gambar": "https://cdn.phototourl.com/free/2026-07-14-cb2d466e-ed14-42df-832b-081461d6823c.jpg",
+      "link download": "https://www.mediafire.com/file/t6m5rztonuhzxma/FurinaMenuV1_1_1_FIXED.mcpack/download",
+      "description": "UI Menu tema Furina yang keren & ringan untuk Minecraft Bedrock!",
+      "type file": "texturepack",
+      "kategori": "resource",
+      "versi mc": "1.26+",
+      "ukuran": "28.5 MB",
+      "tanggal unggah": "14 Juli 2026"
   },
 }
