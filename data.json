@@ -10,29 +10,5 @@
     "ukuran": "472.41 MB",
     "tanggal unggah": "20 Juli 2026",
     "description": "Minecraft Bedrock Edition versi 26.33 adalah sebuah pembaruan perbaikan cepat (hotfix). Pembaruan ini dirilis resmi oleh Mojang pada 9 Juli 2026 untuk sebagian besar perangkat. Sementara untuk konsol PlayStation 4 dan Nintendo Switch menyusul pada 10 Juli 2026."
-  },
-  "addon1": {
-    "slug": "furina-menu-v1",
-    "nama file": "Furina Menu V1",
-    "link gambar": "https://.../image.jpg",
-    "link download": "https://files.catbox.moe/atjsoa.mcaddon",
-    "type file": "mcaddon",
-    "kategori": "addon",
-    "versi mc": "1.20+",
-    "ukuran": "2.5 MB",
-    "tanggal unggah": "14 Agustus 2026",
-    "description": "Menu mod Minecraft Bedrock..."
-  },
-  "addon2": {
-    "slug": "zombie-extreme",
-    "nama file": "Zombie Extreme",
-    "link gambar": "https://.../zombie.jpg",
-    "link download": "https://files.catbox.moe/xxx.mcaddon",
-    "type file": "mcaddon",
-    "kategori": "addon",
-    "versi mc": "1.21",
-    "ukuran": "4.1 MB",
-    "tanggal unggah": "10 Agustus 2026",
-    "description": "Zombie lebih kuat & menakutkan..."
   }
 }
