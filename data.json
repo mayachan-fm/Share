@@ -1608,5 +1608,17 @@
     "ukuran": "2.55 MB",
     "tanggal unggah": "14 Agustus 2026",
     "description": "Déesse UI Pack adalah paket sumber daya UI yang menambahkan fitur baru, penyesuaian, dan desain UI untuk membuat permainan Minecraft Anda lebih baik!"
+  },
+  "creepyhorse": {
+    "slug": "creepyhorse",
+    "nama file": "creepyhorse.jar - Bedrock Edition",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-15-a4775ad3-f191-4ed1-9135-692b58980d75.png",
+    "link download": "https://files.catbox.moe/l45hea.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "8 MB",
+    "tanggal unggah": "15 Agustus 2026",
+    "description": "Menambahkan entitas CreepyHorse dari seri Minecraft LookOut3D ke dunia Anda."
   }
 }
