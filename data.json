@@ -1704,5 +1704,17 @@
     "ukuran": "Tidak diketahui",
     "tanggal unggah": "15 Agustus 2026",
     "description": "Addon ini menghadirkan pemain palsu, yang juga dikenal sebagai ragdoll, ke Minecraft Bedrock. Ragdoll bertindak seperti NPC tetapi dengan fleksibilitas dan kustomisasi yang jauh lebih banyak. Anda dapat memunculkannya, memindahkannya, membuatnya menghadap ke arah tertentu, berinteraksi dengannya, dan bahkan memberinya inventaris. Perintah yang disertakan membuat pengendalian ragdoll menjadi mudah dan intuitif. Gunakan  !ragdoll <target> <move, face, click_interaction, create> <direction, x y z/target, left/right, name> <blocks, N/A, N/A, skin>untuk mengelola semua aksi ragdoll.\n\nRagdoll dapat dibuat dengan nama dan skin kustom. Mereka mendukung sistem inventaris lengkap sehingga Anda dapat membuka dan mengelola item mereka, dan aturan permainan opsional memungkinkan mereka untuk mengambil item yang jatuh dan bola XP seperti pemain sungguhan. Addon ini ideal untuk pengujian, roleplay, acara server, atau eksperimen kreatif, memungkinkan Anda untuk mengisi dunia Anda dengan karakter mirip NPC yang meyakinkan yang terlihat dan bertindak seperti pemain sungguhan.\n\nSebagai contoh, Anda dapat membuat boneka kain bernama Steve dengan kulit default menggunakan perintah !ragdoll @s create Steve`.`. Anda dapat memindahkannya ke koordinat tertentu dengan perintah !ragdoll Steve move 100 64 100`.`. Anda juga dapat membuatnya menghadap pemain lain dengan perintah !ragdoll Steve face @p`.`. Perintah-perintah ini menunjukkan fleksibilitas sistem dan betapa mudahnya mengintegrasikan boneka kain ke dalam permainan."
+  },
+  "gta_san_craft": {
+    "slug": "gta_san_craft",
+    "nama file": "GTA San Craft",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-15-9195e62e-b6bf-4d40-b81e-8ad7a3306af0.png",
+    "link download": "https://files.catbox.moe/2vh3xa.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "744 KB",
+    "tanggal unggah": "16 Agustus 2026",
+    "description": "GTA San Craft menambahkan monster dan karakter ikonik dari GTA San Andreas ke Minecraft Bedrock, membawa suasana Los Santos ke dunia Anda. Rasakan NPC yang familiar, pertemuan yang mendalam, dan perpaduan unik antara gameplay ala GTA di dalam Minecraft."
   }
 }
