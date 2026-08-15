@@ -1632,5 +1632,17 @@
     "ukuran": "10.59 MB",
     "tanggal unggah": "15 Agustus 2026",
     "description": "Menambahkan monster ikonik Trevor Henderson ke dalam game! | Ini adalah port Bedrock terbaik dari Siren Head: The Arrival, lebih baik dari semua port sebelumnya, sangat mirip dengan versi Java dengan hampir tanpa perbedaan, dan dioptimalkan untuk perangkat seluler dan perangkat kelas bawah."
+  },
+  "random_drops": {
+    "slug": "random_drops",
+    "nama file": "Random Drops",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-15-ddde98bd-55e4-45ff-9c0f-dc723c09eba8.jpg",
+    "link download": "https://files.catbox.moe/y3j65e.mcaddon",
+    "versi mc": "1.26_",
+    "ukuran": "60 KB",
+    "tanggal unggah": "15 Agustus 2026",
+    "description": "AddOn ini membuat setiap blok & item yang jatuh bersifat acak! Hadapi tantangan gila ini dan mulailah petualanganmu selanjutnya!"
   }
 }
