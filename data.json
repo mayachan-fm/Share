@@ -1680,5 +1680,17 @@
     "ukuran": "21 KB",
     "tanggal unggah": "15 Agustus 2026",
     "description": "Ciptakan kreasi dengan mudah di duniamu. Ini menawarkan banyak mode pembangunan. Membangun dengan Mudah!"
+  },
+  "rgdollified": {
+    "slug": "rgdollified",
+    "nama file": "Ragdollified",
+    "type file": "Mods",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-15-530cc591-09d6-40c1-b704-ed609227d99c.jpg",
+    "link download": "https://sfl.gl/EAv64",
+    "versi mc": "1.26+",
+    "ukuran": "1.15 MB",
+    "tanggal unggah": "15 Agustus 2026",
+    "description": "Ragdollified adalah mod yang menambahkan efek ragdoll pada pemain, zombie, kerangka, creeper, dan beberapa hewan ternak beserta anak-anaknya. Setiap pembaruan hingga rilis penuh akan menambahkan satu atau beberapa mob baru."
   }
 }
