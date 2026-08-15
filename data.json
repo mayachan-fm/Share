@@ -1644,5 +1644,17 @@
     "ukuran": "60 KB",
     "tanggal unggah": "15 Agustus 2026",
     "description": "AddOn ini membuat setiap blok & item yang jatuh bersifat acak! Hadapi tantangan gila ini dan mulailah petualanganmu selanjutnya!"
+  },
+  "corpse": {
+    "slug": "corpse",
+    "nama file": "corpse",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-15-7a3bb19f-1d3d-45a9-b555-f59534422fc6.jpg",
+    "link download": "https://files.catbox.moe/smhyv1.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "3.17 MB",
+    "tanggal unggah": "15 Agustus 2026",
+    "description": "Menambahkan tampilan mayat sementara untuk banyak monster Minecraft Bedrock, dengan pose ala boneka kain, item yang dijatuhkan dari versi vanilla tetap terjaga, dan pembersihan otomatis."
   }
 }
