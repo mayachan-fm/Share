@@ -1668,5 +1668,17 @@
     "ukuran": "2 MB",
     "tanggal unggah": "15 Agustus",
     "description": "TENTANG ADDON IRRITATOR DWELLER adalah addon horor untuk versi ponsel Minecraft yang terinspirasi oleh mod IRRITATOR versi PC. Kami mencoba untuk meningkatkan tampilan dan mekanisme dari versi aslinya, kami harap Anda menyukainya."
+  },
+  "easy_build": {
+    "slug": "easy_build",
+    "nama file": "Easy Build",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-15-9fe0c46a-9634-46fe-b7ac-b4fb31a05e71.png",
+    "link download": "https://files.catbox.moe/6t2xo5.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "21 KB",
+    "tanggal unggah": "15 Agustus 2026",
+    "description": "Ciptakan kreasi dengan mudah di duniamu. Ini menawarkan banyak mode pembangunan. Membangun dengan Mudah!"
   }
 }
