@@ -1716,5 +1716,17 @@
     "ukuran": "744 KB",
     "tanggal unggah": "16 Agustus 2026",
     "description": "GTA San Craft menambahkan monster dan karakter ikonik dari GTA San Andreas ke Minecraft Bedrock, membawa suasana Los Santos ke dunia Anda. Rasakan NPC yang familiar, pertemuan yang mendalam, dan perpaduan unik antara gameplay ala GTA di dalam Minecraft."
+  },
+  "armor_visibility_pro": {
+    "slug": "armor_visibility_pro",
+    "nama file": "Armor Visibility Pro (Hideable/Invisible)",
+    "type file": "Texturepack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-16-04761836-bdf3-4b69-ba2d-c3ec44db61a5.png",
+    "link download": "https://files.catbox.moe/cp6lj1.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "46 KB",
+    "tanggal unggah": "16 Agustus 2026",
+    "description": "Armor Visibility Pro adalah paket sumber daya khusus visual untuk pemain yang menginginkan tampilan karakter yang lebih bersih tanpa mengubah cara kerja armor.\n\nArmor Anda tetap terpasang. Statistik Anda tetap sama. Hanya model armor yang terlihat yang berubah.\n\nSemuanya dikendalikan dari menu pengaturan paket sumber daya. Tidak ada perintah dan tidak ada paket perilaku."
   }
 }
