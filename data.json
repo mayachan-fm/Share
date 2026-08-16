@@ -1728,5 +1728,17 @@
     "ukuran": "46 KB",
     "tanggal unggah": "16 Agustus 2026",
     "description": "Armor Visibility Pro adalah paket sumber daya khusus visual untuk pemain yang menginginkan tampilan karakter yang lebih bersih tanpa mengubah cara kerja armor.\n\nArmor Anda tetap terpasang. Statistik Anda tetap sama. Hanya model armor yang terlihat yang berubah.\n\nSemuanya dikendalikan dari menu pengaturan paket sumber daya. Tidak ada perintah dan tidak ada paket perilaku."
+  },
+  "one_block": {
+    "slug": "one_block",
+    "nama file": "One Block",
+    "type file": "Maps",
+    "kategori": "peta",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-16-5ec857ec-8d9d-4ea0-b150-fce9bcafeadd.jpg",
+    "link download": "https://files.catbox.moe/mco9a7.mcworld",
+    "versi mc": "1.26+",
+    "ukuran": "7.17 MB",
+    "tanggal unggah": "16 Agustus 2026",
+    "description": "Saya sangat senang akhirnya bisa berbagi peta One Block ini dengan semua orang. Proyek ini membutuhkan waktu sekitar 8 bulan pengerjaan , pengujian, dan penyempurnaan.\n\nTujuannya adalah untuk menciptakan kembali pengalaman klasik Java Edition One Block untuk pemain Bedrock dengan gameplay yang lancar dan progres yang tepat.\n\nAnda memulai dengan satu balok yang melayang di langit. Menghancurkan balok itu secara perlahan akan memperluas dunia dan membuka balok, monster, dan bangunan baru.\n\nSetiap level menghadirkan sesuatu yang baru — menjaga agar permainan tetap segar dan menarik."
   }
 }
