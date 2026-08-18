@@ -1788,5 +1788,17 @@
     "ukuran": "31.62 MB",
     "tanggal unggah": "18 Agustus 2026",
     "description": "Dark Fantasy Visuals adalah paket visual Minecraft yang menghadirkan kembali dunia dengan suasana suram ala Elden Ring dan Dark Souls. Bayangan lebih gelap, warna lebih redup, dan setiap biome terasa lebih misterius dan atmosferik. Sempurna untuk pemain yang menginginkan petualangan Minecraft mereka terasa lebih gelap dan lebih mendalam."
+  },
+  "solar_shader": {
+    "slug": "solar_shader",
+    "nama file": "Solar Shaders",
+    "type file": "Texturepack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-18-ba4bea5b-9808-43c3-806f-52ea1409b4e3.png",
+    "link download": "https://files.catbox.moe/86no71.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "4.50 MB",
+    "tanggal unggah": "18 Agustus 2026",
+    "description": "Perombakan Vibrant Visuals yang dirancang untuk golden hour. Kabut kuning keemasan bervolume, sinar matahari yang hangat, dan langit berlapis emas hingga biru dari fajar hingga tengah malam — dengan aurora, bintang jatuh, burung, dan kupu-kupu."
   }
 }
