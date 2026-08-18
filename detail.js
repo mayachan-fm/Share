@@ -1,14 +1,14 @@
 // ==============================================
-// KONFIGURASI FIREBASE
+// KONFIGURASI FIREBASE (Mcaddon Project)
 // ==============================================
 const firebaseConfig = {
-  apiKey: "AIzaSyD9iPg5KJKlwEiTr7SMjAVTnca9XzGvv2M",
-  authDomain: "share-addon.firebaseapp.com",
-  databaseURL: "https://share-addon-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "share-addon",
-  storageBucket: "share-addon.firebasestorage.app",
-  messagingSenderId: "822096958816",
-  appId: "1:822096958816:web:3a296039adf1ed861b3a05"
+  apiKey: "AIzaSyDSVDvod7D4K-JJ4zXJq_HW0woxUzEhmEY",
+  authDomain: "mcaddon-6c691.firebaseapp.com",
+  databaseURL: "https://mcaddon-6c691-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "mcaddon-6c691",
+  storageBucket: "mcaddon-6c691.firebasestorage.app",
+  messagingSenderId: "769674524186",
+  appId: "1:769674524186:web:05e8c5f4e34867980b03a3"
 };
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
