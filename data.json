@@ -1825,4 +1825,16 @@
     "tanggal unggah": "19 Agustus 2026",
     "description": "Setelah setahun, pembaruan baru untuk Newb Complementary Shaders telah tiba, menghadirkan tampilan yang lebih realistis dan mirip dengan Complementary Shaders di Minecraft Java. Shaders ini memiliki fitur dan fungsi baru untuk kemiripan yang lebih besar dengan shader Java. Cobalah shader ini; Anda tidak akan menyesal."
   }
+  "doublehands": {
+    "slug": "doublehands",
+    "nama file": "DoubleHands - Functional Offhand like Java edition (MCPE PC etc)",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-19-84a0337f-1854-4880-8639-e1b3b8ee8db5.jpg",
+    "link download": "https://files.catbox.moe/7of2q5.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "761 KB",
+    "tanggal unggah": "19 Agustus 2026",
+    "description": "DoubleHands adalah addon Minecraft Bedrock revolusioner :) yang dirancang untuk menghadirkan kesamaan penggunaan tangan kiri dengan Java Edition ke dunia Anda. Jika Anda pernah bertanya-tanya bagaimana cara menggunakan obor di tangan kiri Anda di Bedrock atau ingin meletakkan blok sambil memegang alat, inilah solusinya. Tidak seperti mod kosmetik dasar, addon tangan kiri fungsional ini memungkinkan Anda untuk memegang dan menggunakan item di tangan kiri Anda persis seperti di Java Edition.\n\nKompatibel dengan Minecraft Bedrock 1.21+ , mod ini berfungsi sempurna di Realms, Dedicated Server (BDS), dan dunia pemain tunggal . Baik Anda membutuhkan mod untuk pertempuran atau  senjata tambahan untuk menambang, DoubleHands memberikan pengalaman yang lancar dan tanpa lag bagi pemain seluler, konsol, dan PC."
+  }
 }
