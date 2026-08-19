@@ -1860,5 +1860,17 @@
     "ukuran": "50 KB",
     "tanggal unggah": "19 Agustus 2026",
     "description": "Paket sumber daya ini menambahkan tombol baru yang berfungsi seperti hotbar. Setiap tombol mengubah item yang dipegang tergantung pada tombol yang ditekan, misalnya, tombol 1 akan menekan hotbar 1, dan seterusnya. Tombol-tombol ini juga mendukung mode 2 jari! Ini berarti, misalnya, jika saya sedang menambang dan menggunakan beliung untuk menambang batu, dan kemudian tiba-tiba muncul kerikil, saya tidak perlu mengangkat jari saya dari layar untuk mengganti alat; saya cukup menekan tombol untuk mengganti alat dan melanjutkan penambangan.\n\n \n\nAnda juga dapat menyesuaikan posisi dan ukuran tombol! Anda perlu membuka panel Editor dengan menekan tombol roda gigi di kanan bawah layar. Setelah panel Editor muncul, Anda dapat menggunakan penggeser untuk memindahkan dan mengubah ukuran tombol."
+  },
+  "instant-structure": {
+    "slug": "instant-structure",
+    "nama file": "Instant Structures v7",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-19-3a210bd1-690b-4249-9e45-77a8fe320fe6.png",
+    "link download": "https://files.catbox.moe/m5wtcj.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "871 KB",
+    "tanggal unggah": "19 Agustus 2026",
+    "description": "Add-on ini memungkinkan Anda untuk memunculkan struktur yang sudah jadi secara instan menggunakan item yang dapat dibuat. Saat ini terdapat lebih dari 100 struktur berbeda dengan berbagai gaya yang dapat Anda munculkan, termasuk rumah, pohon, dan pertanian."
   }
 }
