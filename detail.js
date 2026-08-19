@@ -32,6 +32,7 @@ async function tampilkanDetail() {
 
     try {
         const respon = await fetch('data.json');
+        if (!respon.ok) throw new Error('Gagal memuat data.json');
         const data = await respon.json();
 
         // Cari addon berdasarkan slug
@@ -44,7 +45,10 @@ async function tampilkanDetail() {
 
         idAddonSekarang = idAddon; // Simpan ID untuk Firebase
         const linkDetail = window.location.href;
-        let jumlahUnduh = item['jumlah unduh'] || 0;
+        
+        // Ambil jumlah unduh dari Firebase, bukan dari JSON
+        const snapUnduh = await get(ref(db, `jumlah_unduh/${idAddon}`));
+        let jumlahUnduh = snapUnduh.exists() ? snapUnduh.val() : 0;
 
         wadah.innerHTML = `
             <div class="kartu-detail">
@@ -67,7 +71,7 @@ async function tampilkanDetail() {
                         <div class="info-item"><span>Tanggal Unggah</span>${item['tanggal unggah'] || 'Tidak diketahui'}</div>
                     </div>
 
-                    <div class="detail-deskripsi">${item.description}</div>
+                    <div class="detail-deskripsi">${item.description || 'Tidak ada deskripsi.'}</div>
 
                     <div class="tombol-aksi">
                         <a href="${item['link download']}" target="_blank" class="tombol-unduh" data-id="${idAddonSekarang}">
@@ -81,14 +85,16 @@ async function tampilkanDetail() {
             </div>
         `;
 
-        // Hitung unduh
+        // Hitung unduh — hanya sekali per klik
         document.querySelector('.tombol-unduh').addEventListener('click', async () => {
             try {
-                await set(ref(db, `jumlah_unduh/${idAddonSekarang}`), increment(1));
+                const refUnduh = ref(db, `jumlah_unduh/${idAddonSekarang}`);
+                await set(refUnduh, increment(1));
                 jumlahUnduh++;
                 document.querySelector('.detail-unduh span').textContent = `${jumlahUnduh} kali diunduh`;
             } catch (err) {
                 console.error('Gagal menyimpan data unduh:', err);
+                alert('Gagal memperbarui jumlah unduh!');
             }
         });
 
@@ -96,6 +102,7 @@ async function tampilkanDetail() {
         siapkanKomentar();
 
     } catch (error) {
+        console.error('Error memuat detail:', error);
         wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-triangle"></i><p>Gagal memuat data</p></div>`;
     }
 }
@@ -104,6 +111,8 @@ function siapkanKomentar() {
     const inputKomen = document.getElementById('input-komentar');
     const tombolKirim = document.getElementById('tombol-kirim');
     const jumlahKarakter = document.getElementById('jumlah-karakter');
+
+    if (!inputKomen || !tombolKirim || !jumlahKarakter) return;
 
     // Hitung sisa karakter
     inputKomen.addEventListener('input', () => {
@@ -114,6 +123,10 @@ function siapkanKomentar() {
     tombolKirim.addEventListener('click', async () => {
         const isi = inputKomen.value.trim();
         if (!isi) return;
+        if (!idAddonSekarang) {
+            alert('ID addon tidak ditemukan!');
+            return;
+        }
 
         try {
             await push(ref(db, `komentar/${idAddonSekarang}`), {
@@ -129,9 +142,13 @@ function siapkanKomentar() {
         }
     });
 
-    // Tampilkan komentar otomatis
+    // Tampilkan komentar otomatis — Real-time update
+    if (!idAddonSekarang) return;
+    
     onValue(ref(db, `komentar/${idAddonSekarang}`), (snapshot) => {
         const daftar = document.getElementById('daftar-komentar');
+        if (!daftar) return;
+
         const data = snapshot.val();
 
         if (!data) {
@@ -140,13 +157,13 @@ function siapkanKomentar() {
         }
 
         let html = '';
-        const urutkan = Object.values(data).sort((a,b) => b.waktu - a.waktu);
+        const urutkan = Object.values(data).sort((a, b) => b.waktu - a.waktu);
         urutkan.forEach(komen => {
             const tgl = new Date(komen.waktu);
             const waktuTampil = `${tgl.getDate()} ${tgl.toLocaleString('id-ID', {month:'long'})} ${tgl.getFullYear()} pukul ${tgl.getHours().toString().padStart(2,'0')}:${tgl.getMinutes().toString().padStart(2,'0')}`;
             html += `
                 <div class="isi-komentar">
-                    <p class="teks-komentar">${komen.isi}</p>
+                    <p class="teks-komentar">${escapeHtml(komen.isi)}</p>
                     <small class="waktu-komentar">${waktuTampil}</small>
                 </div>
             `;
@@ -155,16 +172,24 @@ function siapkanKomentar() {
     });
 }
 
+// Cegah XSS — bersihkan teks komentar
+function escapeHtml(teks) {
+    const div = document.createElement('div');
+    div.textContent = teks;
+    return div.innerHTML;
+}
+
 function tampilkanNotif(id) {
     const notif = document.getElementById(id);
+    if (!notif) return;
     notif.classList.add('tampil');
     setTimeout(() => notif.classList.remove('tampil'), 2500);
 }
 
-function salinLink(link) {
-    navigator.clipboard.writeText(link).then(() => {
-        tampilkanNotif('notif-salin');
-    });
-}
+window.salinLink = function(link) {
+    navigator.clipboard.writeText(link)
+        .then(() => tampilkanNotif('notif-salin'))
+        .catch(() => alert('Gagal menyalin link!'));
+};
 
 document.addEventListener('DOMContentLoaded', tampilkanDetail);

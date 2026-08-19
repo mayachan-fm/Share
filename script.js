@@ -11,7 +11,6 @@ const firebaseConfig = {
   appId: "1:769674524186:web:05e8c5f4e34867980b03a3"
 };
 
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import { getDatabase, ref, get, set, increment } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
 
@@ -21,6 +20,7 @@ const db = getDatabase(app);
 let semuaDataAddon = {};
 let daftarAddon = [];
 let filterAktif = 'semua';
+let modeTopAddon = 'terbanyak'; // Bawaan: Paling Banyak Diunduh
 
 // ==============================================
 // MUAT DATA AWAL
@@ -43,7 +43,6 @@ async function tampilkanAddon() {
             const dataUnduh = snapUnduh.exists() ? snapUnduh.val() : {};
             const dataLike = snapLike.exists() ? snapLike.val() : {};
 
-            // Gabungkan data dari Firebase ke setiap item
             Object.entries(semuaDataAddon).forEach(([idAddon, item]) => {
                 item['jumlah unduh'] = dataUnduh[idAddon] || item['jumlah unduh'] || 0;
                 item['jumlah like'] = dataLike[idAddon] || item['jumlah like'] || 0;
@@ -68,14 +67,24 @@ async function tampilkanAddon() {
 }
 
 // ==============================================
-// TAMPILKAN TOP ADDON
+// TAMPILKAN TOP ADDON — DENGAN PILIHAN TAB
 // ==============================================
 function tampilkanTopAddon() {
     const wadah = document.getElementById('wadah-top');
     if (!wadah || daftarAddon.length === 0) return;
 
-    const terurut = [...daftarAddon].sort((a,b) => (b['jumlah unduh']||0) - (a['jumlah unduh']||0)).slice(0, 8);
-    
+    let terurut;
+
+    if (modeTopAddon === 'terbanyak') {
+        // Urutkan: paling banyak diunduh
+        terurut = [...daftarAddon]
+            .sort((a, b) => (b['jumlah unduh'] || 0) - (a['jumlah unduh'] || 0))
+            .slice(0, 8);
+    } else {
+        // ✅ OPSI 3: Yang paling bawah di data.json = paling baru diunggah
+        terurut = [...daftarAddon].reverse().slice(0, 8);
+    }
+
     wadah.innerHTML = '';
     terurut.forEach((item) => {
         const kartu = document.createElement('div');
@@ -88,11 +97,28 @@ function tampilkanTopAddon() {
             </div>
             <div class="kartu-isi">
                 <h4>${item['nama file']}</h4>
-                <div class="info-unduh"><i class="fa fa-download"></i> ${item['jumlah unduh'] || 0}</div>
+                <div class="info-unduh">
+                    <i class="fa ${modeTopAddon === 'terbanyak' ? 'fa-download' : 'fa-calendar'}"></i>
+                    ${modeTopAddon === 'terbanyak' ? (item['jumlah unduh'] || 0) + ' unduhan' : item['tanggal unggah']}
+                </div>
             </div>
         `;
         kartu.addEventListener('click', () => window.location.href = `detail.html?slug=${item.slug}`);
         wadah.appendChild(kartu);
+    });
+}
+
+// ==============================================
+// FUNGSI PILIHAN TAB — PALING BANYAK / BARU DIUNGGAH
+// ==============================================
+function aturTabTopAddon() {
+    document.querySelectorAll('.tab-top').forEach(tombol => {
+        tombol.addEventListener('click', () => {
+            document.querySelectorAll('.tab-top').forEach(b => b.classList.remove('aktif'));
+            tombol.classList.add('aktif');
+            modeTopAddon = tombol.dataset.urut;
+            tampilkanTopAddon();
+        });
     });
 }
 
@@ -128,8 +154,12 @@ function tampilkanDaftar(dataYangDitampilkan) {
                 <div class="bagian-aksi">
                     <div class="info-unduh"><i class="fa fa-download"></i> ${item['jumlah unduh'] || 0}</div>
                     <div class="grup-tombol-kanan">
-                        <button class="tombol-like ${sudahDiLike ? 'sudah' : ''}" data-slug="${item.slug}"><i class="fa fa-thumbs-up"></i> ${jumlahLike}</button>
-                        <button class="tombol-bagi" data-link="${window.location.origin}${window.location.pathname.replace('index.html','')}${linkDetail}"><i class="fa fa-link"></i></button>
+                        <button class="tombol-like ${sudahDiLike ? 'sudah' : ''}" data-slug="${item.slug}">
+                            <i class="fa fa-thumbs-up"></i> <span>${jumlahLike}</span>
+                        </button>
+                        <button class="tombol-bagi" data-link="${window.location.origin}${window.location.pathname.replace('index.html','')}${linkDetail}">
+                            <i class="fa fa-link"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -201,8 +231,12 @@ function salinLink(link) {
     });
 }
 
+// ==============================================
+// MULAI SEMUA FUNGSI
+// ==============================================
 document.addEventListener('DOMContentLoaded', () => {
     tampilkanAddon();
+    aturTabTopAddon();
     document.getElementById('tombol-cari')?.addEventListener('click', terapkanFilterDanCari);
     document.getElementById('kotak-cari')?.addEventListener('keydown', e => { if(e.key==='Enter') terapkanFilterDanCari(); });
 });
