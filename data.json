@@ -1792,7 +1792,7 @@
   "solar_shader": {
     "slug": "solar_shader",
     "nama file": "Solar Shaders",
-    "type file": "Texturepack",
+    "type file": "Shader",
     "kategori": "resource",
     "link gambar": "https://cdn.phototourl.com/free/2026-08-18-ba4bea5b-9808-43c3-806f-52ea1409b4e3.png",
     "link download": "https://files.catbox.moe/86no71.mcpack",
@@ -1812,5 +1812,17 @@
     "ukuran": "38.68 MB",
     "tanggal unggah": "18 Agustus 2026",
     "description": "Addon ini menambahkan lebih dari 500 item furnitur ke dalam game. Ada berbagai macam barang, mulai dari peralatan dapur dan perlengkapan kamar mandi hingga kompor, produk mandi, dan barang-barang hiburan seperti meja biliar dan PC gaming. Ini adalah tambahan yang bagus jika Anda menginginkan lebih banyak pilihan untuk mendekorasi rumah Anda.\n\nSemua furnitur berupa balok 3D padat, artinya Anda dapat dengan mudah memutarnya ke segala arah yang Anda inginkan. Beberapa furnitur, seperti kursi dan sofa, juga memiliki fungsi tertentu sehingga Anda dapat duduk di atasnya. Saat ini, semua furnitur dapat dibuat di meja dekorasi."
+  },
+  "newb_complemetary_shader": {
+    "slug": "newb_complemetary_shader",
+    "nama file": "Newb Complemetary Shader | Compatible With Minecraft v26.40+",
+    "type file": "Shaders",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-19-5ef22ccb-b616-4902-9bb2-3b4e88a4bba0.jpg",
+    "link download": "https://files.catbox.moe/dm4qb1.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "15.21 MB",
+    "tanggal unggah": "19 Agustus 2026",
+    "description": "Setelah setahun, pembaruan baru untuk Newb Complementary Shaders telah tiba, menghadirkan tampilan yang lebih realistis dan mirip dengan Complementary Shaders di Minecraft Java. Shaders ini memiliki fitur dan fungsi baru untuk kemiripan yang lebih besar dengan shader Java. Cobalah shader ini; Anda tidak akan menyesal."
   }
 }
