@@ -1836,5 +1836,17 @@
     "ukuran": "761 KB",
     "tanggal unggah": "19 Agustus 2026",
     "description": "DoubleHands adalah addon Minecraft Bedrock revolusioner :) yang dirancang untuk menghadirkan kesamaan penggunaan tangan kiri dengan Java Edition ke dunia Anda. Jika Anda pernah bertanya-tanya bagaimana cara menggunakan obor di tangan kiri Anda di Bedrock atau ingin meletakkan blok sambil memegang alat, inilah solusinya. Tidak seperti mod kosmetik dasar, addon tangan kiri fungsional ini memungkinkan Anda untuk memegang dan menggunakan item di tangan kiri Anda persis seperti di Java Edition.\n\nKompatibel dengan Minecraft Bedrock 1.21+ , mod ini berfungsi sempurna di Realms, Dedicated Server (BDS), dan dunia pemain tunggal . Baik Anda membutuhkan mod untuk pertempuran atau  senjata tambahan untuk menambang, DoubleHands memberikan pengalaman yang lancar dan tanpa lag bagi pemain seluler, konsol, dan PC."
+  },
+  "OTG-backpack": {
+    "slug": "OTG-backpack",
+    "nama file": "OTG Backpack",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-19-daf40a9a-b365-4288-9430-de9c38ce98d7.png",
+    "link download": "https://files.catbox.moe/p4faii.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "1.60 MB",
+    "tanggal unggah": "19 Agustus 2026",
+    "description": "OTG Backpack adalah ransel bertahan hidup modular untuk Minecraft Bedrock dengan peningkatan bertingkat, penyimpanan Netherite 126 slot, modul Overpack dengan 126 slot lainnya, tangki cairan, stasiun kerja portabel, penyortiran otomatis, modul, dan peralatan yang dirancang untuk petualangan di mana saja."
   }
 }
