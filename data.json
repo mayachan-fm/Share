@@ -1884,5 +1884,17 @@
     "ukuran": "49.97 MB",
     "tanggal unggah": "20 Agustus 2026",
     "description": "Jelajahi pengalaman Minecraft Bedrock yang dirancang ulang dengan alur permainan baru; kalahkan bos untuk mencapai akhir. Gunakan sihir, senjata dan peralatan baru, serta keahlianmu untuk menaklukkan permainan!"
+  },
+  "vanilla-rtx": {
+    "slug": "vanilla-rtx",
+    "nama file": "Vanilla RTX",
+    "type file": "Texturepack/shader",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-20-f2b1ae95-eccb-4cb3-92f0-c0273bd29dbc.jpg",
+    "link download": "https://files.catbox.moe/ozhu46.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "2.50 MB",
+    "tanggal unggah": "20 Agustus 2026",
+    "description": "Vanilla RTX adalah paket sumber daya ray tracing andalan untuk Minecraft RTX, yang menyatukan arahan seni yang kohesif untuk grafis Minecraft ray-traced default sejak tahun 2020—Memungkinkan pemain untuk menggunakan fitur ray tracing Minecraft di dunia atau server mana pun dengan menambahkan material dan konfigurasi yang dirancang dengan cermat ke game dasar tanpa mengubah pengalaman vanilla, memberikan dukungan ray tracing lengkap untuk Minecraft dengan cara yang terintegrasi dengan mulus dan mempertahankan tampilan dan nuansa asli."
   }
 }
