@@ -1920,5 +1920,17 @@
     "ukuran": "26.52 MB",
     "tanggal unggah": "20 Agustus 2026",
     "description": "Bangun, perluas, dan kuasai peradaban Anda sendiri! Tingkatkan peradaban Anda dan tingkatkan populasi warga Anda.\nTingkatkan bangunan, klaim tanah, kelola perekonomian Anda, bangun toko, berikan pekerjaan kepada warga, undang pemain, dan pilih pemimpin.\n\n+ 20 Struktur untuk dibangun dan ditingkatkan\n+ Sesuaikan Ekonomi Anda sendiri\n+ Klaim, perluas, dan kendalikan lahan\n+ Modus pertempuran"
+  },
+  "break-the-64-stack-limite":{
+    "slug": "break-the-64-stack-limite",
+    "nama file": "OverStack \"break the 64 stack limite\"",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-21-0d7d0a72-bcf2-4617-847a-c08dfdfc370d.jpg",
+    "link download": "https://files.catbox.moe/s8jbmy.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "17.53 KB",
+    "tanggal unggah": "21 Agustus 2026",
+    "description": "OverStack adalah add-on Bedrock Edition revolusioner yang mendobrak batasan tumpukan item standar! Dengan menggunakan API Scripting tingkat lanjut, add-on ini memungkinkan Anda untuk mengompres item ke dalam tumpukan virtual besar hingga 1.000 item per slot, menjaga inventaris Anda tetap rapi dan terorganisir."
   }
 }
