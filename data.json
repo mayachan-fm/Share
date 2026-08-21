@@ -1932,5 +1932,17 @@
     "ukuran": "17.53 KB",
     "tanggal unggah": "21 Agustus 2026",
     "description": "OverStack adalah add-on Bedrock Edition revolusioner yang mendobrak batasan tumpukan item standar! Dengan menggunakan API Scripting tingkat lanjut, add-on ini memungkinkan Anda untuk mengompres item ke dalam tumpukan virtual besar hingga 1.000 item per slot, menjaga inventaris Anda tetap rapi dan terorganisir."
+  },
+  "steve-model": {
+    "slug": "steve-model",
+    "nama file": "750 Models Addon for Yes Steve Model Mod",
+    "type file": "Mod/Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-21-55ddcb2f-0cb4-407e-ad24-ce26d7b09ee2.jpg",
+    "link download": "https://files.catbox.moe/h3ksfq.zip",
+    "versi mc": "1.26+",
+    "ukuran": "46.23 MB",
+    "tanggal unggah": "21 Agustus 2026",
+    "description": "Addon 750 Model untuk Yes Steve Model Mod adalah koleksi “.ysm” dengan lebih dari 750 model menakjubkan untuk Yes Steve Model Mod. Koleksi ini sangat beragam, menampilkan berbagai tema, mulai dari karakter terkenal dalam anime dan video game hingga ikon budaya dari berbagai negara, memungkinkan pemain untuk mengubah karakter dalam game mereka menjadi versi yang dirancang dengan indah dari tokoh favorit mereka."
   }
 }
