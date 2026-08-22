@@ -2017,4 +2017,16 @@
     "tanggal unggah": "23 Agustus 2026",
     "description": "Gun Classic Beta adalah add-on yang masih dalam pengembangan yang menambahkan senjata-senjata populer ke Minecraft Bedrock. Add-on ini menawarkan variasi yang baik, dan semua senjata memiliki animasi unik saat karakter berdiri diam. Anda mungkin akan menemukan beberapa bug karena masih dalam versi beta, yang justru menambah realisme unik pada permainan.\n\nSekarang Anda dapat menikmati Minecraft yang lebih baik dengan senjata baru, meninggalkan peralatan Minecraft klasik. Melawan bos-bos paling menakutkan di Minecraft tidak pernah semudah ini dengan add-on ini. Kerusakan setiap senjata bervariasi tergantung pada kalibernya, jadi Anda harus mempertimbangkan apa yang akan Anda gunakan untuk mengalahkan naga atau penjaga.\n\nUntuk menikmati plugin ini, penting untuk mengaktifkan mode eksperimen agar fungsionalitas dan performanya optimal."
   }
+  "construct": {
+    "slug": "construct",
+    "nama file": "Construct",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-22-5029b814-abec-4637-90a3-2185254b75e6.jpg",
+    "link download": "https://files.catbox.moe/7qeafa.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "Tidak diketahui",
+    "tanggal unggah": "23 Agustus 2026",
+    "description": "Ini adalah fitur yang paling mirip dengan Litematica yang pernah ada di Bedrock. Construct mempermudah proses pembangunan dalam mode survival dan membantu banyak pemain membangun bersama."
+  }
 }
