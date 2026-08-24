@@ -2028,5 +2028,17 @@
     "ukuran": "Tidak diketahui",
     "tanggal unggah": "23 Agustus 2026",
     "description": "Ini adalah fitur yang paling mirip dengan Litematica yang pernah ada di Bedrock. Construct mempermudah proses pembangunan dalam mode survival dan membantu banyak pemain membangun bersama."
+  },
+  "rgb-xp-bar": {
+    "slug": "rgb-xp-bar",
+    "nama file": "RGB XP Bar",
+    "type file": "Texturepack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-24-5daf2a1e-a5dc-4a62-9560-834eb7b256f6.gif",
+    "link download": "https://files.catbox.moe/wvplvu.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "45 KB",
+    "tanggal unggah": "24 Agustus 2026",
+    "description": "Apakah bilah XP saat ini terlihat sangat membosankan? Dan Anda ingin membuatnya lebih menarik? Anda mungkin membutuhkan paket ini! Ubah bilah XP lama yang membosankan menjadi berwarna-warni dan juga dilengkapi animasi."
   }
 }
