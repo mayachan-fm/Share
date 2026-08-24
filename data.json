@@ -2040,5 +2040,17 @@
     "ukuran": "45 KB",
     "tanggal unggah": "24 Agustus 2026",
     "description": "Apakah bilah XP saat ini terlihat sangat membosankan? Dan Anda ingin membuatnya lebih menarik? Anda mungkin membutuhkan paket ini! Ubah bilah XP lama yang membosankan menjadi berwarna-warni dan juga dilengkapi animasi."
+  },
+  "sodium-boost": {
+    "slug": "sodium-boost",
+    "nama file": "Sodium Boost",
+    "type file": "Texturepack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-24-2c7e848a-b8df-4578-9b6f-ca3c1e6af00b.gif",
+    "link download": "https://files.catbox.moe/rdzwpi.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "1.84 MB",
+    "tanggal unggah": "24 Agustus 2026",
+    "description": "Sodium Boost adalah paket sumber daya Minecraft Bedrock yang ringan, dirancang untuk meningkatkan performa sekaligus menjaga agar permainan tetap sedekat mungkin dengan pengalaman vanilla aslinya.\n\n \n\nBerbeda dengan banyak paket FPS lainnya, Sodium Boost berfokus pada pengurangan lag tanpa mengubah tampilan dan nuansa Minecraft secara signifikan. Paket ini menghilangkan efek visual yang tidak perlu dan mengoptimalkan rendering untuk membantu memberikan gameplay yang lebih lancar, terutama pada perangkat kelas bawah dan menengah."
   }
 }
