@@ -2064,5 +2064,17 @@
     "ukuran": "5.44 MB",
     "tanggal unggah": "25 Agustus 2026",
     "description": "Shader ini memperkenalkan rumput animasi yang disinkronkan dengan bayangan , di mana vegetasi bergerak selaras dengan arah dan intensitas cahaya, bukan melambai secara independen. Saat matahari terbit dan terbenam, bayangan meregang, melunak, dan bergeser—dan rumput merespons secara alami, menjadikan setiap adegan terasa realistis secara fisik.\n\nDari hutan saat senja dengan bayangan panjang dan hangat…\nhingga lautan tenang yang memantulkan sinar matahari siang …\nhingga bioma merah muda lembut yang dipenuhi kelopak bunga yang berterbangan dan dedaunan yang hidup …\nsetiap lingkungan terasa kohesif, atmosferik, dan hidup.\n\nPencahayaan diseimbangkan dengan cermat untuk meningkatkan kedalaman tanpa mengalahkan identitas Minecraft. Sinar matahari volumetrik, pantulan air yang realistis, transisi bayangan yang halus, dan efek ambient yang lembut bekerja bersama untuk menciptakan pengalaman visual sinematik namun tetap meyakinkan ."
+  },
+  "more-simple-structures": {
+    "slug": "more-simple-structures",
+    "nama file": "More Simple Structures",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-25-092fc101-f072-4f83-a890-c17df03d6eb4.png",
+    "link download": "https://files.catbox.moe/0xlpwd.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "509 KB",
+    "tanggal unggah": "25 Agustus 2026",
+    "description": "Addon More Simple Structures menambahkan banyak sekali struktur baru yang muncul secara alami ke dalam game. Struktur-struktur ini beragam, mulai dari reruntuhan kecil hingga Piramida Hutan yang besar!"
   }
 }
