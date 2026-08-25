@@ -2052,5 +2052,17 @@
     "ukuran": "1.84 MB",
     "tanggal unggah": "24 Agustus 2026",
     "description": "Sodium Boost adalah paket sumber daya Minecraft Bedrock yang ringan, dirancang untuk meningkatkan performa sekaligus menjaga agar permainan tetap sedekat mungkin dengan pengalaman vanilla aslinya.\n\n \n\nBerbeda dengan banyak paket FPS lainnya, Sodium Boost berfokus pada pengurangan lag tanpa mengubah tampilan dan nuansa Minecraft secara signifikan. Paket ini menghilangkan efek visual yang tidak perlu dan mengoptimalkan rendering untuk membantu memberikan gameplay yang lebih lancar, terutama pada perangkat kelas bawah dan menengah."
+  },
+  "rg-visual-shader": {
+    "slug": "rg-visual-shader",
+    "nama file": "RG Visuals Shader | Shaders",
+    "type file": "Shader",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-25-2e1426bf-2449-4a17-afe0-ead022bc5749.gif",
+    "link download": "https://files.catbox.moe/zxshgs.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "5.44 MB",
+    "tanggal unggah": "25 Agustus 2026",
+    "description": "Shader ini memperkenalkan rumput animasi yang disinkronkan dengan bayangan , di mana vegetasi bergerak selaras dengan arah dan intensitas cahaya, bukan melambai secara independen. Saat matahari terbit dan terbenam, bayangan meregang, melunak, dan bergeser—dan rumput merespons secara alami, menjadikan setiap adegan terasa realistis secara fisik.\n\nDari hutan saat senja dengan bayangan panjang dan hangat…\nhingga lautan tenang yang memantulkan sinar matahari siang …\nhingga bioma merah muda lembut yang dipenuhi kelopak bunga yang berterbangan dan dedaunan yang hidup …\nsetiap lingkungan terasa kohesif, atmosferik, dan hidup.\n\nPencahayaan diseimbangkan dengan cermat untuk meningkatkan kedalaman tanpa mengalahkan identitas Minecraft. Sinar matahari volumetrik, pantulan air yang realistis, transisi bayangan yang halus, dan efek ambient yang lembut bekerja bersama untuk menciptakan pengalaman visual sinematik namun tetap meyakinkan ."
   }
 }
