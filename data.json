@@ -2160,5 +2160,17 @@
     "ukuran": "1.34 MB",
     "tanggal unggah": "30 Agustus 2026",
     "description": "Sulphur Cars menambahkan ENAM kendaraan baru yang terinspirasi dari Sulphur Cube, dengan SEPULUH tipe dasar yang unik. Setiap arketipe mempunyai kemampuan khususnya sendiri; dari aksi epik hingga lompatan hidrolik! Berkendara di atas air atau lava, melompati jurang, meluncur di tikungan, memanjat tembok, dan menyebabkan kekacauan yang eksplosif! Terinspirasi oleh Sulphur Cube Drop!"
+  },
+  "sulfur-strongholds": {
+    "slug": "sulfur-strongholds",
+    "nama file": "Sulfur Strongholds",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-08-29-b5b5ed68-77c1-44f4-b5ac-f3ded70456e8.jpg",
+    "link download": "https://files.catbox.moe/6n576g.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "3.84 MB",
+    "tanggal unggah": "30 Agustus 2026",
+    "description": "Tersembunyi di bioma Gua Sulfur terdapat empat benteng kuno - Udara, Bumi, Es, dan Lendir. Pukul kubus, buka kunci pintunya, ambil intinya!\n\nPecahkan teka-teki fisika dengan elemen Sulphur Cubes: slime memantul dari dinding, es meluncur melintasi ruangan, udara melayang dan menggantung. Dorong mereka ke pelat penekan untuk memberi daya pada pintu Sulfur dan bertarung melalui tiga level menuju ruang piala."
   }
 }
