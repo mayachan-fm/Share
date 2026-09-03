@@ -2197,4 +2197,16 @@
     "tanggal unggah": "31 Agustus 2026",
     "description": "Selamat datang di Better Biomes , add-on luas yang sepenuhnya mengubah dunia Minecraft Anda! Add-on ini memperkenalkan biome baru dan merombak biome serta gua vanilla yang sudah ada , mengisinya dengan kehidupan yang semarak, dekorasi alam baru, dan mekanisme unik.\n\nBaik Anda menjelajahi kedalaman yang membeku atau bersantai di bawah pohon palem, dunia akan terasa lebih hidup dari sebelumnya!"
   }
+  "better-glowing-ores": {
+    "slug": "better-glowing-ores",
+    "nama file": "Better Glowing Ores",
+    "type file": "Texturepack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-03-19a5408c-3a60-49bb-86b9-99f12b5704a9.png",
+    "link download": "https://files.catbox.moe/h7zr4d.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "921 KB",
+    "tanggal unggah": "3 September 2026",
+    "description": "Better Glowing Ores menambahkan bijih bercahaya dan visibilitas ala penglihatan malam ke gua, membuat penambangan lebih mudah tanpa menonaktifkan pencapaian. Alih-alih menggunakan mod berat yang merusak imersi, paket sumber daya ringan ini menggunakan tekstur yang ditingkatkan dan penyesuaian pencahayaan yang halus sehingga bijih terlihat jelas dalam pengaturan grafis Sederhana, Mewah, atau apa pun, sementara dunia tetap terlihat alami."
+  }
 }
