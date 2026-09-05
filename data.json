@@ -2256,5 +2256,17 @@
     "ukuran": "1.30 MB",
     "tanggal unggah": "4 September 2026",
     "description": "Gugugaga Addon menambahkan mob penguin lucu dengan wajah manusia dan anime ke dunia Minecraft Anda. Makhluk kecil ini muncul di hutan dan berlarian di rerumputan. Anda dapat melihat mereka duduk untuk beristirahat atau berkumpul untuk melawan monster besar."
+  },
+  "cinematic-afk": {
+    "slug": "cinematic-afk",
+    "nama file": "AFKverse: Cinematic AFK System",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-05-d555f6b7-2287-48ce-8b0d-def81f835db6.jpg",
+    "link download": "https://files.catbox.moe/6lz52g.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "7.35 MB",
+    "tanggal unggah": "5 September 2026",
+    "description": "Ubah momen-momen menganggur Anda di Minecraft Bedrock menjadi pengalaman sinematik yang menakjubkan. AFKverse secara otomatis mengaktifkan kamera sinematik yang berputar dinamis, memutar musik latar yang menenangkan, memicu partikel Zzz yang melayang, dan melindungi Anda dengan Perisai AFK yang seimbang setiap kali Anda menganggur.\n\nRamah terhadap pencapaian: dibangun menggunakan API skrip Bedrock asli dan arsitektur Paket Sumber Daya, tanpa penggantian komponen pemain. Anda dapat menikmati mode AFK sinematik sambil terus mendapatkan semua Pencapaian Xbox di dunia bertahan hidup Anda."
   }
 }
