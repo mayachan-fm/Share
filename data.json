@@ -2280,5 +2280,17 @@
     "ukuran": "3 MB",
     "tanggal unggah": "8 September 2026",
     "description": "One Chunk adalah peta bertahan hidup yang dibuat dengan cermat yang memadatkan seluruh progres Minecraft ke dalam satu chunk 16x16 di Overworld dan satu chunk 16x16 di Nether. Setiap struktur, sumber daya, dan pencapaian penting telah diintegrasikan secara strategis untuk memastikan bahwa permainan tetap dapat diselesaikan sepenuhnya, meskipun dengan keterbatasan yang ekstrem."
+  },
+  "the-fantasy-kingdom": {
+    "slug": "the-fantasy-kingdom",
+    "nama file": "The Fantasy Kingdom",
+    "type file": "Maps",
+    "kategori": "peta",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-08-9a38c331-bf5a-4f38-8e48-7f8535997b3a.png",
+    "link download": "https://files.catbox.moe/5rcssi.mcworld",
+    "versi mc": "1.26+",
+    "ukuran": "11.18 MB",
+    "tanggal unggah": "8 September 2026",
+    "description": "\"The Fantasy Kingdom\" adalah peta dunia megah yang dibuat oleh AlisaLiso4ka, dirancang untuk menampilkan kerajaan abad pertengahan yang luas di bawah langit magis. Berlatar lanskap bersalju yang menakjubkan, lokasi besar ini mengundang pemain untuk menjelajahi berbagai struktur yang rumit, termasuk kastil-kastil menjulang tinggi dengan menara yang detail, jalan-jalan kota yang ramai dipenuhi lentera hangat, dan kapal-kapal yang berlabuh di dekat pegunungan."
   }
 }
