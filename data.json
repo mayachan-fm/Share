@@ -2268,5 +2268,17 @@
     "ukuran": "7.35 MB",
     "tanggal unggah": "5 September 2026",
     "description": "Ubah momen-momen menganggur Anda di Minecraft Bedrock menjadi pengalaman sinematik yang menakjubkan. AFKverse secara otomatis mengaktifkan kamera sinematik yang berputar dinamis, memutar musik latar yang menenangkan, memicu partikel Zzz yang melayang, dan melindungi Anda dengan Perisai AFK yang seimbang setiap kali Anda menganggur.\n\nRamah terhadap pencapaian: dibangun menggunakan API skrip Bedrock asli dan arsitektur Paket Sumber Daya, tanpa penggantian komponen pemain. Anda dapat menikmati mode AFK sinematik sambil terus mendapatkan semua Pencapaian Xbox di dunia bertahan hidup Anda."
+  },
+  "one-chunk": {
+    "slug": "one-chunk",
+    "nama file": "One Chunk World",
+    "type file": "Maps",
+    "kategori": "peta",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-08-d3e98d1d-d816-4acd-ae08-fe26b68373f7.png",
+    "link download": "https://files.catbox.moe/07e26f.mcworld",
+    "versi mc": "1.26+",
+    "ukuran": "3 MB",
+    "tanggal unggah": "8 September 2026",
+    "description": "One Chunk adalah peta bertahan hidup yang dibuat dengan cermat yang memadatkan seluruh progres Minecraft ke dalam satu chunk 16x16 di Overworld dan satu chunk 16x16 di Nether. Setiap struktur, sumber daya, dan pencapaian penting telah diintegrasikan secara strategis untuk memastikan bahwa permainan tetap dapat diselesaikan sepenuhnya, meskipun dengan keterbatasan yang ekstrem."
   }
 }
