@@ -2328,5 +2328,17 @@
     "ukuran": "1.69 MB",
     "tanggal unggah": "9 September 2026",
     "description": "Mode Fisika — sekarang di Bedrock!\n\nBunuh massa dan saksikan mereka terjatuh, terjatuh, dan terjatuh dengan fisika ragdoll sungguhan.\n\n- Fisika ragdoll nyata saat mati!\n- Bekerja pada pemain dan massa!\n- Item Realistis turun\n- TNT Meledakkan Balok ke udara!\n- Pengaturan khusus untuk tindakan lebih banyak!"
+  },
+  "villager-news": {
+    "slug": "villager-news",
+    "nama file": "Villager News 1.0",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-09-939f6b98-4a37-459d-9943-a80e6f649fc5.jpg",
+    "link download": "https://files.catbox.moe/2iy7ml.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "40.52 MB",
+    "tanggal unggah": "9 September 2026",
+    "description": "BERITA TERBARU! Villager News disiarkan langsung dalam kolaborasi resmi Oreville Studios x Element Animation! Hidupkan Penduduk Desa Anda hari ini!\n- 2.000+ reaksi bersuara!\n- Dialog reaktif terhadap massa, blok, aksi pemain, dan banyak lagi!\n- Animasi ekspresif & sinkronisasi bibir!\n- Reputasi pemain & sistem gosip!\n- Karakter khusus & perdagangan unik!"
   }
 }
