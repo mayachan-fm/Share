@@ -2316,5 +2316,17 @@
     "ukuran": "31 MB",
     "tanggal unggah": "9 September 2026",
     "description": "Buat mekanisme yang kuat dengan Add-On MECHS.\nTambang titanium, buat suku cadang canggih, dan rakit mekanisme Anda sendiri.\n\nTRANSFORMASI MENJADI MECH KUAT yang dibuat untuk kecepatan, pertahanan, atau daya tembak.\nUji coba mekanisme dinamis dengan blaster dan senjata jarak dekat, kalahkan monster baru, dan taklukkan dunia Anda."
+  },
+  "physics-pro": {
+    "slug": "physics-pro",
+    "nama file": "Physics Pro 1.0",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-09-62e3f265-ac32-462f-b5df-50df892687b2.jpg",
+    "link download": "https://files.catbox.moe/1ihicv.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "1.69 MB",
+    "tanggal unggah": "9 September 2026",
+    "description": "Mode Fisika — sekarang di Bedrock!\n\nBunuh massa dan saksikan mereka terjatuh, terjatuh, dan terjatuh dengan fisika ragdoll sungguhan.\n\n- Fisika ragdoll nyata saat mati!\n- Bekerja pada pemain dan massa!\n- Item Realistis turun\n- TNT Meledakkan Balok ke udara!\n- Pengaturan khusus untuk tindakan lebih banyak!"
   }
 }
