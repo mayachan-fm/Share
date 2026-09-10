@@ -2352,5 +2352,17 @@
     "ukuran": "832 KB",
     "tanggal unggah": "10 September 2026",
     "description": "Ciptakan mahakarya sinematik dengan alat kamera profesional dan animasi jalur halus.\n- Path Camera dengan jalur partikel visual dan bidikan sinematik yang halus\n- Berbagai mode: Selancar Bahu, Drone, Drone 360, Penempatan statis\n- Alat Admin untuk mengelola kamera dan pengaturan global\n- Dilisensikan oleh SE7ENDAYS Studio dan diterbitkan oleh BLOCKLAB Studios."
+  },
+  "cookery": {
+    "slug": "cookery",
+    "nama file": "Kaleidoscope Cookery (Unofficial)",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-10-17a9d2dd-6170-477a-b365-3f09fa650480.png",
+    "link download": "https://files.catbox.moe/i76zjy.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "4.62 MB",
+    "tanggal unggah": "10 September 2026",
+    "description": "Add-on ini mencakup semuanya, mulai dari mi, nasi mangkuk, sup, pangsit, hidangan daging, sashimi, kue-kue, piring saji, makanan goreng, teh, dan resep khusus lainnya hingga kreasi kuliner yang lebih unik. Banyak makanan dapat ditempatkan di dunia sebagai piring saji, sementara keranjang, rak, wadah minyak, meja, kursi, bangku, dan perabot dapur lainnya memungkinkan Anda membangun ruang memasak yang jauh lebih lengkap."
   }
 }
