@@ -2340,5 +2340,17 @@
     "ukuran": "40.52 MB",
     "tanggal unggah": "9 September 2026",
     "description": "BERITA TERBARU! Villager News disiarkan langsung dalam kolaborasi resmi Oreville Studios x Element Animation! Hidupkan Penduduk Desa Anda hari ini!\n- 2.000+ reaksi bersuara!\n- Dialog reaktif terhadap massa, blok, aksi pemain, dan banyak lagi!\n- Animasi ekspresif & sinkronisasi bibir!\n- Reputasi pemain & sistem gosip!\n- Karakter khusus & perdagangan unik!"
+  },
+  "cinecam": {
+    "slug": "cinecam",
+    "nama file": "Cinecam",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-10-15a5192e-8daa-45c4-a571-f60977123f97.jpg",
+    "link download": "https://files.catbox.moe/0ky0ke.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "832 KB",
+    "tanggal unggah": "10 September 2026",
+    "description": "Ciptakan mahakarya sinematik dengan alat kamera profesional dan animasi jalur halus.\n- Path Camera dengan jalur partikel visual dan bidikan sinematik yang halus\n- Berbagai mode: Selancar Bahu, Drone, Drone 360, Penempatan statis\n- Alat Admin untuk mengelola kamera dan pengaturan global\n- Dilisensikan oleh SE7ENDAYS Studio dan diterbitkan oleh BLOCKLAB Studios."
   }
 }
