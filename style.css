@@ -1676,3 +1676,12 @@ body {
         align-items: flex-start;
     }
 }
+
+
+/* Stage D — penyempurnaan tampilan komentar */
+.nama-pengguna-komentar { color: var(--warna-nama); font-weight: 800; letter-spacing: .1px; }
+.item-komentar { margin: 0 0 12px; padding: 14px 14px 13px; background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.10); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.12); }
+.item-komentar-level-0 { border-left: 3px solid rgba(255,255,255,.16); }
+.daftar-balasan { margin-top: 10px; padding-left: 12px; border-left: 2px solid rgba(255,255,255,.12); }
+.daftar-balasan .item-komentar { background: rgba(255,255,255,.018); border-color: rgba(255,255,255,.08); margin-bottom: 9px; }
+@media (max-width: 480px) { .item-komentar { padding: 12px 11px; margin-bottom: 10px; } }

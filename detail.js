@@ -213,8 +213,17 @@ function renderKomentar(daftar, semua) {
     pasangTombolKomentar(anak, map);
 }
 
+function warnaNamaKomentar(username) {
+    const warna = ['#ff6b6b','#4dabf7','#51cf66','#fcc419','#cc5de8','#20c997','#ff922b','#748ffc'];
+    let hash = 0; const teks = String(username || 'Pengguna');
+    for (let i = 0; i < teks.length; i++) { hash = ((hash << 5) - hash) + teks.charCodeAt(i); hash |= 0; }
+    return warna[Math.abs(hash) % warna.length];
+}
+
 function buatKomentarHtml(komen, level, anak, map) {
-    const nama = escapeHtml(komen.username);
+    const namaMentah = komen.username || 'Pengguna';
+    const nama = escapeHtml(namaMentah);
+    const warnaNama = warnaNamaKomentar(namaMentah);
     const isi = escapeHtml(komen.isi);
     const waktu = formatWaktuKomentar(komen.waktu);
     const anakKomentar = anak.get(komen.id) || [];
@@ -226,7 +235,7 @@ function buatKomentarHtml(komen, level, anak, map) {
         <div class="item-komentar item-komentar-level-${Math.min(level, 6)}" data-id="${escapeHtml(komen.id)}" style="--indent:${margin}px">
             <div class="komentar-kepala">
                 <div class="komentar-pengguna">
-                    <strong>@${nama}</strong>${replyInfo}
+                    <strong class="nama-pengguna-komentar" style="--warna-nama:${warnaNama}">@${nama}</strong>${replyInfo}
                 </div>
                 <span>${waktu}</span>
             </div>
