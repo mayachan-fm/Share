@@ -1271,3 +1271,229 @@ body {
         font-size: 14px;
     }
 }
+
+
+/* ==============================================
+   LAYOUT BARU — HEADER & NAVIGASI TETAP
+   ============================================== */
+:root {
+    --tinggi-header: 64px;
+    --tinggi-nav-bawah: 68px;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    padding-top: var(--tinggi-header);
+    padding-bottom: var(--tinggi-nav-bawah);
+    overflow-x: hidden;
+}
+
+.header-tetap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--tinggi-header);
+    background: rgba(15, 15, 15, 0.96);
+    border-bottom: 1px solid var(--batasGelap);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+}
+
+.header-dalam {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.logo-web {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--teksPutih);
+    text-decoration: none;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.logo-web img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    border-radius: 9px;
+}
+
+.konten-utama {
+    min-height: calc(100vh - var(--tinggi-header) - var(--tinggi-nav-bawah));
+}
+
+.navigasi-bawah {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--tinggi-nav-bawah);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: rgba(20, 20, 20, 0.98);
+    border-top: 1px solid var(--batasGelap);
+    z-index: 1100;
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.nav-item {
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: var(--teksAbu);
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.nav-item i {
+    font-size: 19px;
+}
+
+.nav-item.aktif,
+.nav-item:hover {
+    color: var(--merahUtama);
+}
+
+.daftar-addon {
+    scroll-margin-top: calc(var(--tinggi-header) + 12px);
+}
+
+@media (max-width: 640px) {
+    :root {
+        --tinggi-header: 60px;
+        --tinggi-nav-bawah: 64px;
+    }
+
+    .logo-web {
+        font-size: 15px;
+    }
+
+    .logo-web img {
+        width: 34px;
+        height: 34px;
+    }
+
+    .nav-item {
+        font-size: 10px;
+    }
+
+    .nav-item i {
+        font-size: 18px;
+    }
+}
+
+.profil-halaman { text-align: center; padding: 40px 20px; }
+.profil-avatar {
+    width: 76px; height: 76px; margin: 0 auto 16px;
+    border-radius: 50%; background: var(--merahUtama); color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 32px;
+}
+.profil-halaman h2 { margin-bottom: 10px; }
+
+/* ==============================================
+   TAHAP B — FORM AKUN
+   ============================================== */
+.profil-subjudul {
+    color: #aaa;
+    margin: -2px 0 22px;
+}
+.form-akun {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: left;
+}
+.form-akun label {
+    display: block;
+    margin: 14px 0 7px;
+    font-weight: 600;
+}
+.form-akun input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px 14px;
+    border: 1px solid #444;
+    border-radius: 10px;
+    background: #151515;
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+}
+.form-akun input:focus {
+    border-color: #ff3b30;
+}
+.form-akun small {
+    display: block;
+    color: #888;
+    margin-top: 6px;
+    line-height: 1.4;
+}
+.pesan-akun {
+    min-height: 22px;
+    margin: 12px 0;
+    color: #ff756d;
+    text-align: center;
+}
+.tombol-akun,
+.tombol-logout,
+.tombol-sekunder {
+    width: 100%;
+    border: 0;
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.tombol-akun {
+    background: #ff3b30;
+    color: #fff;
+    font-weight: 700;
+}
+.tombol-akun:disabled {
+    opacity: .6;
+    cursor: wait;
+}
+.tombol-sekunder {
+    max-width: 420px;
+    margin: 12px auto 0;
+    display: block;
+    background: transparent;
+    color: #ff6b63;
+}
+.profil-akun-login {
+    margin: 20px auto;
+    padding: 18px;
+    max-width: 420px;
+    border-radius: 12px;
+    background: #181818;
+    border: 1px solid #333;
+}
+.profil-nama {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.profil-status {
+    color: #72d572;
+}
+.tombol-logout {
+    max-width: 420px;
+    margin-top: 20px;
+    background: #333;
+    color: #fff;
+}

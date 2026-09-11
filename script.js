@@ -11,8 +11,8 @@ const firebaseConfig = {
   appId: "1:769674524186:web:05e8c5f4e34867980b03a3"
 };
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-import { getDatabase, ref, get, set, increment } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getDatabase, ref, get, set, increment } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -231,12 +231,51 @@ function salinLink(link) {
     });
 }
 
+
+
+// ==============================================
+// NAVIGASI BAWAH — BERANDA / CARI / DISUKAI / PROFIL
+// ==============================================
+function aturNavigasiBawah() {
+    document.querySelectorAll('.navigasi-bawah .nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const nav = item.dataset.nav;
+
+            if (nav === 'cari') {
+                e.preventDefault();
+                const input = document.getElementById('kotak-cari');
+                if (input) {
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => input.focus(), 350);
+                } else {
+                    window.location.href = 'index.html#kotak-cari';
+                }
+            }
+
+            if (nav === 'disukai') {
+                e.preventDefault();
+                const disukai = JSON.parse(localStorage.getItem('sudahLike') || '[]');
+                filterAktif = 'semua';
+                document.querySelectorAll('.btn-kategori').forEach(b => b.classList.remove('aktif'));
+                document.querySelector('.btn-kategori[data-filter="semua"]')?.classList.add('aktif');
+
+                const hasil = daftarAddon.filter(item => disukai.includes(item.slug));
+                const judul = document.querySelector('.daftar-addon .judul-bagian');
+                if (judul) judul.innerHTML = '👍 Addon Disukai';
+                tampilkanDaftar(hasil);
+                document.querySelector('.daftar-addon')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+}
+
 // ==============================================
 // MULAI SEMUA FUNGSI
 // ==============================================
 document.addEventListener('DOMContentLoaded', () => {
     tampilkanAddon();
     aturTabTopAddon();
+    aturNavigasiBawah();
     document.getElementById('tombol-cari')?.addEventListener('click', terapkanFilterDanCari);
     document.getElementById('kotak-cari')?.addEventListener('keydown', e => { if(e.key==='Enter') terapkanFilterDanCari(); });
 });
