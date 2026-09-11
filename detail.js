@@ -153,6 +153,79 @@ function siapkanKomentar() {
     const form = document.querySelector(".form-komentar");
     if (!form) return;
     actualizarAksesKomentarFallback();
+    mulaiPantauKomentar();
+}
+
+function mulaiPantauKomentar() {
+    if (!idAddonSekarang) return;
+    const daftar = document.getElementById('daftar-komentar');
+    if (!daftar) return;
+
+    const komentarRef = ref(db, `komentar/${idAddonSekarang}`);
+
+    onValue(komentarRef, (snapshot) => {
+        if (!snapshot.exists()) {
+            daftar.innerHTML = `<div class="pesan-kosong-komentar">Belum ada komentar, jadilah yang pertama!</div>`;
+            return;
+        }
+
+        const semua = [];
+        snapshot.forEach((child) => {
+            const data = child.val() || {};
+            semua.push({
+                id: child.key,
+                isi: data.isi || '',
+                waktu: Number(data.waktu) || 0,
+                username: data.username || 'Pengguna'
+            });
+        });
+
+        // Komentar terbaru ditampilkan paling atas.
+        semua.sort((a, b) => b.waktu - a.waktu);
+
+        daftar.innerHTML = semua.map((komen) => {
+            const nama = escapeHtml(komen.username);
+            const isi = escapeHtml(komen.isi);
+            const waktu = formatWaktuKomentar(komen.waktu);
+
+            return `
+                <div class="item-komentar" data-id="${escapeHtml(komen.id)}">
+                    <div class="komentar-kepala">
+                        <strong>@${nama}</strong>
+                        <span>${waktu}</span>
+                    </div>
+                    <div class="komentar-isi">${isi}</div>
+                </div>
+            `;
+        }).join('');
+    }, (error) => {
+        console.error('Gagal memuat komentar:', error);
+        daftar.innerHTML = `<div class="pesan-kosong-komentar">Komentar tidak dapat dimuat.</div>`;
+    });
+}
+
+function formatWaktuKomentar(timestamp) {
+    if (!timestamp) return 'baru saja';
+
+    const selisih = Math.max(0, Date.now() - timestamp);
+    const detik = Math.floor(selisih / 1000);
+
+    if (detik < 60) return 'baru saja';
+
+    const menit = Math.floor(detik / 60);
+    if (menit < 60) return `${menit} menit lalu`;
+
+    const jam = Math.floor(menit / 60);
+    if (jam < 24) return `${jam} jam lalu`;
+
+    const hari = Math.floor(jam / 24);
+    if (hari < 30) return `${hari} hari lalu`;
+
+    return new Date(timestamp).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+    });
 }
 
 function actualizarAksesKomentarFallback() {

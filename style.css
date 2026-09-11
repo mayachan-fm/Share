@@ -1547,3 +1547,28 @@ body {
 .kartu-login-komentar p { margin: 0 0 15px; color: #aaa; }
 .kartu-login-komentar .tombol-utama { display: inline-block; text-decoration: none; }
 .nama-komentar { font-weight: 700; margin-bottom: 4px; }
+
+/* Tampilan daftar komentar */
+.item-komentar {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.komentar-kepala {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+.komentar-kepala strong {
+    font-weight: 700;
+}
+.komentar-kepala span {
+    font-size: .78rem;
+    opacity: .65;
+    white-space: nowrap;
+}
+.komentar-isi {
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
