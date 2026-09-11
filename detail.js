@@ -11,11 +11,53 @@ const firebaseConfig = {
   appId: "1:769674524186:web:05e8c5f4e34867980b03a3"
 };
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { auth, onAuthStateChanged } from "./auth.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
-const app = initializeApp(firebaseConfig);
+const app = getApp();
 const db = getDatabase(app);
+
+let usuarioActual = null;
+let authResuelta = false;
+
+onAuthStateChanged(auth, (user) => {
+    usuarioActual = user;
+    authResuelta = true;
+    actualizarAksesKomentar();
+});
+
+function actualizarAksesKomentar() {
+    const form = document.querySelector(".form-komentar");
+    if (!form) return;
+    if (usuarioActual) {
+        if (form.dataset.ready === "1") return;
+        form.dataset.ready = "1";
+        form.innerHTML = `
+            <textarea id="input-komentar" placeholder="Tulis komentarmu disini..." maxlength="300"></textarea>
+            <div class="batas-karakter">
+                <span id="jumlah-karakter">0/300</span>
+                <button id="tombol-kirim" class="tombol-unduh">Kirim</button>
+            </div>`;
+        siapkanInputKomentar();
+    } else {
+        form.dataset.ready = "0";
+        form.innerHTML = `
+            <div class="kartu-login-komentar">
+                <i class="fa fa-lock"></i>
+                <strong>Login diperlukan</strong>
+                <p>Silakan login atau daftar terlebih dahulu untuk menulis komentar.</p>
+                <a href="profil.html" class="tombol-utama">Login / Daftar</a>
+            </div>`;
+    }
+}
+
+function siapkanInputKomentar() {
+    const input = document.getElementById("input-komentar");
+    const jumlah = document.getElementById("jumlah-karakter");
+    if (!input || !jumlah) return;
+    input.addEventListener("input", () => jumlah.textContent = `${input.value.length}/300`);
+}
 // ==============================================
 
 let idAddonSekarang = null;
@@ -108,30 +150,32 @@ async function tampilkanDetail() {
 }
 
 function siapkanKomentar() {
-    const inputKomen = document.getElementById('input-komentar');
-    const tombolKirim = document.getElementById('tombol-kirim');
-    const jumlahKarakter = document.getElementById('jumlah-karakter');
+    const form = document.querySelector(".form-komentar");
+    if (!form) return;
+    actualizarAksesKomentarFallback();
+}
 
+function actualizarAksesKomentarFallback() {
+    if (!authResuelta) return;
+    actualizarAksesKomentar();
+    if (!usuarioActual) return;
+
+    const tombolKirim = document.getElementById('tombol-kirim');
+    const inputKomen = document.getElementById('input-komentar');
+    const jumlahKarakter = document.getElementById('jumlah-karakter');
     if (!inputKomen || !tombolKirim || !jumlahKarakter) return;
 
-    // Hitung sisa karakter
-    inputKomen.addEventListener('input', () => {
-        jumlahKarakter.textContent = `${inputKomen.value.length}/300`;
-    });
-
-    // Kirim komentar
     tombolKirim.addEventListener('click', async () => {
         const isi = inputKomen.value.trim();
-        if (!isi) return;
-        if (!idAddonSekarang) {
-            alert('ID addon tidak ditemukan!');
-            return;
-        }
-
+        if (!isi || isi.length > 300) return;
+        if (!idAddonSekarang) { alert('ID addon tidak ditemukan!'); return; }
+        if (!usuarioActual) { actualizarAksesKomentar(); return; }
         try {
             await push(ref(db, `komentar/${idAddonSekarang}`), {
                 isi: isi,
-                waktu: Date.now()
+                waktu: Date.now(),
+                uid: usuarioActual.uid,
+                username: usuarioActual.email ? usuarioActual.email.split('@')[0] : 'Pengguna'
             });
             inputKomen.value = '';
             jumlahKarakter.textContent = '0/300';
@@ -140,35 +184,6 @@ function siapkanKomentar() {
             console.error('Gagal kirim komentar:', err);
             alert('Gagal mengirim komentar, coba lagi nanti!');
         }
-    });
-
-    // Tampilkan komentar otomatis — Real-time update
-    if (!idAddonSekarang) return;
-    
-    onValue(ref(db, `komentar/${idAddonSekarang}`), (snapshot) => {
-        const daftar = document.getElementById('daftar-komentar');
-        if (!daftar) return;
-
-        const data = snapshot.val();
-
-        if (!data) {
-            daftar.innerHTML = `<div class="pesan-kosong-komentar">Belum ada komentar, jadilah yang pertama!</div>`;
-            return;
-        }
-
-        let html = '';
-        const urutkan = Object.values(data).sort((a, b) => b.waktu - a.waktu);
-        urutkan.forEach(komen => {
-            const tgl = new Date(komen.waktu);
-            const waktuTampil = `${tgl.getDate()} ${tgl.toLocaleString('id-ID', {month:'long'})} ${tgl.getFullYear()} pukul ${tgl.getHours().toString().padStart(2,'0')}:${tgl.getMinutes().toString().padStart(2,'0')}`;
-            html += `
-                <div class="isi-komentar">
-                    <p class="teks-komentar">${escapeHtml(komen.isi)}</p>
-                    <small class="waktu-komentar">${waktuTampil}</small>
-                </div>
-            `;
-        });
-        daftar.innerHTML = html;
     });
 }
 

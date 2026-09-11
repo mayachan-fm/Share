@@ -1497,3 +1497,53 @@ body {
     background: #333;
     color: #fff;
 }
+
+
+/* ==============================================
+   STAGE C — KARTU LOGIN UNTUK FITUR INTERAKSI
+   ============================================== */
+.login-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.72);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.login-card {
+    width: min(420px, 100%);
+    background: #171717;
+    border: 1px solid #333;
+    border-radius: 18px;
+    padding: 28px 22px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(0,0,0,.45);
+}
+.login-tutup {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+}
+.login-card h3 { margin: 10px 0 8px; }
+.login-card p { margin: 0 0 18px; color: #bbb; line-height: 1.5; }
+.tombol-login-lanjut { display: inline-block; text-decoration: none; }
+.kartu-login-komentar {
+    border: 1px solid #333;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    background: rgba(255,255,255,.025);
+}
+.kartu-login-komentar > i { font-size: 26px; margin-bottom: 8px; }
+.kartu-login-komentar strong { display: block; margin-bottom: 6px; }
+.kartu-login-komentar p { margin: 0 0 15px; color: #aaa; }
+.kartu-login-komentar .tombol-utama { display: inline-block; text-decoration: none; }
+.nama-komentar { font-weight: 700; margin-bottom: 4px; }

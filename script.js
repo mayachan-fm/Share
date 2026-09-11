@@ -11,11 +11,43 @@ const firebaseConfig = {
   appId: "1:769674524186:web:05e8c5f4e34867980b03a3"
 };
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { auth, onAuthStateChanged } from "./auth.js";
 import { getDatabase, ref, get, set, increment } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
-const app = initializeApp(firebaseConfig);
+const app = getApp();
 const db = getDatabase(app);
+
+let penggunaLogin = null;
+let authSiap = false;
+
+onAuthStateChanged(auth, (user) => {
+    penggunaLogin = user;
+    authSiap = true;
+    if (Object.keys(semuaDataAddon).length) terapkanFilterDanCari();
+});
+
+function kunciLikePengguna() {
+    return penggunaLogin ? `sudahLike_${penggunaLogin.uid}` : "sudahLike_tidak_login";
+}
+
+function tampilkanKartuLogin() {
+    if (document.getElementById("kartu-login-overlay")) return;
+    const overlay = document.createElement("div");
+    overlay.id = "kartu-login-overlay";
+    overlay.className = "login-overlay";
+    overlay.innerHTML = `
+        <div class="login-card">
+            <button class="login-tutup" type="button" aria-label="Tutup">×</button>
+            <div class="profil-avatar"><i class="fa fa-user"></i></div>
+            <h3>Login diperlukan</h3>
+            <p>Silakan login atau daftar terlebih dahulu untuk menggunakan Like.</p>
+            <a href="profil.html" class="tombol-utama tombol-login-lanjut">Login / Daftar</a>
+        </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelector(".login-tutup").addEventListener("click", () => overlay.remove());
+    overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
+}
 
 let semuaDataAddon = {};
 let daftarAddon = [];
@@ -140,7 +172,7 @@ function tampilkanDaftar(dataYangDitampilkan) {
 
         const tipeFile = item['type file'] ? `<span class="tipe-file">${item['type file']}</span>` : '';
         const linkDetail = `detail.html?slug=${item.slug}`;
-        const sudahDiLike = JSON.parse(localStorage.getItem('sudahLike') || '[]').includes(item.slug);
+        const sudahDiLike = penggunaLogin ? JSON.parse(localStorage.getItem(kunciLikePengguna()) || '[]').includes(item.slug) : false;
         const jumlahLike = item['jumlah like'] || 0;
 
         kartu.innerHTML = `
@@ -176,10 +208,16 @@ function tampilkanDaftar(dataYangDitampilkan) {
             e.stopPropagation();
             const tombol = e.currentTarget;
             const slug = tombol.dataset.slug;
-            const daftar = JSON.parse(localStorage.getItem('sudahLike') || '[]');
+            if (!authSiap) return;
+            if (!penggunaLogin) {
+                tampilkanKartuLogin();
+                return;
+            }
+            const kunci = kunciLikePengguna();
+            const daftar = JSON.parse(localStorage.getItem(kunci) || '[]');
             if (!daftar.includes(slug)) {
                 daftar.push(slug);
-                localStorage.setItem('sudahLike', JSON.stringify(daftar));
+                localStorage.setItem(kunci, JSON.stringify(daftar));
                 const idAddon = Object.keys(semuaDataAddon).find(k => semuaDataAddon[k].slug === slug);
                 const refLike = ref(db, 'jumlah_like/' + idAddon);
                 const snap = await get(refLike);
@@ -254,7 +292,7 @@ function aturNavigasiBawah() {
 
             if (nav === 'disukai') {
                 e.preventDefault();
-                const disukai = JSON.parse(localStorage.getItem('sudahLike') || '[]');
+                const disukai = penggunaLogin ? JSON.parse(localStorage.getItem(kunciLikePengguna()) || '[]') : [];
                 filterAktif = 'semua';
                 document.querySelectorAll('.btn-kategori').forEach(b => b.classList.remove('aktif'));
                 document.querySelector('.btn-kategori[data-filter="semua"]')?.classList.add('aktif');
