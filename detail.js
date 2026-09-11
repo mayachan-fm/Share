@@ -176,32 +176,169 @@ function mulaiPantauKomentar() {
                 id: child.key,
                 isi: data.isi || '',
                 waktu: Number(data.waktu) || 0,
-                username: data.username || 'Pengguna'
+                username: data.username || 'Pengguna',
+                uid: data.uid || '',
+                parentId: data.parentId || null,
+                replyTo: data.replyTo || null
             });
         });
 
-        // Komentar terbaru ditampilkan paling atas.
         semua.sort((a, b) => b.waktu - a.waktu);
-
-        daftar.innerHTML = semua.map((komen) => {
-            const nama = escapeHtml(komen.username);
-            const isi = escapeHtml(komen.isi);
-            const waktu = formatWaktuKomentar(komen.waktu);
-
-            return `
-                <div class="item-komentar" data-id="${escapeHtml(komen.id)}">
-                    <div class="komentar-kepala">
-                        <strong>@${nama}</strong>
-                        <span>${waktu}</span>
-                    </div>
-                    <div class="komentar-isi">${isi}</div>
-                </div>
-            `;
-        }).join('');
+        renderKomentar(daftar, semua);
     }, (error) => {
         console.error('Gagal memuat komentar:', error);
         daftar.innerHTML = `<div class="pesan-kosong-komentar">Komentar tidak dapat dimuat.</div>`;
     });
+}
+
+function renderKomentar(daftar, semua) {
+    const map = new Map(semua.map(k => [k.id, k]));
+    const anak = new Map();
+
+    semua.forEach((komen) => {
+        const parent = komen.parentId && map.has(komen.parentId) ? komen.parentId : null;
+        if (!anak.has(parent)) anak.set(parent, []);
+        anak.get(parent).push(komen);
+    });
+
+    anak.forEach((list) => list.sort((a, b) => b.waktu - a.waktu));
+
+    const roots = anak.get(null) || [];
+    if (!roots.length && semua.length) {
+        daftar.innerHTML = semua.map(k => buatKomentarHtml(k, 0, anak, map)).join('');
+    } else {
+        daftar.innerHTML = roots.map(k => buatKomentarHtml(k, 0, anak, map)).join('');
+    }
+
+    pasangTombolKomentar(anak, map);
+}
+
+function buatKomentarHtml(komen, level, anak, map) {
+    const nama = escapeHtml(komen.username);
+    const isi = escapeHtml(komen.isi);
+    const waktu = formatWaktuKomentar(komen.waktu);
+    const anakKomentar = anak.get(komen.id) || [];
+    const jumlahBalasan = hitungSemuaBalasan(komen.id, anak);
+    const margin = Math.min(level, 6) * 22;
+    const replyInfo = komen.replyTo ? `<span class="komentar-membalas">membalas @${escapeHtml(komen.replyTo)}</span>` : '';
+
+    return `
+        <div class="item-komentar item-komentar-level-${Math.min(level, 6)}" data-id="${escapeHtml(komen.id)}" style="--indent:${margin}px">
+            <div class="komentar-kepala">
+                <div class="komentar-pengguna">
+                    <strong>@${nama}</strong>${replyInfo}
+                </div>
+                <span>${waktu}</span>
+            </div>
+            <div class="komentar-isi">${isi}</div>
+            <div class="komentar-aksi">
+                <button type="button" class="tombol-reply" data-reply-id="${escapeHtml(komen.id)}" data-reply-name="${escapeHtml(komen.username)}">
+                    <i class="fa fa-reply"></i> Balas
+                </button>
+                ${jumlahBalasan > 0 ? `
+                    <button type="button" class="tombol-lihat-balasan" data-toggle-id="${escapeHtml(komen.id)}">
+                        <i class="fa fa-comments"></i> Lihat ${jumlahBalasan} balasan
+                    </button>` : ''}
+            </div>
+            <div class="form-reply" id="form-reply-${escapeHtml(komen.id)}"></div>
+            <div class="daftar-balasan" id="balasan-${escapeHtml(komen.id)}" hidden>
+                ${anakKomentar.map(child => buatKomentarHtml(child, level + 1, anak, map)).join('')}
+            </div>
+        </div>`;
+}
+
+function hitungSemuaBalasan(parentId, anak) {
+    const list = anak.get(parentId) || [];
+    let total = list.length;
+    list.forEach(k => total += hitungSemuaBalasan(k.id, anak));
+    return total;
+}
+
+function pasangTombolKomentar(anak, map) {
+    document.querySelectorAll('.tombol-lihat-balasan').forEach((tombol) => {
+        tombol.addEventListener('click', () => {
+            const id = tombol.dataset.toggleId;
+            const wadah = document.getElementById(`balasan-${id}`);
+            if (!wadah) return;
+            const tersembunyi = wadah.hidden;
+            wadah.hidden = !tersembunyi;
+            const jumlah = hitungSemuaBalasan(id, anak);
+            tombol.innerHTML = tersembunyi
+                ? `<i class="fa fa-comments"></i> Sembunyikan ${jumlah} balasan`
+                : `<i class="fa fa-comments"></i> Lihat ${jumlah} balasan`;
+        });
+    });
+
+    document.querySelectorAll('.tombol-reply').forEach((tombol) => {
+        tombol.addEventListener('click', () => {
+            if (!usuarioActual) {
+                tampilkanKartuLoginKomentar();
+                return;
+            }
+            const id = tombol.dataset.replyId;
+            const nama = tombol.dataset.replyName || 'Pengguna';
+            const form = document.getElementById(`form-reply-${id}`);
+            if (!form) return;
+
+            if (form.innerHTML.trim()) {
+                form.innerHTML = '';
+                return;
+            }
+
+            form.innerHTML = `
+                <div class="kotak-reply">
+                    <div class="reply-ke">Membalas @${escapeHtml(nama)}</div>
+                    <textarea class="input-reply" maxlength="300" placeholder="Tulis balasan..."></textarea>
+                    <div class="batas-reply">
+                        <span class="jumlah-reply">0/300</span>
+                        <div>
+                            <button type="button" class="tombol-batal-reply">Batal</button>
+                            <button type="button" class="tombol-kirim-reply">Kirim</button>
+                        </div>
+                    </div>
+                </div>`;
+
+            const input = form.querySelector('.input-reply');
+            const jumlah = form.querySelector('.jumlah-reply');
+            input.addEventListener('input', () => jumlah.textContent = `${input.value.length}/300`);
+            form.querySelector('.tombol-batal-reply').addEventListener('click', () => form.innerHTML = '');
+            form.querySelector('.tombol-kirim-reply').addEventListener('click', () => kirimBalasan(id, nama, input, form));
+            input.focus();
+        });
+    });
+}
+
+async function kirimBalasan(parentId, parentUsername, input, form) {
+    const isi = input.value.trim();
+    if (!isi || isi.length > 300 || !usuarioActual || !idAddonSekarang) return;
+
+    try {
+        await push(ref(db, `komentar/${idAddonSekarang}`), {
+            isi,
+            waktu: Date.now(),
+            uid: usuarioActual.uid,
+            username: usuarioActual.email ? usuarioActual.email.split('@')[0] : 'Pengguna',
+            parentId,
+            replyTo: parentUsername
+        });
+        form.innerHTML = '';
+        tampilkanNotif('notif-komen');
+    } catch (err) {
+        console.error('Gagal kirim balasan:', err);
+        alert('Gagal mengirim balasan, coba lagi nanti!');
+    }
+}
+
+function tampilkanKartuLoginKomentar() {
+    const form = document.querySelector('.form-komentar');
+    if (!form) return;
+    form.innerHTML = `
+        <div class="kartu-login-komentar">
+            <i class="fa fa-lock"></i>
+            <strong>Login diperlukan</strong>
+            <p>Silakan login atau daftar terlebih dahulu untuk membalas komentar.</p>
+            <a href="profil.html" class="tombol-utama">Login / Daftar</a>
+        </div>`;
 }
 
 function formatWaktuKomentar(timestamp) {

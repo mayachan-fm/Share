@@ -1572,3 +1572,107 @@ body {
     line-height: 1.5;
     overflow-wrap: anywhere;
 }
+
+
+/* ==============================================
+   STAGE D — KOMENTAR ALA TIKTOK / NESTED REPLY
+   ============================================== */
+.komentar-pengguna {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+}
+.komentar-membalas {
+    color: var(--teksAbu);
+    font-size: .76rem;
+    overflow-wrap: anywhere;
+}
+.komentar-aksi {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+.tombol-reply,
+.tombol-lihat-balasan,
+.tombol-batal-reply,
+.tombol-kirim-reply {
+    border: 0;
+    background: transparent;
+    color: #aaa;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 0;
+    cursor: pointer;
+}
+.tombol-reply:hover,
+.tombol-lihat-balasan:hover {
+    color: #fff;
+}
+.tombol-lihat-balasan {
+    color: var(--merahUtama);
+}
+.daftar-balasan {
+    margin-left: var(--indent, 0px);
+    padding-left: 14px;
+    border-left: 2px solid rgba(255,255,255,.08);
+}
+.daftar-balasan[hidden] {
+    display: none;
+}
+.form-reply {
+    margin-top: 8px;
+}
+.kotak-reply {
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 12px;
+    padding: 10px;
+}
+.reply-ke {
+    color: #aaa;
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+.input-reply {
+    width: 100%;
+    min-height: 55px;
+    box-sizing: border-box;
+    padding: 9px;
+    background: rgba(0,0,0,.25);
+    border: 1px solid var(--batasGelap);
+    border-radius: 9px;
+    color: #fff;
+    font-size: 13px;
+    resize: vertical;
+    outline: none;
+}
+.batas-reply {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 7px;
+    color: var(--teksAbu);
+    font-size: 11px;
+}
+.tombol-batal-reply {
+    margin-right: 10px;
+}
+.tombol-kirim-reply {
+    color: var(--merahUtama);
+}
+.tombol-kirim-reply:hover,
+.tombol-batal-reply:hover {
+    color: #fff;
+}
+@media (max-width: 480px) {
+    .daftar-balasan {
+        margin-left: min(var(--indent, 0px), 44px);
+    }
+    .komentar-kepala {
+        align-items: flex-start;
+    }
+}
