@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Admin — MC Addon Share</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="logo.png" type="image/png">
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+<header class="header-tetap"><div class="container header-dalam">
+<a href="index.html" class="logo-web"><img src="logo.png" alt="MC Addon Share"><span>MC Addon Share</span></a>
+</div></header>
+<main class="konten-utama"><section class="halaman-detail"><div class="container"><div class="kartu-detail">
+<div class="detail-isi profil-halaman" id="admin-app"><p>Memeriksa akses...</p></div>
+</div></div></section></main>
+<script type="module">
+import {auth, onAuthStateChanged, ambilRole} from "./auth.js";
+const el=document.getElementById("admin-app");
+onAuthStateChanged(auth, async user=>{
+  if(!user){ location.href="profil.html"; return; }
+  const role=await ambilRole(user);
+  if(role!=="admin" && role!=="owner"){
+    el.innerHTML="<h2>Akses ditolak</h2><p class='detail-deskripsi'>Halaman ini hanya untuk Admin atau Owner.</p><a class='tombol-utama tombol-akun' href='profil.html'>Kembali ke Profil</a>";
+    return;
+  }
+  el.innerHTML=`
+    <div class="profil-avatar"><i class="fa fa-dashboard"></i></div>
+    <h2>Panel Admin</h2>
+    <p class="detail-deskripsi">Role aktif: <strong>${role === "owner" ? "Owner" : "Admin"}</strong></p>
+    <div class="detail-info">
+      <div class="info-item"><span>Status Stage E</span>Sistem role aktif</div>
+      <div class="info-item"><span>Fitur berikutnya</span>Upload addon</div>
+    </div>
+    <p class="catatan-staf"><i class="fa fa-info-circle"></i> Fitur upload belum diaktifkan pada Stage E. Kita akan membangunnya di tahap berikutnya.</p>
+    <a class="tombol-utama tombol-akun" href="profil.html">Kembali ke Profil</a>`;
+});
+</script>
+</body>
+</html>

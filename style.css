@@ -1685,3 +1685,43 @@ body {
 .daftar-balasan { margin-top: 10px; padding-left: 12px; border-left: 2px solid rgba(255,255,255,.12); }
 .daftar-balasan .item-komentar { background: rgba(255,255,255,.018); border-color: rgba(255,255,255,.08); margin-bottom: 9px; }
 @media (max-width: 480px) { .item-komentar { padding: 12px 11px; margin-bottom: 10px; } }
+
+
+/* ===== STAGE E — ROLE USER / ADMIN / OWNER ===== */
+.pilihan-login {
+    display: flex;
+    gap: 8px;
+    margin: 18px 0;
+}
+.pilihan-login button {
+    flex: 1;
+    padding: 11px 12px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 10px;
+    background: rgba(255,255,255,.05);
+    color: inherit;
+    cursor: pointer;
+}
+.pilihan-login button.aktif {
+    border-color: #ff4d4d;
+    background: rgba(255,77,77,.14);
+}
+.catatan-staf {
+    margin-top: 14px;
+    font-size: .86rem;
+    opacity: .75;
+}
+.badge-role {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 700;
+}
+.role-user { background: rgba(77,171,247,.14); }
+.role-admin { background: rgba(255,193,7,.16); }
+.role-owner { background: rgba(204,93,232,.16); }
+.tombol-owner {
+    margin-top: 10px;
+}

@@ -46,16 +46,16 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  setPersistence,
-  browserLocalPersistence,
   normalisasiUsername,
   validasiUsername,
   usernameKeEmail,
-  emailKeUsername
+  emailKeUsername,
+  ambilRole
 } from "./auth.js";
 
 const appEl = document.getElementById("profil-app");
 let mode = "login";
+let jenisLogin = "user";
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, ch => ({
@@ -66,55 +66,97 @@ function escapeHtml(value) {
 function pesanError(error) {
   const code = error?.code || "";
   const raw = error?.message || "";
-  if (code.includes("email-already-in-use")) return "Username tersebut sudah digunakan.";
-  if (code.includes("invalid-credential") || code.includes("wrong-password") || code.includes("user-not-found")) return "Username atau password salah.";
+  if (code.includes("email-already-in-use")) return "Akun tersebut sudah digunakan.";
+  if (code.includes("invalid-credential") || code.includes("wrong-password") || code.includes("user-not-found")) return "Akun atau password salah.";
   if (code.includes("weak-password")) return "Password terlalu lemah. Gunakan minimal 6 karakter.";
   if (code.includes("too-many-requests")) return "Terlalu banyak percobaan. Coba lagi beberapa saat.";
-  if (code.includes("invalid-email")) return "Format akun internal tidak diterima Firebase. Kode: " + code;
-  if (code.includes("operation-not-allowed")) return "Metode Email/Password belum diizinkan di Firebase. Aktifkan lagi di Authentication → Sign-in method.";
+  if (code.includes("invalid-email")) return "Format email tidak valid.";
+  if (code.includes("operation-not-allowed")) return "Metode Email/Password belum diizinkan di Firebase.";
   if (code.includes("network-request-failed")) return "Koneksi ke Firebase gagal. Periksa internet/CDN.";
   if (code.includes("invalid-api-key") || code.includes("app-not-authorized") || code.includes("api-key-not-valid")) return "Konfigurasi/API key Firebase ditolak. Kode: " + code;
-  if (code.includes("unauthorized-domain")) return "Domain ini belum diizinkan Firebase. Tambahkan localhost di Authentication → Settings → Authorized domains.";
+  if (code.includes("unauthorized-domain")) return "Domain ini belum diizinkan Firebase. Tambahkan domain website di Firebase Authentication.";
   return `Firebase: ${code || "unknown-error"}${raw ? " — " + raw : ""}`;
 }
 
+function pilihJenisLogin(jenis) {
+  jenisLogin = jenis;
+  mode = "login";
+  tampilForm("Masuk", "Masuk");
+}
+
 function tampilForm(judul, teksTombol) {
+  const staf = jenisLogin === "staff";
   appEl.innerHTML = `
-    <div class="profil-avatar"><i class="fa fa-user"></i></div>
+    <div class="profil-avatar"><i class="fa ${staf ? "fa-shield" : "fa-user"}"></i></div>
     <h2>${judul}</h2>
-    <p class="profil-subjudul">${mode === "login" ? "Masuk ke akun MC Addon Share" : "Buat akun baru di MC Addon Share"}</p>
+    <p class="profil-subjudul">${staf ? "Login Admin / Owner MC Addon Share" : (mode === "login" ? "Masuk ke akun MC Addon Share" : "Buat akun pengguna baru")}</p>
+
+    <div class="pilihan-login" role="tablist" aria-label="Jenis login">
+      <button type="button" class="${!staf ? "aktif" : ""}" id="login-user">User</button>
+      <button type="button" class="${staf ? "aktif" : ""}" id="login-staff">Admin / Owner</button>
+    </div>
+
     <form id="form-akun" class="form-akun" novalidate>
-      <label for="username">Username</label>
-      <input id="username" name="username" type="text" minlength="3" maxlength="20" autocomplete="username" placeholder="Contoh: Steve_123" required>
-      <small>3–20 karakter: huruf, angka, dan garis bawah (_).</small>
+      ${staf ? `
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="Email Admin / Owner" required>
+      ` : `
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" minlength="3" maxlength="20" autocomplete="username" placeholder="Contoh: Steve_123" required>
+        <small>3–20 karakter: huruf, angka, dan garis bawah (_).</small>
+      `}
       <label for="password">Password</label>
-      <input id="password" name="password" type="password" minlength="6" autocomplete="current-password" placeholder="Minimal 6 karakter" required>
+      <input id="password" name="password" type="password" minlength="6" autocomplete="${staf ? "current-password" : "current-password"}" placeholder="Minimal 6 karakter" required>
       <div id="pesan-akun" class="pesan-akun" role="alert"></div>
       <button class="tombol-utama tombol-akun" type="submit">${teksTombol}</button>
     </form>
-    <button id="ganti-mode" class="tombol-sekunder" type="button">
-      ${mode === "login" ? "Belum punya akun? Daftar" : "Sudah punya akun? Masuk"}
-    </button>
+
+    ${!staf ? `
+      <button id="ganti-mode" class="tombol-sekunder" type="button">
+        ${mode === "login" ? "Belum punya akun? Daftar" : "Sudah punya akun? Masuk"}
+      </button>
+      <p class="catatan-staf"><i class="fa fa-info-circle"></i> Admin dan Owner tidak mendaftar dari halaman ini.</p>
+    ` : `
+      <button id="kembali-user" class="tombol-sekunder" type="button">Kembali ke login User</button>
+      <p class="catatan-staf"><i class="fa fa-lock"></i> Akses Admin / Owner hanya untuk akun yang telah diberi role.</p>
+    `}
   `;
 
-  document.getElementById("ganti-mode").addEventListener("click", () => {
-    mode = mode === "login" ? "register" : "login";
-    tampilForm(mode === "login" ? "Masuk" : "Daftar", mode === "login" ? "Masuk" : "Daftar");
-  });
+  document.getElementById("login-user").addEventListener("click", () => pilihJenisLogin("user"));
+  document.getElementById("login-staff").addEventListener("click", () => pilihJenisLogin("staff"));
+
+  if (staf) {
+    document.getElementById("kembali-user").addEventListener("click", () => pilihJenisLogin("user"));
+  } else {
+    document.getElementById("ganti-mode").addEventListener("click", () => {
+      mode = mode === "login" ? "register" : "login";
+      tampilForm(mode === "login" ? "Masuk" : "Daftar", mode === "login" ? "Masuk" : "Daftar");
+    });
+  }
 
   document.getElementById("form-akun").addEventListener("submit", async (event) => {
     event.preventDefault();
-    const username = normalisasiUsername(document.getElementById("username").value);
     const password = document.getElementById("password").value;
     const pesan = document.getElementById("pesan-akun");
 
-    if (!validasiUsername(username)) {
-      pesan.textContent = "Username harus 3–20 karakter dan hanya boleh huruf, angka, atau _.";
-      return;
-    }
     if (password.length < 6) {
       pesan.textContent = "Password minimal 6 karakter.";
       return;
+    }
+
+    let akunLogin;
+    if (staf) {
+      akunLogin = document.getElementById("email").value.trim();
+      if (!akunLogin || !akunLogin.includes("@")) {
+        pesan.textContent = "Masukkan email Admin atau Owner.";
+        return;
+      }
+    } else {
+      akunLogin = normalisasiUsername(document.getElementById("username").value);
+      if (!validasiUsername(akunLogin)) {
+        pesan.textContent = "Username harus 3–20 karakter dan hanya boleh huruf, angka, atau _.";
+        return;
+      }
     }
 
     const tombol = document.querySelector(".tombol-akun");
@@ -123,11 +165,15 @@ function tampilForm(judul, teksTombol) {
     pesan.textContent = "";
 
     try {
-      const emailInternal = usernameKeEmail(username);
-      if (mode === "register") {
-        await createUserWithEmailAndPassword(auth, emailInternal, password);
+      if (staf) {
+        await signInWithEmailAndPassword(auth, akunLogin, password);
       } else {
-        await signInWithEmailAndPassword(auth, emailInternal, password);
+        const emailInternal = usernameKeEmail(akunLogin);
+        if (mode === "register") {
+          await createUserWithEmailAndPassword(auth, emailInternal, password);
+        } else {
+          await signInWithEmailAndPassword(auth, emailInternal, password);
+        }
       }
     } catch (error) {
       console.error("Firebase Auth:", error);
@@ -138,21 +184,40 @@ function tampilForm(judul, teksTombol) {
   });
 }
 
-function tampilProfil(user) {
-  const username = emailKeUsername(user.email);
+function badgeRole(role) {
+  const map = {
+    user: ["User", "fa-user"],
+    admin: ["Admin", "fa-shield"],
+    owner: ["Owner", "fa-star"]
+  };
+  const [label, icon] = map[role] || map.user;
+  return `<span class="badge-role role-${role}"><i class="fa ${icon}"></i> ${label}</span>`;
+}
+
+function tampilProfil(user, role) {
+  const isStaff = role === "admin" || role === "owner";
+  const nama = isStaff ? (user.email || "") : emailKeUsername(user.email);
+
   appEl.innerHTML = `
-    <div class="profil-avatar"><i class="fa fa-user"></i></div>
+    <div class="profil-avatar"><i class="fa ${isStaff ? "fa-shield" : "fa-user"}"></i></div>
     <h2>Profil</h2>
     <div class="profil-akun-login">
-      <div class="profil-nama">@${escapeHtml(username)}</div>
+      <div class="profil-nama">${isStaff ? escapeHtml(nama) : "@" + escapeHtml(nama)}</div>
       <div class="profil-status"><i class="fa fa-check-circle"></i> Sudah login</div>
+      ${badgeRole(role)}
     </div>
     <div class="detail-info">
-      <div class="info-item"><span>Username</span>@${escapeHtml(username)}</div>
+      <div class="info-item"><span>Jenis akun</span>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</div>
       <div class="info-item"><span>Status</span>Aktif</div>
     </div>
+    ${role === "admin" ? `<a href="admin.html" class="tombol-utama tombol-akun"><i class="fa fa-dashboard"></i> Panel Admin</a>` : ""}
+    ${role === "owner" ? `
+      <a href="admin.html" class="tombol-utama tombol-akun"><i class="fa fa-dashboard"></i> Panel Admin</a>
+      <a href="owner.html" class="tombol-utama tombol-akun tombol-owner"><i class="fa fa-star"></i> Panel Owner</a>
+    ` : ""}
     <button id="logout" class="tombol-logout" type="button"><i class="fa fa-sign-out"></i> Logout</button>
   `;
+
   document.getElementById("logout").addEventListener("click", async () => {
     try {
       await signOut(auth);
@@ -167,21 +232,24 @@ function tampilErrorFirebase() {
     <div class="profil-avatar"><i class="fa fa-exclamation-triangle"></i></div>
     <h2>Profil</h2>
     <p class="detail-deskripsi">Firebase gagal dimuat.</p>
-    <p class="detail-deskripsi"><small>Pastikan internet aktif dan halaman dijalankan melalui server (localhost atau hosting), bukan dibuka langsung sebagai file.</small></p>
     <button id="coba-lagi" class="tombol-utama tombol-akun" type="button">Coba Lagi</button>
   `;
   document.getElementById("coba-lagi").addEventListener("click", () => location.reload());
 }
 
-try {
-  onAuthStateChanged(auth, (user) => {
-    if (user) tampilProfil(user);
-    else tampilForm("Masuk", "Masuk");
-  });
-} catch (error) {
-  console.error("Firebase Auth gagal:", error);
-  tampilErrorFirebase();
-}
+onAuthStateChanged(auth, async (user) => {
+  try {
+    if (user) {
+      const role = await ambilRole(user);
+      tampilProfil(user, role);
+    } else {
+      tampilForm("Masuk", "Masuk");
+    }
+  } catch (error) {
+    console.error("Role/Auth gagal:", error);
+    tampilErrorFirebase();
+  }
+});
 </script>
 </body>
 </html>
