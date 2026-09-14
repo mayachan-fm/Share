@@ -1725,3 +1725,209 @@ body {
 .tombol-owner {
     margin-top: 10px;
 }
+
+/* ===== STAGE F — GENERATOR data.json ===== */
+.admin-generator {
+    margin-top: 22px;
+    text-align: left;
+}
+.admin-generator-header,
+.admin-json-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+.admin-generator-header h3,
+.admin-json-header h3 {
+    margin: 0 0 7px;
+    font-size: 1.08rem;
+}
+.admin-generator-header p,
+.admin-json-header p {
+    margin: 0;
+    color: var(--teksAbu);
+    font-size: .86rem;
+    line-height: 1.55;
+}
+.admin-generator code,
+.admin-json-area code {
+    color: #fff;
+    background: rgba(255,255,255,.08);
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+.admin-data-count {
+    flex: 0 0 auto;
+    padding: 7px 10px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 999px;
+    color: var(--teksAbu);
+    font-size: .75rem;
+    white-space: nowrap;
+}
+.form-grid-admin {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+}
+.admin-generator label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #ddd;
+    font-size: .82rem;
+    font-weight: 600;
+}
+.admin-generator input,
+.admin-generator select,
+.admin-generator textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid rgba(255,255,255,.11);
+    border-radius: 10px;
+    outline: none;
+    background: rgba(0,0,0,.22);
+    color: #fff;
+    font: inherit;
+    font-weight: 400;
+}
+.admin-generator select option {
+    background: #171717;
+    color: #fff;
+}
+.admin-generator input:focus,
+.admin-generator select:focus,
+.admin-generator textarea:focus {
+    border-color: var(--merahUtama);
+}
+.label-full {
+    margin-top: 13px;
+}
+.admin-generator textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+.batas-form-admin {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 6px;
+    color: var(--teksAbu);
+    font-size: .73rem;
+}
+.admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 15px;
+}
+.tombol-sekunder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    box-sizing: border-box;
+    padding: 9px 13px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 10px;
+    background: rgba(255,255,255,.04);
+    color: #ddd;
+    text-decoration: none;
+    cursor: pointer;
+}
+.tombol-sekunder:hover {
+    background: rgba(255,255,255,.08);
+    color: #fff;
+}
+.daftar-admin-addon {
+    margin-top: 22px;
+}
+.admin-list-empty {
+    padding: 18px;
+    border: 1px dashed rgba(255,255,255,.12);
+    border-radius: 11px;
+    color: var(--teksAbu);
+    text-align: center;
+    font-size: .83rem;
+}
+.admin-addon-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 11px;
+    background: rgba(255,255,255,.025);
+}
+.admin-addon-item-main {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.admin-addon-item-main strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.admin-addon-item-main span {
+    color: var(--teksAbu);
+    font-size: .73rem;
+}
+.tombol-hapus-addon {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255,77,77,.22);
+    border-radius: 9px;
+    background: rgba(255,77,77,.08);
+    color: #ff7777;
+    cursor: pointer;
+}
+.tombol-hapus-addon:hover {
+    background: rgba(255,77,77,.16);
+    color: #fff;
+}
+.admin-json-area {
+    margin-top: 25px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(255,255,255,.09);
+}
+.hasil-json {
+    width: 100%;
+    min-height: 310px;
+    box-sizing: border-box;
+    padding: 13px;
+    border: 1px solid rgba(255,255,255,.11);
+    border-radius: 11px;
+    background: #0b0b0b;
+    color: #d9d9d9;
+    font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    resize: vertical;
+    outline: none;
+}
+.tombol-kembali-admin {
+    margin-top: 18px;
+}
+@media (max-width: 620px) {
+    .admin-generator-header,
+    .admin-json-header {
+        flex-direction: column;
+    }
+    .form-grid-admin {
+        grid-template-columns: 1fr;
+    }
+    .admin-data-count {
+        align-self: flex-start;
+    }
+    .admin-actions .tombol-utama,
+    .admin-actions .tombol-sekunder {
+        flex: 1 1 100%;
+    }
+}

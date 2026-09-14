@@ -17,24 +17,238 @@
 </div></div></section></main>
 <script type="module">
 import {auth, onAuthStateChanged, ambilRole} from "./auth.js";
-const el=document.getElementById("admin-app");
-onAuthStateChanged(auth, async user=>{
-  if(!user){ location.href="profil.html"; return; }
-  const role=await ambilRole(user);
-  if(role!=="admin" && role!=="owner"){
-    el.innerHTML="<h2>Akses ditolak</h2><p class='detail-deskripsi'>Halaman ini hanya untuk Admin atau Owner.</p><a class='tombol-utama tombol-akun' href='profil.html'>Kembali ke Profil</a>";
+
+const el = document.getElementById("admin-app");
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]));
+}
+
+function slugify(text) {
+  return String(text || "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 80);
+}
+
+function tanggalHariIni() {
+  const bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  const d = new Date();
+  return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function buatKunciUnik(base, digunakan) {
+  let slug = slugify(base) || `addon_${Date.now()}`;
+  const asli = slug;
+  let nomor = 2;
+  while (digunakan.has(slug)) slug = `${asli}_${nomor++}`;
+  return slug;
+}
+
+onAuthStateChanged(auth, async user => {
+  if (!user) { location.href = "profil.html"; return; }
+
+  const role = await ambilRole(user);
+  if (role !== "admin" && role !== "owner") {
+    el.innerHTML = `<h2>Akses ditolak</h2><p class="detail-deskripsi">Halaman ini hanya untuk Admin atau Owner.</p><a class="tombol-utama tombol-akun" href="profil.html">Kembali ke Profil</a>`;
     return;
   }
-  el.innerHTML=`
+
+  el.innerHTML = `
     <div class="profil-avatar"><i class="fa fa-dashboard"></i></div>
     <h2>Panel Admin</h2>
     <p class="detail-deskripsi">Role aktif: <strong>${role === "owner" ? "Owner" : "Admin"}</strong></p>
-    <div class="detail-info">
-      <div class="info-item"><span>Status Stage E</span>Sistem role aktif</div>
-      <div class="info-item"><span>Fitur berikutnya</span>Upload addon</div>
+
+    <div class="admin-generator">
+      <div class="admin-generator-header">
+        <div>
+          <h3><i class="fa fa-plus-circle"></i> Tambah Addon</h3>
+          <p>Masukkan informasi addon. File addon tetap disimpan di layanan eksternal seperti MediaFire; panel ini hanya membuat data untuk <code>data.json</code>.</p>
+        </div>
+        <div class="admin-data-count" id="admin-data-count">Memuat data.json...</div>
+      </div>
+
+      <form id="form-addon" autocomplete="off">
+        <div class="form-grid-admin">
+          <label>Nama Addon *<input id="nama-addon" required maxlength="120" placeholder="Contoh: Furina UI"></label>
+          <label>Slug / ID<input id="slug-addon" maxlength="80" placeholder="Otomatis dari nama addon"></label>
+          <label>Tipe File *<input id="type-file" required maxlength="40" placeholder="Contoh: mcpack"></label>
+          <label>Kategori *<select id="kategori-addon" required>
+            <option value="">Pilih kategori</option>
+            <option value="addon">Addon</option>
+            <option value="resource">Resource</option>
+            <option value="peta">Peta</option>
+            <option value="lainnya">Lainnya</option>
+            <option value="apk">APK</option>
+          </select></label>
+          <label>Link Gambar *<input id="link-gambar" type="url" required placeholder="https://...jpg / .png"></label>
+          <label>Link Download *<input id="link-download" type="url" required placeholder="https://mediafire.com/... atau link lainnya"></label>
+          <label>Versi Minecraft<input id="versi-mc" maxlength="60" placeholder="Contoh: 1.26+" value="1.26+"></label>
+          <label>Ukuran File<input id="ukuran-file" maxlength="30" placeholder="Contoh: 28.5 MB"></label>
+          <label>Tanggal Upload<input id="tanggal-upload" maxlength="40" placeholder="Contoh: 15 September 2026"></label>
+        </div>
+        <label class="label-full">Deskripsi Singkat *<textarea id="deskripsi-addon" required maxlength="1000" rows="5" placeholder="Jelaskan addon secara singkat..."></textarea></label>
+        <div class="batas-form-admin"><span id="hitung-deskripsi">0/1000</span><span>Field bertanda * wajib diisi</span></div>
+        <div class="admin-actions">
+          <button type="submit" class="tombol-utama"><i class="fa fa-plus"></i> Masukkan ke Daftar</button>
+          <button type="button" class="tombol-sekunder" id="kosongkan-form"><i class="fa fa-refresh"></i> Kosongkan Form</button>
+        </div>
+      </form>
+
+      <div class="daftar-admin-addon" id="daftar-admin-addon">
+        <div class="admin-list-empty">Belum ada addon baru. Isi formulir di atas.</div>
+      </div>
+
+      <div class="admin-json-area">
+        <div class="admin-json-header">
+          <div>
+            <h3><i class="fa fa-code"></i> Hasil Kode JSON</h3>
+            <p>Hasil ini berisi addon yang kamu masukkan pada sesi ini. Salin lalu gabungkan ke <code>data.json</code>.</p>
+          </div>
+          <button type="button" class="tombol-sekunder" id="buat-json"><i class="fa fa-file-code-o"></i> Buat Kode JSON</button>
+        </div>
+        <textarea id="hasil-json" class="hasil-json" readonly placeholder="Belum ada kode. Masukkan addon ke daftar lalu klik Buat Kode JSON."></textarea>
+        <div class="admin-actions">
+          <button type="button" class="tombol-utama" id="salin-json"><i class="fa fa-copy"></i> Salin Kode JSON</button>
+          <a class="tombol-sekunder" href="data.json" target="_blank" rel="noopener"><i class="fa fa-file-text-o"></i> Lihat data.json</a>
+        </div>
+        <p class="catatan-staf"><i class="fa fa-info-circle"></i> Panel ini belum mengubah file GitHub secara otomatis. Setelah JSON dibuat, kamu tetap menempelkan hasilnya ke <code>data.json</code> dan mengunggah perubahan ke repository.</p>
+      </div>
     </div>
-    <p class="catatan-staf"><i class="fa fa-info-circle"></i> Fitur upload belum diaktifkan pada Stage E. Kita akan membangunnya di tahap berikutnya.</p>
-    <a class="tombol-utama tombol-akun" href="profil.html">Kembali ke Profil</a>`;
+
+    <a class="tombol-sekunder tombol-kembali-admin" href="profil.html"><i class="fa fa-arrow-left"></i> Kembali ke Profil</a>
+  `;
+
+  const nama = document.getElementById("nama-addon");
+  const slug = document.getElementById("slug-addon");
+  const type = document.getElementById("type-file");
+  const kategori = document.getElementById("kategori-addon");
+  const gambar = document.getElementById("link-gambar");
+  const download = document.getElementById("link-download");
+  const versi = document.getElementById("versi-mc");
+  const ukuran = document.getElementById("ukuran-file");
+  const tanggal = document.getElementById("tanggal-upload");
+  const deskripsi = document.getElementById("deskripsi-addon");
+  const form = document.getElementById("form-addon");
+  const daftar = document.getElementById("daftar-admin-addon");
+  const hasil = document.getElementById("hasil-json");
+  const count = document.getElementById("admin-data-count");
+  const descCount = document.getElementById("hitung-deskripsi");
+
+  tanggal.value = tanggalHariIni();
+  let dataLama = {};
+  let addonBaru = [];
+
+  try {
+    const response = await fetch("./data.json", {cache: "no-store"});
+    if (response.ok) {
+      dataLama = await response.json();
+      count.textContent = `${Object.keys(dataLama).length} addon di data.json`;
+    } else throw new Error("Gagal membaca data.json");
+  } catch (error) {
+    console.error(error);
+    count.textContent = "data.json tidak terbaca";
+  }
+
+  nama.addEventListener("input", () => {
+    if (!slug.dataset.diedit) slug.value = slugify(nama.value);
+  });
+  slug.addEventListener("input", () => { slug.dataset.diedit = "true"; });
+  deskripsi.addEventListener("input", () => { descCount.textContent = `${deskripsi.value.length}/1000`; });
+
+  function renderDaftar() {
+    if (!addonBaru.length) {
+      daftar.innerHTML = '<div class="admin-list-empty">Belum ada addon baru. Isi formulir di atas.</div>';
+      return;
+    }
+    daftar.innerHTML = addonBaru.map((item, index) => `
+      <div class="admin-addon-item">
+        <div class="admin-addon-item-main">
+          <strong>${esc(item.data["nama file"])}</strong>
+          <span>${esc(item.key)} · ${esc(item.data["type file"])} · ${esc(item.data.kategori)}</span>
+        </div>
+        <button type="button" class="tombol-hapus-addon" data-index="${index}" title="Hapus dari daftar"><i class="fa fa-trash"></i></button>
+      </div>
+    `).join("");
+    daftar.querySelectorAll(".tombol-hapus-addon").forEach(btn => btn.addEventListener("click", () => {
+      addonBaru.splice(Number(btn.dataset.index), 1);
+      renderDaftar();
+      hasil.value = "";
+    }));
+  }
+
+  function resetForm() {
+    form.reset();
+    versi.value = "1.26+";
+    tanggal.value = tanggalHariIni();
+    slug.value = "";
+    delete slug.dataset.diedit;
+    descCount.textContent = "0/1000";
+  }
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    const namaValue = nama.value.trim();
+    const slugValue = slug.value.trim() || slugify(namaValue);
+    if (!slugValue) { alert("Slug/ID addon tidak valid."); return; }
+
+    const sudahAda = Object.prototype.hasOwnProperty.call(dataLama, slugValue) || addonBaru.some(x => x.key === slugValue);
+    if (sudahAda) {
+      alert(`Slug "${slugValue}" sudah digunakan. Ganti slug agar addon tidak menimpa data lama.`);
+      slug.focus();
+      return;
+    }
+
+    const item = {
+      key: slugValue,
+      data: {
+        "slug": slugValue,
+        "nama file": namaValue,
+        "type file": type.value.trim(),
+        "kategori": kategori.value,
+        "link gambar": gambar.value.trim(),
+        "link download": download.value.trim(),
+        "versi mc": versi.value.trim(),
+        "ukuran": ukuran.value.trim(),
+        "tanggal unggah": tanggal.value.trim(),
+        "description": deskripsi.value.trim()
+      }
+    };
+    addonBaru.push(item);
+    renderDaftar();
+    hasil.value = "";
+    resetForm();
+  });
+
+  document.getElementById("kosongkan-form").addEventListener("click", resetForm);
+
+  document.getElementById("buat-json").addEventListener("click", () => {
+    if (!addonBaru.length) {
+      alert("Belum ada addon di daftar.");
+      return;
+    }
+    const output = {};
+    addonBaru.forEach(item => { output[item.key] = item.data; });
+    hasil.value = JSON.stringify(output, null, 2);
+    hasil.focus();
+  });
+
+  document.getElementById("salin-json").addEventListener("click", async () => {
+    if (!hasil.value.trim()) {
+      alert("Buat kode JSON terlebih dahulu.");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(hasil.value);
+      alert("Kode JSON berhasil disalin.");
+    } catch (error) {
+      hasil.focus();
+      hasil.select();
+      alert("Clipboard otomatis tidak tersedia. Kode sudah dipilih, silakan salin manual.");
+    }
+  });
 });
 </script>
 </body>
