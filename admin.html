@@ -188,6 +188,32 @@ onAuthStateChanged(auth, async user => {
     descCount.textContent = "0/1000";
   }
 
+  function bersihkanUrl(value) {
+    let url = String(value || "").trim();
+
+    // Jika pengguna menempelkan Markdown: [teks](https://contoh.com/file)
+    const markdown = url.match(/^\[.*?\]\((https?:\/\/[^\s)]+)\)$/i);
+    if (markdown) url = markdown[1];
+
+    // Hilangkan pembungkus < > jika URL ditempel dalam format tersebut.
+    if (url.startsWith("<") && url.endsWith(">")) {
+      url = url.slice(1, -1).trim();
+    }
+
+    return url;
+  }
+
+  function validasiUrl(value, label) {
+    const url = bersihkanUrl(value);
+    try {
+      const parsed = new URL(url);
+      if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+      return url;
+    } catch {
+      throw new Error(`${label} harus berupa URL http/https yang valid.`);
+    }
+  }
+
   form.addEventListener("submit", event => {
     event.preventDefault();
     const namaValue = nama.value.trim();
@@ -201,6 +227,16 @@ onAuthStateChanged(auth, async user => {
       return;
     }
 
+    let linkGambar, linkDownload;
+    try {
+      linkGambar = validasiUrl(gambar.value, "Link gambar");
+      linkDownload = validasiUrl(download.value, "Link download");
+    } catch (error) {
+      alert(error.message);
+      return;
+    }
+
+    // Struktur dibuat sama dengan data.json yang sudah digunakan MC Addon Share.
     const item = {
       key: slugValue,
       data: {
@@ -208,8 +244,8 @@ onAuthStateChanged(auth, async user => {
         "nama file": namaValue,
         "type file": type.value.trim(),
         "kategori": kategori.value,
-        "link gambar": gambar.value.trim(),
-        "link download": download.value.trim(),
+        "link gambar": linkGambar,
+        "link download": linkDownload,
         "versi mc": versi.value.trim(),
         "ukuran": ukuran.value.trim(),
         "tanggal unggah": tanggal.value.trim(),
@@ -230,7 +266,20 @@ onAuthStateChanged(auth, async user => {
       return;
     }
     const output = {};
-    addonBaru.forEach(item => { output[item.key] = item.data; });
+    addonBaru.forEach(item => {
+      output[item.key] = {
+        "slug": item.data.slug,
+        "nama file": item.data["nama file"],
+        "type file": item.data["type file"],
+        "kategori": item.data.kategori,
+        "link gambar": bersihkanUrl(item.data["link gambar"]),
+        "link download": bersihkanUrl(item.data["link download"]),
+        "versi mc": item.data["versi mc"],
+        "ukuran": item.data.ukuran,
+        "tanggal unggah": item.data["tanggal unggah"],
+        "description": item.data.description
+      };
+    });
     hasil.value = JSON.stringify(output, null, 2);
     hasil.focus();
   });
