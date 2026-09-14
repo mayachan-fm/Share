@@ -18,7 +18,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDSVDvod7D4-KJ4zXJq_HW0woxUzEhmEY",
+  apiKey: "AIzaSyDSVDvod7D4-KJ4JXqHW0oxUzEhmEY",
   authDomain: "mcaddon-6c691.firebaseapp.com",
   databaseURL: "https://mcaddon-6c691-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "mcaddon-6c691",
