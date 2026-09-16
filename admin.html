@@ -64,11 +64,19 @@ onAuthStateChanged(auth, async user => {
     <div class="admin-generator">
       <div class="admin-generator-header">
         <div>
-          <h3><i class="fa fa-plus-circle"></i> Tambah Addon</h3>
+          <h3 id="judul-form-addon"><i class="fa fa-plus-circle"></i> Tambah Addon</h3>
           <p>Masukkan informasi addon. File addon tetap disimpan di layanan eksternal seperti MediaFire; panel ini hanya membuat data untuk <code>data.json</code>.</p>
         </div>
         <div class="admin-data-count" id="admin-data-count">Memuat data.json...</div>
       </div>
+
+      <div class="admin-manage-box">
+        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di <code>data.json</code>, lalu edit informasinya tanpa mengubah slug/ID.</p></div></div>
+        <div class="admin-manage-search"><input id="cari-addon-lama" type="search" placeholder="Cari nama addon atau slug..." autocomplete="off"><span id="hasil-cari-addon">Memuat...</span></div>
+        <div id="daftar-addon-lama" class="daftar-addon-lama"></div>
+      </div>
+
+      <div id="mode-edit-addon" class="mode-edit-addon" hidden><div class="mode-edit-header"><div><h3><i class="fa fa-pencil"></i> Edit Addon</h3><p id="edit-addon-target"></p></div><button type="button" class="tombol-sekunder" id="batal-edit-addon">Batal Edit</button></div></div>
 
       <form id="form-addon" autocomplete="off">
         <div class="form-grid-admin">
@@ -137,6 +145,14 @@ onAuthStateChanged(auth, async user => {
   const hasil = document.getElementById("hasil-json");
   const count = document.getElementById("admin-data-count");
   const descCount = document.getElementById("hitung-deskripsi");
+  const cariAddonLama = document.getElementById("cari-addon-lama");
+  const daftarAddonLama = document.getElementById("daftar-addon-lama");
+  const hasilCariAddon = document.getElementById("hasil-cari-addon");
+  const modeEditAddon = document.getElementById("mode-edit-addon");
+  const editAddonTarget = document.getElementById("edit-addon-target");
+  const batalEditAddon = document.getElementById("batal-edit-addon");
+  const judulFormAddon = document.getElementById("judul-form-addon");
+  let sedangEditKey = null;
 
   tanggal.value = tanggalHariIni();
   let dataLama = {};
@@ -152,6 +168,37 @@ onAuthStateChanged(auth, async user => {
     console.error(error);
     count.textContent = "data.json tidak terbaca";
   }
+
+  function renderAddonLama() {
+    const q = String(cariAddonLama.value || "").trim().toLowerCase();
+    const hasil = Object.entries(dataLama).filter(([key, item]) => {
+      const teks = `${key} ${item?.["nama file"] || ""} ${item?.kategori || ""} ${item?.["type file"] || ""}`.toLowerCase();
+      return !q || teks.includes(q);
+    });
+    hasilCariAddon.textContent = `${hasil.length} addon ditemukan`;
+    if (!hasil.length) { daftarAddonLama.innerHTML = '<div class="admin-list-empty">Addon tidak ditemukan.</div>'; return; }
+    daftarAddonLama.innerHTML = hasil.slice(0,60).map(([key,item]) => `<div class="addon-lama-item"><div class="addon-lama-main"><strong>${esc(item["nama file"] || key)}</strong><span>${esc(key)} · ${esc(item["type file"] || "-")} · ${esc(item.kategori || "-")}</span></div><button type="button" class="tombol-edit-addon" data-key="${esc(key)}"><i class="fa fa-pencil"></i> Edit</button></div>`).join("");
+    if (hasil.length > 60) daftarAddonLama.insertAdjacentHTML("beforeend", '<div class="admin-list-empty">Menampilkan 60 hasil pertama. Gunakan pencarian untuk mempersempit.</div>');
+    daftarAddonLama.querySelectorAll(".tombol-edit-addon").forEach(btn => btn.addEventListener("click", () => mulaiEditAddon(btn.dataset.key)));
+  }
+
+  function isiFormDariAddon(key) {
+    const item = dataLama[key]; if (!item) return;
+    nama.value = item["nama file"] || ""; slug.value = key; slug.dataset.diedit = "true"; type.value = item["type file"] || ""; kategori.value = item.kategori || ""; gambar.value = item["link gambar"] || ""; download.value = item["link download"] || ""; versi.value = item["versi mc"] || ""; ukuran.value = item.ukuran || ""; tanggal.value = item["tanggal unggah"] || ""; deskripsi.value = item.description || ""; descCount.textContent = `${deskripsi.value.length}/1000`;
+  }
+
+  function mulaiEditAddon(key) {
+    if (!dataLama[key]) return;
+    sedangEditKey = key; isiFormDariAddon(key); modeEditAddon.hidden = false; editAddonTarget.textContent = `Mengedit: ${dataLama[key]["nama file"] || key} · slug/ID: ${key}`; judulFormAddon.innerHTML = '<i class="fa fa-pencil"></i> Edit Addon'; slug.disabled = true; form.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  function batalEdit() {
+    sedangEditKey = null; modeEditAddon.hidden = true; judulFormAddon.innerHTML = '<i class="fa fa-plus-circle"></i> Tambah Addon'; slug.disabled = false; resetForm();
+  }
+
+  cariAddonLama.addEventListener("input", renderAddonLama);
+  batalEditAddon.addEventListener("click", batalEdit);
+  renderAddonLama();
 
   nama.addEventListener("input", () => {
     if (!slug.dataset.diedit) slug.value = slugify(nama.value);
@@ -215,48 +262,31 @@ onAuthStateChanged(auth, async user => {
     }
   }
 
-  form.addEventListener("submit", event => {
+  async function updateAddonKeGithub(key, data) {
+    if (!auth.currentUser) throw new Error("Sesi login sudah berakhir. Silakan login kembali.");
+    const idToken = await auth.currentUser.getIdToken();
+    const response = await fetch("/api/update-addon", {method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${idToken}`},body:JSON.stringify({key,addon:data})});
+    const result = await response.json().catch(()=>({}));
+    if (!response.ok || !result.ok) throw new Error(result.error || "Gagal memperbarui addon.");
+    return result;
+  }
+
+  form.addEventListener("submit", async event => {
     event.preventDefault();
     const namaValue = nama.value.trim();
-    const slugValue = slug.value.trim() || slugify(namaValue);
+    const slugValue = sedangEditKey || slug.value.trim() || slugify(namaValue);
     if (!slugValue) { alert("Slug/ID addon tidak valid."); return; }
-
-    const sudahAda = Object.prototype.hasOwnProperty.call(dataLama, slugValue) || addonBaru.some(x => x.key === slugValue);
-    if (sudahAda) {
-      alert(`Slug "${slugValue}" sudah digunakan. Ganti slug agar addon tidak menimpa data lama.`);
-      slug.focus();
-      return;
-    }
-
+    if (!sedangEditKey && (Object.prototype.hasOwnProperty.call(dataLama, slugValue) || addonBaru.some(x=>x.key===slugValue))) { alert(`Slug "${slugValue}" sudah digunakan. Ganti slug agar addon tidak menimpa data lama.`); slug.focus(); return; }
     let linkGambar, linkDownload;
-    try {
-      linkGambar = validasiUrl(gambar.value, "Link gambar");
-      linkDownload = validasiUrl(download.value, "Link download");
-    } catch (error) {
-      alert(error.message);
+    try { linkGambar=validasiUrl(gambar.value,"Link gambar"); linkDownload=validasiUrl(download.value,"Link download"); } catch(error){ alert(error.message); return; }
+    const dataBaru={slug:slugValue,"nama file":namaValue,"type file":type.value.trim(),kategori:kategori.value,"link gambar":linkGambar,"link download":linkDownload,"versi mc":versi.value.trim(),ukuran:ukuran.value.trim(),"tanggal unggah":tanggal.value.trim(),description:deskripsi.value.trim()};
+    if (sedangEditKey) {
+      if (!confirm(`Simpan perubahan untuk "${dataLama[sedangEditKey]?.["nama file"] || sedangEditKey}" ke data.json di GitHub?\n\nSlug/ID tetap: ${sedangEditKey}`)) return;
+      const tombol=form.querySelector('button[type="submit"]'); const asli=tombol.innerHTML; tombol.disabled=true; tombol.innerHTML='<i class="fa fa-spinner fa-spin"></i> Menyimpan...';
+      try { await updateAddonKeGithub(sedangEditKey,dataBaru); dataLama[sedangEditKey]=dataBaru; count.textContent=`${Object.keys(dataLama).length} addon di data.json`; renderAddonLama(); alert("Perubahan addon berhasil disimpan ke data.json dan GitHub."); batalEdit(); } catch(error){ alert(`Gagal menyimpan perubahan.\n\n${error.message}`); } finally { tombol.disabled=false; tombol.innerHTML=asli; }
       return;
     }
-
-    // Struktur dibuat sama dengan data.json yang sudah digunakan MC Addon Share.
-    const item = {
-      key: slugValue,
-      data: {
-        "slug": slugValue,
-        "nama file": namaValue,
-        "type file": type.value.trim(),
-        "kategori": kategori.value,
-        "link gambar": linkGambar,
-        "link download": linkDownload,
-        "versi mc": versi.value.trim(),
-        "ukuran": ukuran.value.trim(),
-        "tanggal unggah": tanggal.value.trim(),
-        "description": deskripsi.value.trim()
-      }
-    };
-    addonBaru.push(item);
-    renderDaftar();
-    hasil.value = "";
-    resetForm();
+    addonBaru.push({key:slugValue,data:dataBaru}); renderDaftar(); hasil.value=""; resetForm();
   });
 
   document.getElementById("kosongkan-form").addEventListener("click", resetForm);
