@@ -59,8 +59,8 @@ module.exports = async (req, res) => {
     const decoded = await admin.auth().verifyIdToken(authHeader.slice(7).trim());
     const roleSnap = await admin.database().ref(`roles/${decoded.uid}`).once('value');
     const role = String(roleSnap.val() || 'user').toLowerCase();
-    if (!['admin', 'owner'].includes(role)) {
-      return send(res, 403, { ok: false, error: 'Hanya Admin atau Owner yang boleh menghapus addon.' });
+    if (role !== 'owner') {
+      return send(res, 403, { ok: false, error: 'Hanya Owner yang boleh menghapus addon.' });
     }
 
     const key = String(req.body?.key || '').trim();
