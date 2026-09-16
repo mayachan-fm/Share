@@ -71,7 +71,7 @@ onAuthStateChanged(auth, async user => {
       </div>
 
       <div class="admin-manage-box">
-        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di <code>data.json</code>, lalu edit informasinya tanpa mengubah slug/ID.</p></div></div>
+        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di <code>data.json</code>, lalu edit atau hapus addon yang dipilih. Penghapusan hanya menghapus data dari website; file addon di layanan eksternal tetap aman.</p></div></div>
         <div class="admin-manage-search"><input id="cari-addon-lama" type="search" placeholder="Cari nama addon atau slug..." autocomplete="off"><span id="hasil-cari-addon">Memuat...</span></div>
         <div id="daftar-addon-lama" class="daftar-addon-lama"></div>
       </div>
@@ -177,9 +177,10 @@ onAuthStateChanged(auth, async user => {
     });
     hasilCariAddon.textContent = `${hasil.length} addon ditemukan`;
     if (!hasil.length) { daftarAddonLama.innerHTML = '<div class="admin-list-empty">Addon tidak ditemukan.</div>'; return; }
-    daftarAddonLama.innerHTML = hasil.slice(0,60).map(([key,item]) => `<div class="addon-lama-item"><div class="addon-lama-main"><strong>${esc(item["nama file"] || key)}</strong><span>${esc(key)} · ${esc(item["type file"] || "-")} · ${esc(item.kategori || "-")}</span></div><button type="button" class="tombol-edit-addon" data-key="${esc(key)}"><i class="fa fa-pencil"></i> Edit</button></div>`).join("");
+    daftarAddonLama.innerHTML = hasil.slice(0,60).map(([key,item]) => `<div class="addon-lama-item"><div class="addon-lama-main"><strong>${esc(item["nama file"] || key)}</strong><span>${esc(key)} · ${esc(item["type file"] || "-")} · ${esc(item.kategori || "-")}</span></div><div class="addon-lama-actions"><button type="button" class="tombol-edit-addon" data-key="${esc(key)}"><i class="fa fa-pencil"></i> Edit</button><button type="button" class="tombol-hapus-addon-lama" data-key="${esc(key)}"><i class="fa fa-trash"></i> Hapus</button></div></div>`).join("");
     if (hasil.length > 60) daftarAddonLama.insertAdjacentHTML("beforeend", '<div class="admin-list-empty">Menampilkan 60 hasil pertama. Gunakan pencarian untuk mempersempit.</div>');
     daftarAddonLama.querySelectorAll(".tombol-edit-addon").forEach(btn => btn.addEventListener("click", () => mulaiEditAddon(btn.dataset.key)));
+    daftarAddonLama.querySelectorAll(".tombol-hapus-addon-lama").forEach(btn => btn.addEventListener("click", () => hapusAddon(btn.dataset.key)));
   }
 
   function isiFormDariAddon(key) {
@@ -259,6 +260,47 @@ onAuthStateChanged(auth, async user => {
       return url;
     } catch {
       throw new Error(`${label} harus berupa URL http/https yang valid.`);
+    }
+  }
+
+  async function hapusAddon(key) {
+    const item = dataLama[key];
+    if (!item) return;
+    const namaAddon = item["nama file"] || key;
+    const konfirmasi1 = confirm(`Hapus "${namaAddon}" dari data.json?\n\nSlug/ID: ${key}\n\nFile addon di layanan eksternal TIDAK akan dihapus.`);
+    if (!konfirmasi1) return;
+    const konfirmasi2 = confirm(`Konfirmasi terakhir.\n\nAddon "${namaAddon}" akan dihapus dari data.json dan perubahan akan dibuat sebagai commit di GitHub.\n\nLanjutkan?`);
+    if (!konfirmasi2) return;
+
+    const tombol = daftarAddonLama.querySelector(`.tombol-hapus-addon-lama[data-key="${CSS.escape(key)}"]`);
+    const teksAsli = tombol ? tombol.innerHTML : "";
+    if (tombol) { tombol.disabled = true; tombol.innerHTML = '<i class="fa fa-spinner fa-spin"></i>'; }
+
+    try {
+      if (!auth.currentUser) throw new Error("Sesi login sudah berakhir. Silakan login kembali.");
+      const idToken = await auth.currentUser.getIdToken();
+      const response = await fetch("/api/delete-addon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ key })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) throw new Error(result.error || "Gagal menghapus addon.");
+
+      delete dataLama[key];
+      count.textContent = `${Object.keys(dataLama).length} addon di data.json`;
+      if (sedangEditKey === key) batalEdit();
+      renderAddonLama();
+      hasil.value = "";
+      alert(`Berhasil! "${namaAddon}" sudah dihapus dari data.json.\n\nFile addon eksternal tetap tidak berubah.`);
+    } catch (error) {
+      console.error(error);
+      alert(`Gagal menghapus addon.\n\n${error.message}`);
+    } finally {
+      if (tombol) { tombol.disabled = false; tombol.innerHTML = teksAsli; }
     }
   }
 
