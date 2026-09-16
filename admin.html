@@ -47,6 +47,10 @@ function buatKunciUnik(base, digunakan) {
   return slug;
 }
 
+async function muatAktivitasAdmin(){
+  const list=document.getElementById('aktivitas-admin');if(!list)return;list.innerHTML='<div class="aktivitas-kosong">Memuat aktivitas...</div>';
+  try{if(!auth.currentUser)throw new Error('Login diperlukan.');const token=await auth.currentUser.getIdToken();const response=await fetch('/api/activity',{headers:{'Authorization':`Bearer ${token}`}});const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||`Permintaan gagal (${response.status}).`);const logs=result.logs||[];if(!logs.length){list.innerHTML='<div class="aktivitas-kosong">Belum ada aktivitas yang tercatat.</div>';return;}const label={addon_tambah:'Menambahkan addon',addon_edit:'Mengedit addon',addon_hapus:'Menghapus addon'},icon={addon_tambah:'fa-plus',addon_edit:'fa-pencil',addon_hapus:'fa-trash'};list.innerHTML=logs.map(item=>{const d=new Date(Number(item.waktu)||0),waktu=Number.isNaN(d.getTime())?'-':d.toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}),aksi=label[item.aksi]||item.aksi||'Aktivitas';return `<div class="aktivitas-item"><div class="aktivitas-icon"><i class="fa ${icon[item.aksi]||'fa-history'}"></i></div><div class="aktivitas-main"><strong>${esc(item.actor||'Akun')} <span class="badge-aktivitas">${esc(item.role||'user')}</span></strong><p>${esc(aksi)}: <b>${esc(item.targetName||item.targetId||'-')}</b></p><small>${esc(waktu)} · ${esc(item.detail||'')}</small></div></div>`}).join('');}catch(error){list.innerHTML=`<div class="aktivitas-kosong">${esc(error.message)}</div>`;}}
+
 onAuthStateChanged(auth, async user => {
   if (!user) { location.href = "profil.html"; return; }
 
@@ -126,6 +130,11 @@ onAuthStateChanged(auth, async user => {
         <p class="catatan-staf"><i class="fa fa-shield"></i> Tombol GitHub akan meminta konfirmasi sebelum mengubah <code>data.json</code>. Token GitHub tidak disimpan di browser.</p>
       </div>
     </div>
+
+      <section class="aktivitas-box">
+        <div class="aktivitas-header"><div><h3><i class="fa fa-history"></i> Riwayat Aktivitas</h3><p>Aktivitas pengelolaan addon oleh Admin dan Owner.</p></div><button type="button" class="tombol-sekunder" id="muat-aktivitas-admin"><i class="fa fa-refresh"></i> Muat ulang</button></div>
+        <div id="aktivitas-admin" class="aktivitas-daftar"><div class="aktivitas-kosong">Memuat aktivitas...</div></div>
+      </section>
 
     <a class="tombol-sekunder tombol-kembali-admin" href="profil.html"><i class="fa fa-arrow-left"></i> Kembali ke Profil</a>
   `;
@@ -331,6 +340,8 @@ onAuthStateChanged(auth, async user => {
     addonBaru.push({key:slugValue,data:dataBaru}); renderDaftar(); hasil.value=""; resetForm();
   });
 
+  document.getElementById('muat-aktivitas-admin')?.addEventListener('click', muatAktivitasAdmin);
+
   document.getElementById("kosongkan-form").addEventListener("click", resetForm);
 
   document.getElementById("buat-json").addEventListener("click", () => {
@@ -418,6 +429,7 @@ onAuthStateChanged(auth, async user => {
       tombol.innerHTML = teksAsli;
     }
   });
+  await muatAktivitasAdmin();
 });
 </script>
 </body>

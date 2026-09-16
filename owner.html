@@ -157,6 +157,11 @@ onAuthStateChanged(auth, async user => {
       <div id="owner-daftar-staf" class="owner-daftar-staf"></div>
     </section>
 
+    <section class="aktivitas-box">
+      <div class="aktivitas-header"><div><h3><i class="fa fa-history"></i> Semua Aktivitas</h3><p>Riwayat pengelolaan addon dan perubahan role Admin.</p></div><button type="button" class="tombol-sekunder" id="muat-aktivitas-owner"><i class="fa fa-refresh"></i> Muat ulang</button></div>
+      <div id="aktivitas-owner" class="aktivitas-daftar"><div class="aktivitas-kosong">Memuat aktivitas...</div></div>
+    </section>
+
     <div class="catatan-staf"><i class="fa fa-lock"></i> Perubahan role dilakukan melalui server dan tidak bergantung pada izin tulis Firebase dari browser.</div>
     <a class="tombol-sekunder tombol-kembali-admin" href="profil.html"><i class="fa fa-arrow-left"></i> Kembali ke Profil</a>
   `;
@@ -183,6 +188,8 @@ onAuthStateChanged(auth, async user => {
   });
 
   await muatStaff();
+  await muatAktivitasOwner();
+  document.getElementById('muat-aktivitas-owner')?.addEventListener('click', muatAktivitasOwner);
 });
 </script>
 </body>
