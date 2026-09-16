@@ -106,6 +106,31 @@ function renderStaff(staff) {
   });
 }
 
+async function muatAktivitasOwner(){
+  const list=document.getElementById("aktivitas-owner");
+  if(!list)return;
+  list.innerHTML='<div class="aktivitas-kosong">Memuat aktivitas...</div>';
+  try{
+    if(!auth.currentUser)throw new Error("Login diperlukan.");
+    const token=await auth.currentUser.getIdToken();
+    const response=await fetch("/api/activity",{headers:{"Authorization":`Bearer ${token}`}});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.ok)throw new Error(result.error||`Permintaan gagal (${response.status}).`);
+    const logs=result.logs||[];
+    if(!logs.length){list.innerHTML='<div class="aktivitas-kosong">Belum ada aktivitas yang tercatat.</div>';return;}
+    const label={addon_tambah:"Menambahkan addon",addon_edit:"Mengedit addon",addon_hapus:"Menghapus addon",admin_tambah:"Menambahkan Admin",admin_cabut:"Mencabut Admin"};
+    const icon={addon_tambah:"fa-plus",addon_edit:"fa-pencil",addon_hapus:"fa-trash",admin_tambah:"fa-user-plus",admin_cabut:"fa-user-times"};
+    list.innerHTML=logs.map(item=>{
+      const d=new Date(Number(item.waktu)||0);
+      const waktu=Number.isNaN(d.getTime())?"-":d.toLocaleString("id-ID",{dateStyle:"medium",timeStyle:"short"});
+      const aksi=label[item.aksi]||item.aksi||"Aktivitas";
+      return `<div class="aktivitas-item"><div class="aktivitas-icon"><i class="fa ${icon[item.aksi]||"fa-history"}"></i></div><div class="aktivitas-main"><strong>${esc(item.actor||"Akun")} <span class="badge-aktivitas">${esc(item.role||"user")}</span></strong><p>${esc(aksi)}: <b>${esc(item.targetName||item.targetId||"-")}</b></p><small>${esc(waktu)} · ${esc(item.detail||"")}</small></div></div>`;
+    }).join("");
+  }catch(error){
+    list.innerHTML=`<div class="aktivitas-kosong">${esc(error.message)}</div>`;
+  }
+}
+
 async function muatStaff() {
   const list = document.getElementById("owner-daftar-staf");
   list.innerHTML = `<div class="admin-list-empty">Memuat daftar...</div>`;
