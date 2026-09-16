@@ -112,9 +112,10 @@ onAuthStateChanged(auth, async user => {
         <textarea id="hasil-json" class="hasil-json" readonly placeholder="Belum ada kode. Masukkan addon ke daftar lalu klik Buat Kode JSON."></textarea>
         <div class="admin-actions">
           <button type="button" class="tombol-utama" id="salin-json"><i class="fa fa-copy"></i> Salin Kode JSON</button>
+          <button type="button" class="tombol-utama" id="simpan-github"><i class="fa fa-github"></i> Tambahkan ke data.json</button>
           <a class="tombol-sekunder" href="data.json" target="_blank" rel="noopener"><i class="fa fa-file-text-o"></i> Lihat data.json</a>
         </div>
-        <p class="catatan-staf"><i class="fa fa-info-circle"></i> Panel ini belum mengubah file GitHub secara otomatis. Setelah JSON dibuat, kamu tetap menempelkan hasilnya ke <code>data.json</code> dan mengunggah perubahan ke repository.</p>
+        <p class="catatan-staf"><i class="fa fa-shield"></i> Tombol GitHub akan meminta konfirmasi sebelum mengubah <code>data.json</code>. Token GitHub tidak disimpan di browser.</p>
       </div>
     </div>
 
@@ -296,6 +297,53 @@ onAuthStateChanged(auth, async user => {
       hasil.focus();
       hasil.select();
       alert("Clipboard otomatis tidak tersedia. Kode sudah dipilih, silakan salin manual.");
+    }
+  });
+
+  document.getElementById("simpan-github").addEventListener("click", async () => {
+    if (!addonBaru.length) {
+      alert("Belum ada addon di daftar.");
+      return;
+    }
+
+    const namaAddon = addonBaru.map(item => item.data["nama file"]).join(", ");
+    const konfirmasi = confirm(
+      `Tambahkan ${addonBaru.length} addon ke data.json di GitHub?\n\n${namaAddon}\n\nPerubahan akan membuat commit ke mayachan-fm/Share pada branch main.`
+    );
+    if (!konfirmasi) return;
+
+    const tombol = document.getElementById("simpan-github");
+    const teksAsli = tombol.innerHTML;
+    tombol.disabled = true;
+    tombol.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Menyimpan ke GitHub...';
+
+    try {
+      if (!auth.currentUser) throw new Error("Sesi login sudah berakhir. Silakan login kembali.");
+      const idToken = await auth.currentUser.getIdToken();
+      const response = await fetch("/api/add-addon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ addons: addonBaru })
+      });
+
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) throw new Error(result.error || "Gagal memperbarui data.json.");
+
+      addonBaru.forEach(item => { dataLama[item.key] = item.data; });
+      count.textContent = `${Object.keys(dataLama).length} addon di data.json`;
+      addonBaru = [];
+      renderDaftar();
+      hasil.value = "";
+      alert(`Berhasil! ${result.count} addon sudah ditambahkan ke data.json dan commit GitHub telah dibuat.`);
+    } catch (error) {
+      console.error(error);
+      alert(`Gagal menyimpan ke GitHub.\n\n${error.message}`);
+    } finally {
+      tombol.disabled = false;
+      tombol.innerHTML = teksAsli;
     }
   });
 });
