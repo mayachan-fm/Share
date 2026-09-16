@@ -15,26 +15,174 @@
 <main class="konten-utama"><section class="halaman-detail"><div class="container"><div class="kartu-detail">
 <div class="detail-isi profil-halaman" id="owner-app"><p>Memeriksa akses...</p></div>
 </div></div></section></main>
+<nav class="navigasi-bawah" aria-label="Navigasi utama">
+<a href="index.html" class="nav-item" data-nav="beranda"><i class="fa fa-home"></i><span>Beranda</span></a>
+<a href="index.html#kotak-cari" class="nav-item" data-nav="cari"><i class="fa fa-search"></i><span>Cari</span></a>
+<a href="index.html#wadah-addon" class="nav-item" data-nav="disukai"><i class="fa fa-thumbs-up"></i><span>Disukai</span></a>
+<a href="profil.html" class="nav-item" data-nav="profil"><i class="fa fa-user"></i><span>Profil</span></a>
+</nav>
 <script type="module">
 import {auth, onAuthStateChanged, ambilRole} from "./auth.js";
-const el=document.getElementById("owner-app");
-onAuthStateChanged(auth, async user=>{
-  if(!user){ location.href="profil.html"; return; }
-  const role=await ambilRole(user);
-  if(role!=="owner"){
-    el.innerHTML="<h2>Akses ditolak</h2><p class='detail-deskripsi'>Halaman ini hanya untuk Owner.</p><a class='tombol-utama tombol-akun' href='profil.html'>Kembali ke Profil</a>";
+
+const el = document.getElementById("owner-app");
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]));
+}
+
+function waktu(value) {
+  if (!value) return "-";
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? "-" : d.toLocaleString("id-ID", {dateStyle:"medium", timeStyle:"short"});
+}
+
+function tampilPesan(text, jenis = "info") {
+  const box = document.getElementById("owner-pesan");
+  if (!box) return;
+  box.className = `owner-pesan ${jenis}`;
+  box.textContent = text;
+}
+
+async function tokenHeader() {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Login diperlukan.");
+  const token = await user.getIdToken(true);
+  return {"Content-Type":"application/json", "Authorization":`Bearer ${token}`};
+}
+
+async function api(action, payload = {}) {
+  const headers = await tokenHeader();
+  const response = await fetch("/api/manage-role", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({action, ...payload})
+  });
+  let body;
+  try { body = await response.json(); } catch (_) { body = {}; }
+  if (!response.ok || !body.ok) throw new Error(body.error || `Permintaan gagal (${response.status}).`);
+  return body;
+}
+
+function renderStaff(staff) {
+  const list = document.getElementById("owner-daftar-staf");
+  const count = document.getElementById("owner-count-staf");
+  count.textContent = `${staff.length} akun ber-role tinggi`;
+
+  if (!staff.length) {
+    list.innerHTML = `<div class="admin-list-empty">Belum ada Admin/Owner yang terdaftar.</div>`;
     return;
   }
-  el.innerHTML=`
+
+  list.innerHTML = staff.map(item => {
+    const owner = item.role === "owner";
+    return `
+      <div class="owner-staff-item">
+        <div class="owner-staff-icon"><i class="fa ${owner ? "fa-star" : "fa-shield"}"></i></div>
+        <div class="owner-staff-main">
+          <strong>${esc(item.email || "Email tidak tersedia")}</strong>
+          <span class="owner-role-badge role-${esc(item.role)}">${owner ? "Owner" : "Admin"}</span>
+          <small>UID: ${esc(item.uid)}</small>
+          <small>Dibuat: ${esc(waktu(item.createdAt))}</small>
+          ${item.lastSignIn ? `<small>Login terakhir: ${esc(waktu(item.lastSignIn))}</small>` : ""}
+        </div>
+        ${owner ? `<span class="owner-tetap"><i class="fa fa-lock"></i> Owner</span>` : `<button type="button" class="tombol-hapus-admin" data-uid="${esc(item.uid)}"><i class="fa fa-user-times"></i> Cabut Admin</button>`}
+      </div>`;
+  }).join("");
+
+  list.querySelectorAll(".tombol-hapus-admin").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const uid = btn.dataset.uid;
+      if (!confirm("Cabut role Admin dari akun ini? Akun akan kembali menjadi User.")) return;
+      btn.disabled = true;
+      try {
+        const result = await api("remove_admin", {uid});
+        tampilPesan(result.message, "sukses");
+        await muatStaff();
+      } catch (error) {
+        tampilPesan(error.message, "error");
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
+async function muatStaff() {
+  const list = document.getElementById("owner-daftar-staf");
+  list.innerHTML = `<div class="admin-list-empty">Memuat daftar...</div>`;
+  try {
+    const result = await api("list");
+    renderStaff(result.staff || []);
+  } catch (error) {
+    list.innerHTML = `<div class="admin-list-empty">${esc(error.message)}</div>`;
+  }
+}
+
+onAuthStateChanged(auth, async user => {
+  if (!user) { location.href = "profil.html"; return; }
+
+  const role = await ambilRole(user);
+  if (role !== "owner") {
+    el.innerHTML = `<h2>Akses ditolak</h2><p class="detail-deskripsi">Halaman ini hanya untuk Owner.</p><a class="tombol-utama tombol-akun" href="profil.html">Kembali ke Profil</a>`;
+    return;
+  }
+
+  el.innerHTML = `
     <div class="profil-avatar"><i class="fa fa-star"></i></div>
     <h2>Panel Owner</h2>
-    <p class="detail-deskripsi">Akses Owner aktif.</p>
-    <div class="detail-info">
-      <div class="info-item"><span>Status Stage E</span>Sistem role aktif</div>
-      <div class="info-item"><span>Kontrol berikutnya</span>Kelola addon & website</div>
+    <p class="detail-deskripsi">Kontrol Owner aktif. Owner adalah role tertinggi dan tidak dapat dikelola oleh Admin.</p>
+
+    <div class="owner-dashboard-grid">
+      <div class="owner-info-card"><i class="fa fa-shield"></i><div><strong>Kelola Admin</strong><span>Tambahkan atau cabut akses Admin.</span></div></div>
+      <div class="owner-info-card"><i class="fa fa-database"></i><div><strong>Data website</strong><span>Pengelolaan addon tetap melalui Panel Admin.</span></div></div>
     </div>
-    <p class="catatan-staf"><i class="fa fa-info-circle"></i> Kontrol penghapusan, moderasi, dan pengaturan website akan ditambahkan pada tahap Owner berikutnya.</p>
-    <a class="tombol-utama tombol-akun" href="profil.html">Kembali ke Profil</a>`;
+
+    <section class="owner-manage-box">
+      <div class="admin-json-header">
+        <div><h3><i class="fa fa-user-plus"></i> Tambah Admin</h3><p>Masukkan email akun Firebase yang sudah terdaftar. Akun tersebut akan mendapatkan role Admin.</p></div>
+      </div>
+      <form id="form-tambah-admin" class="owner-add-form" autocomplete="off">
+        <label>Email atau username akun
+          <input id="identifier-admin" type="text" required maxlength="160" placeholder="contoh@email.com atau username">
+        </label>
+        <button type="submit" class="tombol-utama"><i class="fa fa-user-plus"></i> Jadikan Admin</button>
+      </form>
+      <div id="owner-pesan" class="owner-pesan info" role="alert"></div>
+    </section>
+
+    <section class="owner-manage-box">
+      <div class="admin-json-header">
+        <div><h3><i class="fa fa-users"></i> Admin & Owner</h3><p>Daftar akun yang memiliki role khusus.</p></div>
+        <span class="admin-data-count" id="owner-count-staf">Memuat...</span>
+      </div>
+      <div id="owner-daftar-staf" class="owner-daftar-staf"></div>
+    </section>
+
+    <div class="catatan-staf"><i class="fa fa-lock"></i> Perubahan role dilakukan melalui server dan tidak bergantung pada izin tulis Firebase dari browser.</div>
+    <a class="tombol-sekunder tombol-kembali-admin" href="profil.html"><i class="fa fa-arrow-left"></i> Kembali ke Profil</a>
+  `;
+
+  document.getElementById("form-tambah-admin").addEventListener("submit", async event => {
+    event.preventDefault();
+    const input = document.getElementById("identifier-admin");
+    const button = event.currentTarget.querySelector("button[type=submit]");
+    const identifier = input.value.trim();
+    if (!identifier) return;
+    button.disabled = true;
+    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Memproses...';
+    try {
+      const result = await api("add_admin", {identifier});
+      tampilPesan(result.message, "sukses");
+      input.value = "";
+      await muatStaff();
+    } catch (error) {
+      tampilPesan(error.message, "error");
+    } finally {
+      button.disabled = false;
+      button.innerHTML = '<i class="fa fa-user-plus"></i> Jadikan Admin';
+    }
+  });
+
+  await muatStaff();
 });
 </script>
 </body>
