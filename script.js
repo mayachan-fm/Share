@@ -53,6 +53,8 @@ let semuaDataAddon = {};
 let daftarAddon = [];
 let filterAktif = 'semua';
 let modeTopAddon = 'terbanyak'; // Bawaan: Paling Banyak Diunduh
+let urutanDaftar = 'terbaru';
+let versiAktif = 'semua';
 
 function tampilkanAddonDisukaiDariUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -118,6 +120,7 @@ async function tampilkanAddon() {
         wadah.innerHTML = '';
         tampilkanDaftar(daftarAddon);
         aturFilterKategori();
+        isiPilihanVersi();
         tampilkanAddonDisukaiDariUrl();
     } catch (error) {
         console.error("❌ Gagal memuat data:", error);
@@ -272,20 +275,39 @@ function aturFilterKategori() {
     });
 }
 
+function isiPilihanVersi() {
+    const select = document.getElementById('filter-versi');
+    if (!select) return;
+    const versi = [...new Set(daftarAddon.map(item => String(item['versi mc'] || '').trim()).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
+    select.innerHTML = '<option value="semua">Semua versi</option>' + versi.map(v => `<option value="${encodeURIComponent(v)}">${v}</option>`).join('');
+    select.value = versiAktif === 'semua' ? 'semua' : encodeURIComponent(versiAktif);
+}
+
+function terapkanUrutan(data) {
+    const hasil = [...data];
+    if (urutanDaftar === 'terbanyak') return hasil.sort((a, b) => (b['jumlah unduh'] || 0) - (a['jumlah unduh'] || 0));
+    if (urutanDaftar === 'like') return hasil.sort((a, b) => (b['jumlah like'] || 0) - (a['jumlah like'] || 0));
+    if (urutanDaftar === 'nama') return hasil.sort((a, b) => String(a['nama file'] || '').localeCompare(String(b['nama file'] || ''), undefined, { sensitivity: 'base' }));
+    return hasil.reverse();
+}
+
 function terapkanFilterDanCari() {
     const el = document.getElementById('kotak-cari');
     if (!el) return;
     const kunci = el.value.toLowerCase().trim();
     const hasil = daftarAddon.filter(item => {
-        const nama = (item['nama file']||'').toLowerCase();
-        const desc = (item.description||'').toLowerCase();
-        const tipe = (item['type file']||'').toLowerCase();
-        const kat = (item.kategori||'lainnya');
-        const cocokKat = filterAktif==='semua' || kat===filterAktif;
-        const cocokKata = kunci==='' || nama.includes(kunci) || desc.includes(kunci) || tipe.includes(kunci);
-        return cocokKat && cocokKata;
+        const nama = String(item['nama file'] || '').toLowerCase();
+        const desc = String(item.description || '').toLowerCase();
+        const tipe = String(item['type file'] || '').toLowerCase();
+        const kat = String(item.kategori || 'lainnya').toLowerCase();
+        const versi = String(item['versi mc'] || '').trim();
+        const cocokKat = filterAktif === 'semua' || kat === filterAktif;
+        const cocokVersi = versiAktif === 'semua' || versi === versiAktif;
+        const cocokKata = kunci === '' || nama.includes(kunci) || desc.includes(kunci) || tipe.includes(kunci) || versi.toLowerCase().includes(kunci) || kat.includes(kunci);
+        return cocokKat && cocokVersi && cocokKata;
     });
-    tampilkanDaftar(hasil);
+    tampilkanDaftar(terapkanUrutan(hasil));
 }
 
 function salinLink(link) {
@@ -343,4 +365,12 @@ document.addEventListener('DOMContentLoaded', () => {
     aturNavigasiBawah();
     document.getElementById('tombol-cari')?.addEventListener('click', terapkanFilterDanCari);
     document.getElementById('kotak-cari')?.addEventListener('keydown', e => { if(e.key==='Enter') terapkanFilterDanCari(); });
+    document.getElementById('filter-versi')?.addEventListener('change', e => {
+        versiAktif = e.target.value === 'semua' ? 'semua' : decodeURIComponent(e.target.value);
+        terapkanFilterDanCari();
+    });
+    document.getElementById('urutkan-addon')?.addEventListener('change', e => {
+        urutanDaftar = e.target.value;
+        terapkanFilterDanCari();
+    });
 });
