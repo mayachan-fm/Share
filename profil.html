@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="logo.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+.profil-statistik{max-width:420px;margin:16px auto;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.profil-stat-item{padding:14px 8px;background:#181818;border:1px solid #333;border-radius:12px;display:flex;flex-direction:column;gap:5px;align-items:center;min-width:0}
+.profil-stat-item strong{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.profil-stat-item span{font-size:12px;color:#999}
+.profil-role-label{color:#aaa;font-size:13px;margin:2px 0 8px}
+.profil-disukai-link{box-sizing:border-box;text-decoration:none;border:1px solid #333!important}
+@media(max-width:420px){.profil-statistik{gap:7px}.profil-stat-item{padding:12px 5px}.profil-stat-item strong{font-size:16px}}
+</style>
 </head>
 <body>
 <header class="header-tetap">
@@ -197,19 +206,35 @@ function badgeRole(role) {
 function tampilProfil(user, role) {
   const isStaff = role === "admin" || role === "owner";
   const nama = isStaff ? (user.email || "") : emailKeUsername(user.email);
+  const likeKey = `sudahLike_${user.uid}`;
+  let jumlahDisukai = 0;
+  try {
+    const dataLike = JSON.parse(localStorage.getItem(likeKey) || "[]");
+    jumlahDisukai = Array.isArray(dataLike) ? dataLike.length : 0;
+  } catch (_) {
+    jumlahDisukai = 0;
+  }
+  const labelAkun = role === "owner" ? "Pemilik" : role === "admin" ? "Staf Admin" : "Anggota";
 
   appEl.innerHTML = `
     <div class="profil-avatar"><i class="fa ${isStaff ? "fa-shield" : "fa-user"}"></i></div>
     <h2>Profil</h2>
     <div class="profil-akun-login">
       <div class="profil-nama">${isStaff ? escapeHtml(nama) : "@" + escapeHtml(nama)}</div>
-      <div class="profil-status"><i class="fa fa-check-circle"></i> Sudah login</div>
+      <div class="profil-status"><i class="fa fa-check-circle"></i> Akun aktif</div>
+      <div class="profil-role-label">${escapeHtml(labelAkun)}</div>
       ${badgeRole(role)}
     </div>
-    <div class="detail-info">
-      <div class="info-item"><span>Jenis akun</span>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</div>
-      <div class="info-item"><span>Status</span>Aktif</div>
+    <div class="profil-statistik">
+      <div class="profil-stat-item"><strong>${jumlahDisukai}</strong><span>Disukai</span></div>
+      <div class="profil-stat-item"><strong>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</strong><span>Role</span></div>
+      <div class="profil-stat-item"><strong>Aktif</strong><span>Status</span></div>
     </div>
+    <div class="detail-info">
+      <div class="info-item"><span>Username / akun</span>${isStaff ? escapeHtml(nama) : "@" + escapeHtml(nama)}</div>
+      <div class="info-item"><span>Jenis akun</span>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</div>
+    </div>
+    <a href="index.html#wadah-addon" class="tombol-sekunder profil-disukai-link"><i class="fa fa-thumbs-up"></i> Lihat addon disukai</a>
     ${role === "admin" ? `<a href="admin.html" class="tombol-utama tombol-akun"><i class="fa fa-dashboard"></i> Panel Admin</a>` : ""}
     ${role === "owner" ? `
       <a href="admin.html" class="tombol-utama tombol-akun"><i class="fa fa-dashboard"></i> Panel Admin</a>
