@@ -84,150 +84,148 @@
     "description": "Alylica's Dungeons mengambil monster, item, dan lainnya dari Minecraft Dungeons dan mengimplementasikannya ke dalam game utama Minecraft!"
   },
   "vanila_vehicles": {
-        "slug": "vanila_vehicles",
-        "nama file": "Vanila Vehicles",
-        "type file": "mcpack",
-        "kategori": "addon",
-        "link gambar": "https://cdn.phototourl.com/free/2026-07-15-c8d76a76-5a0d-4372-aa42-251c4094f72f.jpg",
-        "link download": "https://www.mediafire.com/file/ng5zeablrizxp4y/Vanilla+Vehicles.mcaddon/file",
-        "versi mc": "1.26+",
-        "ukuran": "4.57 MB",
-        "tanggal unggah": "15 Juli 2026",
-        "description": "Dari angkasa, laut, hingga darat, Vanilla Vehicles menambahkan kendaraan yang ramah terhadap kelangsungan hidup dan dapat disesuaikan sepenuhnya sehingga terasa seperti di rumah sendiri di dunia Anda!"
-    },
-    "vfx_core_visual": {
-        "slug": "vfx_core_visual",
-        "nama file": "VFX Core Visual",
-        "type file": "mcpack",
-        "kategori": "addon",
-        "link gambar": "https://cdn.phototourl.com/free/2026-07-15-4d4aae93-dee7-4eed-95db-25d41cbfae9d.jpg",
-        "link download": "https://www.mediafire.com/file/3gy7r7px3ldjf14/VFXCore+v1.4.mcaddon/file",
-        "versi mc": "1.26+",
-        "ukuran": "4.25 MB",
-        "tanggal unggah": "15 Juli 2026",
-        "description": "Ubah dunia Minecraft Anda dengan efek visual yang menakjubkan, kupu-kupu, kunang-kunang, pencahayaan dinamis, aurora, percikan air, jejak kaki, dan masih banyak lagi!"
-    },
-    
-    "realistic_biomes": {
-      "slug": "realistic_biomes",
-      "nama file": "Realistic Biomes",
-      "type file": "Mcpack",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/free/2026-07-15-c22eca88-2b37-444c-9db4-20e676b8c01d.jpg",
-      "link download": "https://www.mediafire.com/file/0syti17kkc1d03t/Realistic_Biomes_1.2.2_Add-On.mcaddon/file",
-      "versi mc": "1.26+",
-      "ukuran": "20.23 MB",
-      "tanggal unggah": "15 Juli 2026",
-      "description": "Ubah dunia Anda dengan langit khusus yang indah, cuaca dinamis, efek visual menakjubkan, dan audio yang imersif."
-    },
-   "vanilla_humanoid_villagers": {
-      "slug": "vanilla_humanoid_villagers",
-      "nama file": "Vanilla Humanoid Village",
-      "type file": "Mcpack",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/free/2026-07-15-f601abbe-8c96-4b2d-970c-9351444b730d.png",
-      "link download": "https://www.mediafire.com/file/h5kvyrlnthjmlci/vanilla_humanoid_villagers-v1.5.mcpack/file",
-      "versi mc": "1.26+",
-      "ukuran": "1.26 MB",
-      "tanggal unggah": "15 Juli 2026",
-      "description": "Memperkenalkan Vanilla Humanoid Villagers! Paket ini mengubah penduduk desa Minecraft menjadi berpenampilan lebih mirip manusia sambil tetap mempertahankan nuansa vanilla asli yang Anda kenal dan sukai."
-    },
-    "auto_fisher": {
-      "slug": "auto_fisher",
-      "nama file": "Auto Fisher",
-      "type file": "Mcpack",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/free/2026-07-15-02e05f24-eb71-406f-b791-72826a4c52b4.jpg",
-      "link download": "https://www.mediafire.com/file/i4s5s31149aohst/AutoFisher+1.0.3+Add-On+(addon)+(MDF).mcaddon/file",
-      "versi mc": "1.26+",
-      "ukuran": "881.92 KB",
-      "tanggal unggah": "15 Juli 2026",
-      "description": "Bagi kita yang sangat tidak suka memancing:\n- alat pancing otomatis yang dapat dibuat: AutoFisher\n- perangkat sampah yang dapat dibuat untuk menghancurkan kelebihan jarahan: Insinerator\n- 5 peningkatan berbeda\n- Chunk Vizualizer untuk membantu penempatan\n- Boneka Golem Mini\n- Multi alat\nOleh Scai Quest"
-    },
-    "auto_factory": {
-      "slug": "auto_factory",
-      "nama file": "Auto Factory",
-      "type file": "Mcpack",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/member/2026-07-15-34061075-7b18-4398-adb9-fe7837176299.jpg",
-      "link download": "https://www.mediafire.com/file/l30alsih9823vce/Auto+Factory+RP+(addon)+(MDF).mcaddon/file",
-      "versi mc": "1.26+",
-      "ukuran": "1 MB",
-      "tanggal unggah": "15 Juli 2026",
-      "description": "Gunakan lebih dari selusin mesin baru untuk memindahkan, memproses, dan membuat pabrik terbaik! Setiap mesin melakukan sesuatu yang berbeda untuk membantu Anda mengumpulkan dan membuat bahan dalam jumlah besar! Gunakan konveyor, kipas, dan magnet untuk memindahkan barang dari satu mesin ke mesin berikutnya dan ciptakan jalur perakitan terbaik!\n\n- Menambahkan 12+ mesin baru yang memindahkan atau mengubah blok!\n- Memiliki dukungan penuh redstone!"
-    },
-
-    "auto_quarry": {
-      "slug": "auto_quarry",
-      "nama file": "Auto Quarry",
-      "type file": "Mcpack",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/member/2026-07-15-1cf187d0-6378-4ca9-b97b-65358a06c3c1.jpg",
-      "link download": "https://www.mediafire.com/file/eqzl4riqf7z5vyj/Auto+Quarry+1.1+(addon)+(MDF).mcaddon/file",
-      "versi mc": "1.26+",
-      "ukuran": "600 KB",
-      "tanggal unggah": "15 Juli 2026",
-      "description": "Tambang secara efisien dengan Add-On Tambang Otomatis! Buat 4 tambang dengan ukuran berbeda lengkap dengan perancah, pelindung air & lava, dan jatuh perlahan! Tambang Otomatis sekarang mengumpulkan tetesannya! Tempatkan alat lain di bagian bawah untuk menambang tambang yang lebih dalam! Kumpulkan rampasan Anda dan bangun markas yang Anda impikan!"
-    },
-    "auto_farm": {
-      "slug": "auto_farm",
-      "nama file": "Auto Farm",
-      "type file": "Mcpack",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/member/2026-07-15-8bceb29e-1ba8-4dd4-8cac-645c2fb4250c.jpg",
-      "link download": "https://www.mediafire.com/file/r8vz97n6y8m31s3/AutoFarm++(addon)+(MDF).mcaddon/file",
-      "versi mc": "1.26+",
-      "ukuran": "1.90 MB",
-      "tanggal unggah": "15 Juli 2026",
-      "description": "Bosan mencari sumber daya? Dengan AutoFarm+, Anda dapat secara otomatis mengumpulkan monster favorit, mengumpulkan barang langka, dan meningkatkan penghasilan — semuanya sambil fokus membangun, menjelajahi, atau menaklukkan dunia Anda!\n\n+ Bertani hingga 25 monster!\n+ 2 MOB FARMS dan 5 GENERATOR LISTRIK!\n- Dibuat oleh Eco Studios."
-    },
-    "anime_weapons": {
-      "slug": "anime_weapons",
-      "nama file": "Anime Weapons",
-      "type file": "Mcaddon",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/member/2026-07-16-a8facf96-0b31-4721-af95-cd673feca57d.jpg",
-      "link download": "https://www.mediafire.com/file/e2dfb2f2w67yxr7/Anime-Weapons-Addon-MCPE-1.21.mcaddon.zip/file",
-      "versi mc": "1.26+",
-      "ukuran": "8.90 MB",
-      "tanggal unggah": "16 Juli 2026",
-      "description": "Dengan Anime Weapons Addon (1.21), Anda dapat melepaskan kekuatan persenjataan legendaris dan menjadi prajurit anime terhebat, siap menaklukkan musuh mana pun di jalan Anda! Mod ini menampilkan 7 senjata epik, masing-masing memiliki 3 kemampuan unik dan satu kemampuan pamungkas. Hadapi 7 karakter anime ikonik, tingkatkan level senjata Anda, buka kemampuan pamungkas, dan nikmati efek suara kustom dan banyak lagi!"
-    },
-    "rg_shader": {
-      "slug": "rg_shader",
-      "nama file": "RG Shader",
-      "type file": "Texturepack",
-      "kategori": "resource",
-      "link gambar": "https://cdn.phototourl.com/member/2026-07-17-bfbb4f86-2bf9-4b68-b3be-82d59df07f54.gif",
-      "link download": "https://www.mediafire.com/file/b7yo6wiwjnrbyei/RG+SHADER+v.3.7.mcpack/file",
-      "versi mc": "1.26+",
-      "ukuran": "4.26 MB",
-      "tanggal unggah": "17 Juli 2026",
-      "description": "Shader Non-Patch Terbaik untuk MCPE & Bedrock! Kabut realistis, Godrays, dedaunan/air yang melambai, pencahayaan halus, Lebih baik & tanpa lag pada perangkat kelas bawah. Kompatibel dengan Renderdragon. Tingkatkan visual tanpa mengurangi performa!"
-    },
-    "viltrumate_addon": {
-      "slug": "viltrumate_addon",
-      "nama file": "Viltrumate Addon",
-      "type file": "Mcpack",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/member/2026-07-17-6fcd94d1-3559-4bb1-acde-ef26a2eb31c9.jpg",
-      "link download": "https://www.mediafire.com/file/ynvuq0h4g8cr2sr/[MZNK]Viltrumate+Addon+V1(fixed+bug).mcaddon/file",
-      "versi mc": "1.26+",
-      "ukuran": "1.67 MB",
-      "tanggal unggah": "17 Juli 2026",
-      "description": "Jadilah seorang Viltrumite atau manusia.\n\nYa, add-on Viltrumate dengan beberapa kemampuan kustom.\n\n⚠️TIDAK PERLU MENGAKTIFKAN FITUR EKSPERIMENTAL⚠️\n\nMenikmati!\n\nSaya juga menambahkan sistem level! Kamu akan menjadi lebih kuat seiring meningkatnya levelmu.\n\nJangan lupa melihat gambar sebagai panduan!!!!\n\nPastikan untuk menonton video lengkap agar tahu cara kerjanya.\n\n\nOh ya, kompatibel dengan sebagian besar add-on, dan ramah terhadap pencapaian.\n\nApa yang baru dalam pembaruan ini:\n\n-Pengangkatan laser mata untuk Viltrumite \n\n-Menambahkan kemampuan mencengkeram baru\n\n-Menambahkan mode melayang\n\n-Viltrumite yang Dipoles Secara Keseluruhan\n\n-Menambahkan Homelander\n\n-Menu diubah\n\n-Perintah Level Mudah (/set:levels [target amount])\n\n-Perubahan animasi, perbaikan bug, dan lainnya\n\nCobalah, kamu akan lihat."
-    },
-    "TaCZ":{
-      "slug": "TaCZ",
-      "nama file": "[TaCZ] Modern Warfare Gun Pack for TaCZ",
-      "type file": "Mcpack",
-      "kategori": "addon",
-      "link gambar": "https://cdn.phototourl.com/member/2026-07-17-32e26069-c618-46cb-aea7-824f636c3320.png",
-      "link download": "https://www.mediafire.com/file/grh20y0nyzgyjh9/mw19_guns_addon_v200.zip/file[Tacz1.1.8-Only]+Tacz_Plus_v1.5.zip.zip/file",
-      "versi mc": "1.26+",
-      "ukuran": "8.49 MB",
-      "tanggal unggah": "17 Juli 2026",
-      "description": "Paket senjata untuk Timeless dan Classic: Zero dengan senjata dan perlengkapan yang sebagian besar berasal dari CoD: Modern Warfare 2019, dan game lainnya!"
+    "slug": "vanila_vehicles",
+    "nama file": "Vanila Vehicles",
+    "type file": "mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-07-15-c8d76a76-5a0d-4372-aa42-251c4094f72f.jpg",
+    "link download": "https://www.mediafire.com/file/ng5zeablrizxp4y/Vanilla+Vehicles.mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "4.57 MB",
+    "tanggal unggah": "15 Juli 2026",
+    "description": "Dari angkasa, laut, hingga darat, Vanilla Vehicles menambahkan kendaraan yang ramah terhadap kelangsungan hidup dan dapat disesuaikan sepenuhnya sehingga terasa seperti di rumah sendiri di dunia Anda!"
+  },
+  "vfx_core_visual": {
+    "slug": "vfx_core_visual",
+    "nama file": "VFX Core Visual",
+    "type file": "mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-07-15-4d4aae93-dee7-4eed-95db-25d41cbfae9d.jpg",
+    "link download": "https://www.mediafire.com/file/3gy7r7px3ldjf14/VFXCore+v1.4.mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "4.25 MB",
+    "tanggal unggah": "15 Juli 2026",
+    "description": "Ubah dunia Minecraft Anda dengan efek visual yang menakjubkan, kupu-kupu, kunang-kunang, pencahayaan dinamis, aurora, percikan air, jejak kaki, dan masih banyak lagi!"
+  },
+  "realistic_biomes": {
+    "slug": "realistic_biomes",
+    "nama file": "Realistic Biomes",
+    "type file": "Mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-07-15-c22eca88-2b37-444c-9db4-20e676b8c01d.jpg",
+    "link download": "https://www.mediafire.com/file/0syti17kkc1d03t/Realistic_Biomes_1.2.2_Add-On.mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "20.23 MB",
+    "tanggal unggah": "15 Juli 2026",
+    "description": "Ubah dunia Anda dengan langit khusus yang indah, cuaca dinamis, efek visual menakjubkan, dan audio yang imersif."
+  },
+  "vanilla_humanoid_villagers": {
+    "slug": "vanilla_humanoid_villagers",
+    "nama file": "Vanilla Humanoid Village",
+    "type file": "Mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-07-15-f601abbe-8c96-4b2d-970c-9351444b730d.png",
+    "link download": "https://www.mediafire.com/file/h5kvyrlnthjmlci/vanilla_humanoid_villagers-v1.5.mcpack/file",
+    "versi mc": "1.26+",
+    "ukuran": "1.26 MB",
+    "tanggal unggah": "15 Juli 2026",
+    "description": "Memperkenalkan Vanilla Humanoid Villagers! Paket ini mengubah penduduk desa Minecraft menjadi berpenampilan lebih mirip manusia sambil tetap mempertahankan nuansa vanilla asli yang Anda kenal dan sukai."
+  },
+  "auto_fisher": {
+    "slug": "auto_fisher",
+    "nama file": "Auto Fisher",
+    "type file": "Mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-07-15-02e05f24-eb71-406f-b791-72826a4c52b4.jpg",
+    "link download": "https://www.mediafire.com/file/i4s5s31149aohst/AutoFisher+1.0.3+Add-On+(addon)+(MDF).mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "881.92 KB",
+    "tanggal unggah": "15 Juli 2026",
+    "description": "Bagi kita yang sangat tidak suka memancing:\n- alat pancing otomatis yang dapat dibuat: AutoFisher\n- perangkat sampah yang dapat dibuat untuk menghancurkan kelebihan jarahan: Insinerator\n- 5 peningkatan berbeda\n- Chunk Vizualizer untuk membantu penempatan\n- Boneka Golem Mini\n- Multi alat\nOleh Scai Quest"
+  },
+  "auto_factory": {
+    "slug": "auto_factory",
+    "nama file": "Auto Factory",
+    "type file": "Mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-07-15-34061075-7b18-4398-adb9-fe7837176299.jpg",
+    "link download": "https://www.mediafire.com/file/l30alsih9823vce/Auto+Factory+RP+(addon)+(MDF).mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "1 MB",
+    "tanggal unggah": "15 Juli 2026",
+    "description": "Gunakan lebih dari selusin mesin baru untuk memindahkan, memproses, dan membuat pabrik terbaik! Setiap mesin melakukan sesuatu yang berbeda untuk membantu Anda mengumpulkan dan membuat bahan dalam jumlah besar! Gunakan konveyor, kipas, dan magnet untuk memindahkan barang dari satu mesin ke mesin berikutnya dan ciptakan jalur perakitan terbaik!\n\n- Menambahkan 12+ mesin baru yang memindahkan atau mengubah blok!\n- Memiliki dukungan penuh redstone!"
+  },
+  "auto_quarry": {
+    "slug": "auto_quarry",
+    "nama file": "Auto Quarry",
+    "type file": "Mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-07-15-1cf187d0-6378-4ca9-b97b-65358a06c3c1.jpg",
+    "link download": "https://www.mediafire.com/file/eqzl4riqf7z5vyj/Auto+Quarry+1.1+(addon)+(MDF).mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "600 KB",
+    "tanggal unggah": "15 Juli 2026",
+    "description": "Tambang secara efisien dengan Add-On Tambang Otomatis! Buat 4 tambang dengan ukuran berbeda lengkap dengan perancah, pelindung air & lava, dan jatuh perlahan! Tambang Otomatis sekarang mengumpulkan tetesannya! Tempatkan alat lain di bagian bawah untuk menambang tambang yang lebih dalam! Kumpulkan rampasan Anda dan bangun markas yang Anda impikan!"
+  },
+  "auto_farm": {
+    "slug": "auto_farm",
+    "nama file": "Auto Farm",
+    "type file": "Mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-07-15-8bceb29e-1ba8-4dd4-8cac-645c2fb4250c.jpg",
+    "link download": "https://www.mediafire.com/file/r8vz97n6y8m31s3/AutoFarm++(addon)+(MDF).mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "1.90 MB",
+    "tanggal unggah": "15 Juli 2026",
+    "description": "Bosan mencari sumber daya? Dengan AutoFarm+, Anda dapat secara otomatis mengumpulkan monster favorit, mengumpulkan barang langka, dan meningkatkan penghasilan — semuanya sambil fokus membangun, menjelajahi, atau menaklukkan dunia Anda!\n\n+ Bertani hingga 25 monster!\n+ 2 MOB FARMS dan 5 GENERATOR LISTRIK!\n- Dibuat oleh Eco Studios."
+  },
+  "anime_weapons": {
+    "slug": "anime_weapons",
+    "nama file": "Anime Weapons",
+    "type file": "Mcaddon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-07-16-a8facf96-0b31-4721-af95-cd673feca57d.jpg",
+    "link download": "https://www.mediafire.com/file/e2dfb2f2w67yxr7/Anime-Weapons-Addon-MCPE-1.21.mcaddon.zip/file",
+    "versi mc": "1.26+",
+    "ukuran": "8.90 MB",
+    "tanggal unggah": "16 Juli 2026",
+    "description": "Dengan Anime Weapons Addon (1.21), Anda dapat melepaskan kekuatan persenjataan legendaris dan menjadi prajurit anime terhebat, siap menaklukkan musuh mana pun di jalan Anda! Mod ini menampilkan 7 senjata epik, masing-masing memiliki 3 kemampuan unik dan satu kemampuan pamungkas. Hadapi 7 karakter anime ikonik, tingkatkan level senjata Anda, buka kemampuan pamungkas, dan nikmati efek suara kustom dan banyak lagi!"
+  },
+  "rg_shader": {
+    "slug": "rg_shader",
+    "nama file": "RG Shader",
+    "type file": "Texturepack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/member/2026-07-17-bfbb4f86-2bf9-4b68-b3be-82d59df07f54.gif",
+    "link download": "https://www.mediafire.com/file/b7yo6wiwjnrbyei/RG+SHADER+v.3.7.mcpack/file",
+    "versi mc": "1.26+",
+    "ukuran": "4.26 MB",
+    "tanggal unggah": "17 Juli 2026",
+    "description": "Shader Non-Patch Terbaik untuk MCPE & Bedrock! Kabut realistis, Godrays, dedaunan/air yang melambai, pencahayaan halus, Lebih baik & tanpa lag pada perangkat kelas bawah. Kompatibel dengan Renderdragon. Tingkatkan visual tanpa mengurangi performa!"
+  },
+  "viltrumate_addon": {
+    "slug": "viltrumate_addon",
+    "nama file": "Viltrumate Addon",
+    "type file": "Mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-07-17-6fcd94d1-3559-4bb1-acde-ef26a2eb31c9.jpg",
+    "link download": "https://www.mediafire.com/file/ynvuq0h4g8cr2sr/[MZNK]Viltrumate+Addon+V1(fixed+bug).mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "1.67 MB",
+    "tanggal unggah": "17 Juli 2026",
+    "description": "Jadilah seorang Viltrumite atau manusia.\n\nYa, add-on Viltrumate dengan beberapa kemampuan kustom.\n\n⚠️TIDAK PERLU MENGAKTIFKAN FITUR EKSPERIMENTAL⚠️\n\nMenikmati!\n\nSaya juga menambahkan sistem level! Kamu akan menjadi lebih kuat seiring meningkatnya levelmu.\n\nJangan lupa melihat gambar sebagai panduan!!!!\n\nPastikan untuk menonton video lengkap agar tahu cara kerjanya.\n\n\nOh ya, kompatibel dengan sebagian besar add-on, dan ramah terhadap pencapaian.\n\nApa yang baru dalam pembaruan ini:\n\n-Pengangkatan laser mata untuk Viltrumite \n\n-Menambahkan kemampuan mencengkeram baru\n\n-Menambahkan mode melayang\n\n-Viltrumite yang Dipoles Secara Keseluruhan\n\n-Menambahkan Homelander\n\n-Menu diubah\n\n-Perintah Level Mudah (/set:levels [target amount])\n\n-Perubahan animasi, perbaikan bug, dan lainnya\n\nCobalah, kamu akan lihat."
+  },
+  "TaCZ": {
+    "slug": "TaCZ",
+    "nama file": "[TaCZ] Modern Warfare Gun Pack for TaCZ",
+    "type file": "Mcpack",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-07-17-32e26069-c618-46cb-aea7-824f636c3320.png",
+    "link download": "https://www.mediafire.com/file/grh20y0nyzgyjh9/mw19_guns_addon_v200.zip/file[Tacz1.1.8-Only]+Tacz_Plus_v1.5.zip.zip/file",
+    "versi mc": "1.26+",
+    "ukuran": "8.49 MB",
+    "tanggal unggah": "17 Juli 2026",
+    "description": "Paket senjata untuk Timeless dan Classic: Zero dengan senjata dan perlengkapan yang sebagian besar berasal dari CoD: Modern Warfare 2019, dan game lainnya!"
   },
   "sunman_horror_enchanced": {
     "slug": "sunman_horror_enchanced",
@@ -493,7 +491,7 @@
     "tanggal unggah": "22 Juli 2026",
     "description": "Addon ini menambahkan realisme ke Minecraft dengan memperkenalkan manajemen hidrasi dan suhu. Pemain harus minum air untuk tetap terhidrasi dan mengatur suhu tubuh mereka berdasarkan lingkungan, membutuhkan pakaian atau tempat berlindung yang sesuai untuk bertahan hidup dalam cuaca panas atau dingin yang ekstrem."
   },
-  "otherworldly":   {
+  "otherworldly": {
     "slug": "otherworldly",
     "nama file": "Otherworldly",
     "type file": "Mcaddon",
@@ -818,7 +816,7 @@
     "description": "MENJELAJAHI KE DIMENSI BARU! Jelajahi dunia yang dihasilkan secara prosedural dengan pulau-pulau terapung tak berujung yang dipenuhi bioma aneh, makhluk bermusuhan, reruntuhan alien yang ditinggalkan, dan teknologi misterius.\n\n- Dimensi khusus yang nyata\n- Senjata & pelindung kekuatan yang dapat diupgrade\n- Mesin canggih dan perkembangan kompleks\n- Massa baru yang menantang\n- Terraformer medan yang dapat dikontrol"
   },
   "boom_and_bloom": {
-    "slug": "boom_and_bloom", 
+    "slug": "boom_and_bloom",
     "nama file": "Boom & Bloom",
     "type file": "Script",
     "kategori": "addon",
@@ -832,13 +830,13 @@
   "verity_be_official": {
     "slug": "verity_be_official",
     "nama file": "Verity BE (Official)",
-    "type file": "Add-on",
+    "type file": "Addon",
     "kategori": "addon",
-    "link gambar": "https://cdn.phototourl.com/member/2026-07-29-03327b19-61f4-4cbc-ac13-207d43ea6d0b.png",
-    "link download": "https://www.mediafire.com/file/i0rny1sn0qnxnaa/Verity+(Stable)+(1.1.0)-(26.3).mcaddon/file",
+    "link gambar": "https://cdn.phototourl.com/member/2026-08-01-94843671-8d0e-46f3-8574-a13c6d3a6fff.png",
+    "link download": "https://files.catbox.moe/7o4k9s.mcaddon",
     "versi mc": "1.26+",
-    "ukuran": "21.31 MB",
-    "tanggal unggah": "29 Juli 2026",
+    "ukuran": "24.82 MB",
+    "tanggal unggah": "1 Agustus 2026",
     "description": "Verity™ adalah sebuah add-on yang memperkenalkan teman pembantu bernama Verity, yang mengetahui segalanya."
   },
   "dimensional_travels": {
@@ -891,15 +889,15 @@
   },
   "overgrown_v_0.3": {
     "slug": "overgrown_v_0.3",
-    "nama file": "Overgrown V 0.3",
-    "type file": "Addon",
-    "kategori": "addon",
-    "link gambar": "https://cdn.phototourl.com/member/2026-07-31-263fd8b7-e4eb-4d67-8645-be23e8a39cae.jpg",
-    "link download": "https://www.mediafire.com/file/tifvakrsaw1aqhq/Overgrown+0.3+[+Construction+Update+]_1777824674150.mcaddon/file",
-    "versi mc": "---",
-    "ukuran": "1.31 mb",
-    "tanggal unggah": "31 Juli 2026",
-    "description": "❗️Ini adalah versi yang SANGAT awal, jadi harap maklum jika ada bug dan hal lainnya❗️\n\nPohon dan dedaunan (saat ini)\n\nPohon Poplar Putih\n\nPohon Abu\n\nLapisan rumput \n\nBunga Limonium Kaspia\n\nDekorasi Balok |\n\n• Pintu Abu \n\n•Atap Abu \n\n• Perancah Abu \n\n•Dinding Abu\n\n•Jendela Abu-abu\n\n•Dinding dan Blok Plester Batu Kapur\n\n•Tungku Lumpur"
+    "nama file": "Overgrown v0.3",
+    "type file": "Resource Pack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/member/2026-08-01-3d2a5ff8-1d29-4535-8c2e-0455953c4bd2.png",
+    "link download": "https://files.catbox.moe/mnm9r2.mcpack",
+    "versi mc": "26.30",
+    "ukuran": "1.9",
+    "tanggal unggah": "1 Agustus 2026",
+    "description": "\"Survival Overhaul adalah resource pack lengkap yang dirancang untuk meningkatkan setiap aspek gameplay bertahan hidup di Minecraft Bedrock. Alih-alih menumpuk banyak resource pack, pack tunggal ini menggabungkan berbagai fitur penting untuk mode survival ke dalam satu pengalaman yang rapi, lengkap, dan berkualitas.\""
   },
   "warmlight_shaders": {
     "slug": "warmlight_shaders",
@@ -925,7 +923,7 @@
     "tanggal unggah": "31 Juli 2026",
     "description": "🌿 Paket Tekstur Rumput Lengkap Java\nHadirkan tampilan rumput penuh (Full Grass) Java Edition yang bersih dan cerah ke Minecraft Bedrock! Paket tekstur ini membuat blok rumput tampak tertutup sepenuhnya oleh rumput hijau yang rimbun, memberikan dunia Anda tampilan yang lebih halus, lebih imersif, dan realistis sambil tetap mempertahankan gaya vanilla klasik."
   },
-  "starlit_vision_shader":  {
+  "starlit_vision_shader": {
     "slug": "starlit_vision_shader",
     "nama file": "Starlit Vision Shader",
     "type file": "Shader",
@@ -1045,30 +1043,6 @@
     "tanggal unggah": "1 Agustus 2026",
     "description": "Derivative kembali hadir, membawa visual realistis, optimasi hebat, dan masih banyak lagi."
   },
-  "verity_be_official": {
-    "slug": "verity_be_official",
-    "nama file": "Verity BE (Official)",
-    "type file": "Addon",
-    "kategori": "addon",
-    "link gambar": "https://cdn.phototourl.com/member/2026-08-01-94843671-8d0e-46f3-8574-a13c6d3a6fff.png",
-    "link download": "https://files.catbox.moe/7o4k9s.mcaddon",
-    "versi mc": "1.26+",
-    "ukuran": "24.82 MB",
-    "tanggal unggah": "1 Agustus 2026",
-    "description": "Verity™ adalah sebuah add-on yang memperkenalkan teman pembantu bernama Verity, yang mengetahui segalanya."
-  },
-  "overgrown_v_0.3": {
-    "slug": "overgrown_v_0.3",
-    "nama file": "Overgrown v0.3",
-    "type file": "Resource Pack",
-    "kategori": "resource",
-    "link gambar": "https://cdn.phototourl.com/member/2026-08-01-3d2a5ff8-1d29-4535-8c2e-0455953c4bd2.png",
-    "link download": "https://files.catbox.moe/mnm9r2.mcpack",
-    "versi mc": "26.30",
-    "ukuran": "1.9",
-    "tanggal unggah": "1 Agustus 2026",
-    "description": "\"Survival Overhaul adalah resource pack lengkap yang dirancang untuk meningkatkan setiap aspek gameplay bertahan hidup di Minecraft Bedrock. Alih-alih menumpuk banyak resource pack, pack tunggal ini menggabungkan berbagai fitur penting untuk mode survival ke dalam satu pengalaman yang rapi, lengkap, dan berkualitas.\""
-  },
   "replaycraft_real_replay_addon": {
     "slug": "replaycraft_real_replay_addon",
     "nama file": "ReplayCraft Real Replay Add-on",
@@ -1153,7 +1127,7 @@
     "tanggal unggah": "2 Agustus 2026",
     "description": "Sweep 'N Slash menambahkan serangan sapuan untuk pedang dan menonaktifkan efek dorongan mundur perisai.\nSweep 'N Slash mengkonversi perhitungan kerusakan ke dalam perhitungan yang digunakan oleh Java Edition.\nSweep 'N Slash menggunakan mekanisme efek dorongan mundur (knockback) khusus untuk menghadirkan efek dorongan mundur dari Java Edition ke Bedrock Edition semaksimal mungkin."
   },
-  "tanks":  {
+  "tanks": {
     "slug": "tanks",
     "nama file": "Tanks | Drivable Battle Tank",
     "type file": "Addon",
@@ -1189,7 +1163,7 @@
     "tanggal unggah": "3 Agustus 2026",
     "description": "Paket tekstur animasi orang pertama — dapat dikustomisasi dalam segala hal!"
   },
-  "mojojos_interdimensional_portal_network":{
+  "mojojos_interdimensional_portal_network": {
     "slug": "mojojos_interdimensional_portal_network",
     "nama file": "Mojojo's, Interdimensional Portal Network",
     "type file": "Addon",
@@ -1201,7 +1175,7 @@
     "tanggal unggah": "4 Agustus 2026",
     "description": "Jadi, saya berhasil melakukannya lagi! Saya telah menulis konsep yang sangat menarik ke dalam JavaScript. Anda benar-benar dapat membuat portal dari blok-blok tertentu yang dirancang untuk memiliki jaringan portal multi-lapisan dan multi-dimensi."
   },
-  "epic_fight":{
+  "epic_fight": {
     "slug": "epic_fight",
     "nama file": "Epic Fight",
     "type file": "Addon",
@@ -1921,7 +1895,7 @@
     "tanggal unggah": "20 Agustus 2026",
     "description": "Bangun, perluas, dan kuasai peradaban Anda sendiri! Tingkatkan peradaban Anda dan tingkatkan populasi warga Anda.\nTingkatkan bangunan, klaim tanah, kelola perekonomian Anda, bangun toko, berikan pekerjaan kepada warga, undang pemain, dan pilih pemimpin.\n\n+ 20 Struktur untuk dibangun dan ditingkatkan\n+ Sesuaikan Ekonomi Anda sendiri\n+ Klaim, perluas, dan kendalikan lahan\n+ Modus pertempuran"
   },
-  "break-the-64-stack-limite":{
+  "break-the-64-stack-limite": {
     "slug": "break-the-64-stack-limite",
     "nama file": "OverStack \"break the 64 stack limite\"",
     "type file": "Addon",
@@ -2364,5 +2338,17 @@
     "ukuran": "4.62 MB",
     "tanggal unggah": "10 September 2026",
     "description": "Add-on ini mencakup semuanya, mulai dari mi, nasi mangkuk, sup, pangsit, hidangan daging, sashimi, kue-kue, piring saji, makanan goreng, teh, dan resep khusus lainnya hingga kreasi kuliner yang lebih unik. Banyak makanan dapat ditempatkan di dunia sebagai piring saji, sementara keranjang, rak, wadah minyak, meja, kursi, bangku, dan perabot dapur lainnya memungkinkan Anda membangun ruang memasak yang jauh lebih lengkap."
+  },
+  "volatile_cuisine": {
+    "slug": "volatile_cuisine",
+    "nama file": "Volatile cuisine",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-14-2b018d0f-9a05-4046-9f4d-7e4e83e198bd.jpg",
+    "link download": "https://files.catbox.moe/gz6f8k.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "3 MB",
+    "tanggal unggah": "16 September 2026",
+    "description": "\"Rasanya tidak pernah semenyenangkan ini! Volatile Cuisine mengubah kelangsungan hidup menjadi petualangan memasak yang hidup. Berburu makhluk menggemaskan, kumpulkan bahan-bahan yang mudah menguap, dan buat resep menakjubkan di Tungku Makanan. Setiap makanan memberikan efek menggemparkan yang unik!\\n\\n+ 21 Resep Unik\\n+ 6 Bahan Unik\\n+ 6 Makhluk Baru\\n+ Masak dengan Sendok Koki!\""
   }
 }
