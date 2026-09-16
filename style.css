@@ -1985,3 +1985,27 @@ body {
 }
 .filter-kontrol select:focus { border-color: #ff3b30; }
 @media (max-width: 520px) { .filter-lanjutan { grid-template-columns: 1fr; } }
+
+
+/* ==============================================
+   STAGE R — OPTIMASI MOBILE & PERFORMA
+   ============================================== */
+.kartu-addon, .kartu-geser {
+    contain: layout paint;
+}
+
+#wadah-addon .kartu-addon {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 320px;
+}
+
+.gambar-wadah img {
+    content-visibility: auto;
+}
+
+@media (max-width: 480px) {
+    .container { width: 94%; }
+    .bagian-sambutan { height: 230px; }
+    .isi-sambutan h1 { font-size: 25px; }
+    .kartu-geser { min-width: 240px; max-width: 240px; }
+}

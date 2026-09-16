@@ -31,6 +31,15 @@ function kunciLikePengguna() {
     return penggunaLogin ? `sudahLike_${penggunaLogin.uid}` : "sudahLike_tidak_login";
 }
 
+function ambilDaftarLikeLokal() {
+    if (!penggunaLogin) return [];
+    try {
+        return JSON.parse(localStorage.getItem(kunciLikePengguna()) || '[]');
+    } catch {
+        return [];
+    }
+}
+
 function tampilkanKartuLogin() {
     if (document.getElementById("kartu-login-overlay")) return;
     const overlay = document.createElement("div");
@@ -63,7 +72,7 @@ function tampilkanAddonDisukaiDariUrl() {
     const wadah = document.getElementById("wadah-addon");
     if (!wadah) return false;
 
-    const disukai = penggunaLogin ? JSON.parse(localStorage.getItem(kunciLikePengguna()) || "[]") : [];
+    const disukai = ambilDaftarLikeLokal();
     const hasil = penggunaLogin ? daftarAddon.filter(item => disukai.includes(item.slug)) : [];
 
     filterAktif = "semua";
@@ -88,7 +97,7 @@ function tampilkanAddonDisukaiDariUrl() {
 async function tampilkanAddon() {
     const wadah = document.getElementById('wadah-addon');
     try {
-        const respon = await fetch('./data.json');
+        const respon = await fetch('./data.json', { cache: 'no-cache' });
         if (!respon.ok) throw new Error(`File tidak ditemukan (Kode: ${respon.status})`);
         
         semuaDataAddon = await respon.json();
@@ -155,7 +164,7 @@ function tampilkanTopAddon() {
 
         kartu.innerHTML = `
             <div class="gambar-wadah">
-                <img src="${item['link gambar']}" alt="${item['nama file']}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x160/ff3b30/ffffff?text=Gambar+Tidak+Ada'">
+                <img src="${item['link gambar']}" alt="${item['nama file']}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/300x160/ff3b30/ffffff?text=Gambar+Tidak+Ada'">
             </div>
             <div class="kartu-isi">
                 <h4>${item['nama file']}</h4>
@@ -195,20 +204,23 @@ function tampilkanDaftar(dataYangDitampilkan) {
         return;
     }
 
+    const fragmen = document.createDocumentFragment();
+    const daftarLike = ambilDaftarLikeLokal();
+
     dataYangDitampilkan.forEach((item) => {
         const kartu = document.createElement('div');
         kartu.className = 'kartu-addon';
         kartu.dataset.kategori = item.kategori || 'lainnya';
 
         const tipeFile = item['type file'] ? `<span class="tipe-file">${item['type file']}</span>` : '';
-        const linkDetail = `detail.html?slug=${item.slug}`;
-        const sudahDiLike = penggunaLogin ? JSON.parse(localStorage.getItem(kunciLikePengguna()) || '[]').includes(item.slug) : false;
+        const linkDetail = `detail.html?slug=${encodeURIComponent(item.slug)}`;
+        const sudahDiLike = daftarLike.includes(item.slug);
         const jumlahLike = item['jumlah like'] || 0;
 
         kartu.innerHTML = `
             <div class="gambar-wadah">
                 ${tipeFile}
-                <img src="${item['link gambar']}" alt="${item['nama file']}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x180/ff3b30/ffffff?text=Gambar+Tidak+Ada'">
+                <img src="${item['link gambar']}" alt="${item['nama file']}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/400x180/ff3b30/ffffff?text=Gambar+Tidak+Ada'">
             </div>
             <div class="kartu-isi">
                 <h3>${item['nama file']}</h3>
@@ -244,21 +256,25 @@ function tampilkanDaftar(dataYangDitampilkan) {
                 return;
             }
             const kunci = kunciLikePengguna();
-            const daftar = JSON.parse(localStorage.getItem(kunci) || '[]');
+            const daftar = ambilDaftarLikeLokal();
             if (!daftar.includes(slug)) {
                 daftar.push(slug);
                 localStorage.setItem(kunci, JSON.stringify(daftar));
                 const idAddon = Object.keys(semuaDataAddon).find(k => semuaDataAddon[k].slug === slug);
+                if (!idAddon) return;
                 const refLike = ref(db, 'jumlah_like/' + idAddon);
                 const snap = await get(refLike);
-                const baru = (snap.exists()?snap.val():0) + 1;
+                const baru = (snap.exists() ? snap.val() : 0) + 1;
                 await set(refLike, baru);
+                semuaDataAddon[idAddon]['jumlah like'] = baru;
                 tombol.classList.add('sudah');
                 tombol.querySelector('span').textContent = baru;
             }
         });
-        wadah.appendChild(kartu);
+        fragmen.appendChild(kartu);
     });
+
+    wadah.appendChild(fragmen);
 }
 
 // ==============================================
@@ -290,6 +306,12 @@ function terapkanUrutan(data) {
     if (urutanDaftar === 'like') return hasil.sort((a, b) => (b['jumlah like'] || 0) - (a['jumlah like'] || 0));
     if (urutanDaftar === 'nama') return hasil.sort((a, b) => String(a['nama file'] || '').localeCompare(String(b['nama file'] || ''), undefined, { sensitivity: 'base' }));
     return hasil.reverse();
+}
+
+let timerPencarian = null;
+function jadwalkanPencarian() {
+    clearTimeout(timerPencarian);
+    timerPencarian = setTimeout(terapkanFilterDanCari, 180);
 }
 
 function terapkanFilterDanCari() {
@@ -341,7 +363,7 @@ function aturNavigasiBawah() {
 
             if (nav === 'disukai') {
                 e.preventDefault();
-                const disukai = penggunaLogin ? JSON.parse(localStorage.getItem(kunciLikePengguna()) || '[]') : [];
+                const disukai = ambilDaftarLikeLokal();
                 filterAktif = 'semua';
                 document.querySelectorAll('.btn-kategori').forEach(b => b.classList.remove('aktif'));
                 document.querySelector('.btn-kategori[data-filter="semua"]')?.classList.add('aktif');
@@ -364,7 +386,8 @@ document.addEventListener('DOMContentLoaded', () => {
     aturTabTopAddon();
     aturNavigasiBawah();
     document.getElementById('tombol-cari')?.addEventListener('click', terapkanFilterDanCari);
-    document.getElementById('kotak-cari')?.addEventListener('keydown', e => { if(e.key==='Enter') terapkanFilterDanCari(); });
+    document.getElementById('kotak-cari')?.addEventListener('input', jadwalkanPencarian);
+    document.getElementById('kotak-cari')?.addEventListener('keydown', e => { if(e.key==='Enter') { clearTimeout(timerPencarian); terapkanFilterDanCari(); } });
     document.getElementById('filter-versi')?.addEventListener('change', e => {
         versiAktif = e.target.value === 'semua' ? 'semua' : decodeURIComponent(e.target.value);
         terapkanFilterDanCari();
