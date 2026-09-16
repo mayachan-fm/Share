@@ -109,10 +109,6 @@ function buatKunciUnik(base, digunakan) {
   return slug;
 }
 
-async function muatAktivitasAdmin(){
-  const list=document.getElementById('aktivitas-admin');if(!list)return;list.innerHTML='<div class="aktivitas-kosong">Memuat aktivitas...</div>';
-  try{if(!auth.currentUser)throw new Error('Login diperlukan.');const token=await auth.currentUser.getIdToken();const response=await fetch('/api/activity',{headers:{'Authorization':`Bearer ${token}`}});const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||`Permintaan gagal (${response.status}).`);const logs=result.logs||[];if(!logs.length){list.innerHTML='<div class="aktivitas-kosong">Belum ada aktivitas yang tercatat.</div>';return;}const label={addon_tambah:'Menambahkan addon',addon_edit:'Mengedit addon',addon_hapus:'Menghapus addon'},icon={addon_tambah:'fa-plus',addon_edit:'fa-pencil',addon_hapus:'fa-trash'};list.innerHTML=logs.map(item=>{const d=new Date(Number(item.waktu)||0),waktu=Number.isNaN(d.getTime())?'-':d.toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}),aksi=label[item.aksi]||item.aksi||'Aktivitas';return `<div class="aktivitas-item"><div class="aktivitas-icon"><i class="fa ${icon[item.aksi]||'fa-history'}"></i></div><div class="aktivitas-main"><strong>${esc(item.actor||'Akun')} <span class="badge-aktivitas">${esc(item.role||'user')}</span></strong><p>${esc(aksi)}: <b>${esc(item.targetName||item.targetId||'-')}</b></p><small>${esc(waktu)} · ${esc(item.detail||'')}</small></div></div>`}).join('');}catch(error){list.innerHTML=`<div class="aktivitas-kosong">${esc(error.message)}</div>`;}}
-
 onAuthStateChanged(auth, async user => {
   if (!user) { location.href = "profil.html"; return; }
 
@@ -139,7 +135,7 @@ onAuthStateChanged(auth, async user => {
       </div>
 
       <div class="admin-manage-box">
-        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di <code>data.json</code>, lalu edit atau hapus addon yang dipilih. Penghapusan hanya menghapus data dari website; file addon di layanan eksternal tetap aman.</p></div></div>
+        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di <code>data.json</code>, lalu edit addon yang dipilih. Penghapusan addon hanya dapat dilakukan oleh Owner di Panel Owner.</p></div></div>
         <div class="admin-manage-search"><input id="cari-addon-lama" type="search" placeholder="Cari nama addon atau slug..." autocomplete="off"><span id="hasil-cari-addon">Memuat...</span></div>
         <div id="daftar-addon-lama" class="daftar-addon-lama"></div>
       </div>
@@ -195,11 +191,6 @@ onAuthStateChanged(auth, async user => {
       </div>
     </div>
 
-      <section class="aktivitas-box">
-        <div class="aktivitas-header"><div><h3><i class="fa fa-history"></i> Riwayat Aktivitas</h3><p>Aktivitas pengelolaan addon oleh Admin dan Owner.</p></div><button type="button" class="tombol-sekunder" id="muat-aktivitas-admin"><i class="fa fa-refresh"></i> Muat ulang</button></div>
-        <div id="aktivitas-admin" class="aktivitas-daftar"><div class="aktivitas-kosong">Memuat aktivitas...</div></div>
-      </section>
-
     <a class="tombol-sekunder tombol-kembali-admin" href="profil.html"><i class="fa fa-arrow-left"></i> Kembali ke Profil</a>
   `;
 
@@ -250,10 +241,9 @@ onAuthStateChanged(auth, async user => {
     });
     hasilCariAddon.textContent = `${hasil.length} addon ditemukan`;
     if (!hasil.length) { daftarAddonLama.innerHTML = '<div class="admin-list-empty">Addon tidak ditemukan.</div>'; return; }
-    daftarAddonLama.innerHTML = hasil.slice(0,60).map(([key,item]) => `<div class="addon-lama-item"><div class="addon-lama-main"><strong>${esc(item["nama file"] || key)}</strong><span>${esc(key)} · ${esc(item["type file"] || "-")} · ${esc(item.kategori || "-")}</span></div><div class="addon-lama-actions"><button type="button" class="tombol-edit-addon" data-key="${esc(key)}"><i class="fa fa-pencil"></i> Edit</button><button type="button" class="tombol-hapus-addon-lama" data-key="${esc(key)}"><i class="fa fa-trash"></i> Hapus</button></div></div>`).join("");
+    daftarAddonLama.innerHTML = hasil.slice(0,60).map(([key,item]) => `<div class="addon-lama-item"><div class="addon-lama-main"><strong>${esc(item["nama file"] || key)}</strong><span>${esc(key)} · ${esc(item["type file"] || "-")} · ${esc(item.kategori || "-")}</span></div><div class="addon-lama-actions"><button type="button" class="tombol-edit-addon" data-key="${esc(key)}"><i class="fa fa-pencil"></i> Edit</button></div></div>`).join("");
     if (hasil.length > 60) daftarAddonLama.insertAdjacentHTML("beforeend", '<div class="admin-list-empty">Menampilkan 60 hasil pertama. Gunakan pencarian untuk mempersempit.</div>');
     daftarAddonLama.querySelectorAll(".tombol-edit-addon").forEach(btn => btn.addEventListener("click", () => mulaiEditAddon(btn.dataset.key)));
-    daftarAddonLama.querySelectorAll(".tombol-hapus-addon-lama").forEach(btn => btn.addEventListener("click", () => hapusAddon(btn.dataset.key)));
   }
 
   function isiFormDariAddon(key) {
@@ -291,7 +281,7 @@ onAuthStateChanged(auth, async user => {
           <strong>${esc(item.data["nama file"])}</strong>
           <span>${esc(item.key)} · ${esc(item.data["type file"])} · ${esc(item.data.kategori)}</span>
         </div>
-        <button type="button" class="tombol-hapus-addon" data-index="${index}" title="Hapus dari daftar"><i class="fa fa-trash"></i></button>
+        <button type="button" class="tombol-hapus-addon" data-index="${index}" title="Buang dari daftar sementara"><i class="fa fa-trash"></i></button>
       </div>
     `).join("");
     daftar.querySelectorAll(".tombol-hapus-addon").forEach(btn => btn.addEventListener("click", () => {
@@ -336,47 +326,6 @@ onAuthStateChanged(auth, async user => {
     }
   }
 
-  async function hapusAddon(key) {
-    const item = dataLama[key];
-    if (!item) return;
-    const namaAddon = item["nama file"] || key;
-    const konfirmasi1 = confirm(`Hapus "${namaAddon}" dari data.json?\n\nSlug/ID: ${key}\n\nFile addon di layanan eksternal TIDAK akan dihapus.`);
-    if (!konfirmasi1) return;
-    const konfirmasi2 = confirm(`Konfirmasi terakhir.\n\nAddon "${namaAddon}" akan dihapus dari data.json dan perubahan akan dibuat sebagai commit di GitHub.\n\nLanjutkan?`);
-    if (!konfirmasi2) return;
-
-    const tombol = daftarAddonLama.querySelector(`.tombol-hapus-addon-lama[data-key="${CSS.escape(key)}"]`);
-    const teksAsli = tombol ? tombol.innerHTML : "";
-    if (tombol) { tombol.disabled = true; tombol.innerHTML = '<i class="fa fa-spinner fa-spin"></i>'; }
-
-    try {
-      if (!auth.currentUser) throw new Error("Sesi login sudah berakhir. Silakan login kembali.");
-      const idToken = await auth.currentUser.getIdToken();
-      const response = await fetch("/api/delete-addon", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${idToken}`
-        },
-        body: JSON.stringify({ key })
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok || !result.ok) throw new Error(result.error || "Gagal menghapus addon.");
-
-      delete dataLama[key];
-      count.textContent = `${Object.keys(dataLama).length} addon di data.json`;
-      if (sedangEditKey === key) batalEdit();
-      renderAddonLama();
-      hasil.value = "";
-      alert(`Berhasil! "${namaAddon}" sudah dihapus dari data.json.\n\nFile addon eksternal tetap tidak berubah.`);
-    } catch (error) {
-      console.error(error);
-      alert(`Gagal menghapus addon.\n\n${error.message}`);
-    } finally {
-      if (tombol) { tombol.disabled = false; tombol.innerHTML = teksAsli; }
-    }
-  }
-
   async function updateAddonKeGithub(key, data) {
     if (!auth.currentUser) throw new Error("Sesi login sudah berakhir. Silakan login kembali.");
     const idToken = await auth.currentUser.getIdToken();
@@ -405,7 +354,6 @@ onAuthStateChanged(auth, async user => {
     addonBaru.push({key:slugValue,data:dataBaru}); renderDaftar(); hasil.value=""; resetForm();
   });
 
-  document.getElementById('muat-aktivitas-admin')?.addEventListener('click', muatAktivitasAdmin);
 
   document.getElementById("kosongkan-form").addEventListener("click", resetForm);
 
@@ -495,7 +443,6 @@ onAuthStateChanged(auth, async user => {
     }
   });
   await muatDashboardStatistik();
-  await muatAktivitasAdmin();
 });
 </script>
 </body>
