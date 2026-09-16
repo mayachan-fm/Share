@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { catatAktivitas } = require('../lib/activity');
 
 function send(res, status, body) {
   res.status(status).json(body);
@@ -112,6 +113,7 @@ module.exports = async (req, res) => {
       if (currentRole === 'owner') return send(res, 400, { ok: false, error: 'Akun Owner tidak boleh diubah menjadi Admin.' });
 
       await admin.database().ref(`roles/${target.uid}`).set('admin');
+      await catatAktivitas({decoded: owner, role:'owner', aksi:'admin_tambah', targetId:target.uid, targetName:target.email || target.uid, detail:'Memberikan role Admin'});
       return send(res, 200, {
         ok: true,
         action,
@@ -131,6 +133,9 @@ module.exports = async (req, res) => {
       if (role !== 'admin') return send(res, 400, { ok: false, error: 'Akun tersebut bukan Admin.' });
 
       await admin.database().ref(`roles/${uid}`).remove();
+      let targetEmail = uid;
+      try { targetEmail = (await admin.auth().getUser(uid)).email || uid; } catch (_) {}
+      await catatAktivitas({decoded: owner, role:'owner', aksi:'admin_cabut', targetId:uid, targetName:targetEmail, detail:'Mencabut role Admin'});
       return send(res, 200, { ok: true, action, uid, message: 'Role Admin berhasil dicabut. Akun kembali menjadi User.' });
     }
 

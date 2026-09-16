@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { catatAktivitas } = require('../lib/activity');
 
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
@@ -145,6 +146,10 @@ module.exports = async (req, res) => {
         branch: BRANCH
       })
     });
+
+    for (const addon of incoming) {
+      await catatAktivitas({ decoded, role, aksi: 'addon_tambah', targetId: addon.slug, targetName: addon['nama file'], detail: 'Menambahkan addon ke data.json' });
+    }
 
     return send(res, 200, {
       ok: true,

@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { catatAktivitas } = require('../lib/activity');
 
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
@@ -44,6 +45,7 @@ module.exports=async(req,res)=>{
     data[key]=addon;
     const encoded=Buffer.from(JSON.stringify(data,null,2)+'\n','utf8').toString('base64');
     const updated=await github(`contents/${PATH}`,{method:'PUT',body:JSON.stringify({message:`Perbarui addon di data.json: ${addon['nama file']}`.slice(0,200),content:encoded,sha:current.sha,branch:BRANCH})});
+    await catatAktivitas({decoded,role,aksi:'addon_edit',targetId:key,targetName:addon['nama file'],detail:'Mengedit data addon di data.json'});
     return send(res,200,{ok:true,role,slug:key,commitSha:updated.commit?.sha||null,commitUrl:updated.commit?.html_url||null});
   }catch(error){console.error('update-addon error:',error);const status=error.status===409?409:(error.code==='auth/id-token-expired'||error.code==='auth/argument-error'?401:500);return send(res,status,{ok:false,error:error.message||'Gagal memperbarui addon.'});}
 };

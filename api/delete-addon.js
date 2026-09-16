@@ -1,4 +1,5 @@
 const admin = require('firebase-admin');
+const { catatAktivitas } = require('../lib/activity');
 
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
@@ -99,6 +100,8 @@ module.exports = async (req, res) => {
         branch: BRANCH
       })
     });
+
+    await catatAktivitas({decoded,role,aksi:'addon_hapus',targetId:key,targetName:namaAddon,detail:'Menghapus addon dari data.json'});
 
     return send(res, 200, {
       ok: true,
