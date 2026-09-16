@@ -65,11 +65,12 @@ function normalizeAddon(item) {
     description: String(data.description || '').trim()
   };
 
-  if (!result['nama file'] || !result['type file'] || !result.kategori || !result.description) {
-    throw new Error(`Data addon "${key}" belum lengkap.`);
+  if (!result['nama file'] || result['nama file'].length > 120 || !result['type file'] || result['type file'].length > 40 || !result.kategori || !['addon','resource','peta','lainnya','apk'].includes(result.kategori.toLowerCase()) || !result.description || result.description.length > 1000) {
+    throw new Error(`Data addon \"${key}\" belum lengkap atau tidak valid.`);
   }
-  if (!validUrl(result['link gambar'])) throw new Error(`Link gambar untuk "${key}" tidak valid.`);
-  if (!validUrl(result['link download'])) throw new Error(`Link download untuk "${key}" tidak valid.`);
+  if (!validUrl(result['link gambar'])) throw new Error(`Link gambar untuk \"${key}\" tidak valid.`);
+  if (!validUrl(result['link download'])) throw new Error(`Link download untuk \"${key}\" tidak valid.`);
+  if (result['versi mc'].length > 60 || result.ukuran.length > 30 || result['tanggal unggah'].length > 40) throw new Error(`Data addon \"${key}\" melebihi batas karakter.`);
   return result;
 }
 

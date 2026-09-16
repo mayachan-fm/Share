@@ -20,9 +20,9 @@ function normalizeAddon(key,data){
   if(!/^[a-z0-9_-]{1,80}$/i.test(String(key||''))) throw new Error('Slug/ID addon tidak valid.');
   if(!data||typeof data!=='object') throw new Error('Data addon tidak valid.');
   const result={slug:String(key).trim(),'nama file':String(data['nama file']||'').trim(),'type file':String(data['type file']||'').trim(),kategori:String(data.kategori||'').trim(),'link gambar':cleanUrl(data['link gambar']),'link download':cleanUrl(data['link download']),'versi mc':String(data['versi mc']||'').trim(),ukuran:String(data.ukuran||'').trim(),'tanggal unggah':String(data['tanggal unggah']||'').trim(),description:String(data.description||'').trim()};
-  if(!result['nama file']||!result['type file']||!result.kategori||!result.description) throw new Error(`Data addon "${key}" belum lengkap.`);
+  if(!result['nama file']||result['nama file'].length>120||!result['type file']||result['type file'].length>40||!['addon','resource','peta','lainnya','apk'].includes(result.kategori.toLowerCase())||!result.description||result.description.length>1000) throw new Error(`Data addon "${key}" belum lengkap atau tidak valid.`);
   if(!validUrl(result['link gambar'])) throw new Error(`Link gambar untuk "${key}" tidak valid.`);
-  if(!validUrl(result['link download'])) throw new Error(`Link download untuk "${key}" tidak valid.`);
+  if(!validUrl(result['link download'])) throw new Error(`Link download untuk "${key}" tidak valid.`);if(result['versi mc'].length>60||result.ukuran.length>30||result['tanggal unggah'].length>40) throw new Error(`Data addon "${key}" melebihi batas karakter.`);
   return result;
 }
 async function github(path,options={}){
