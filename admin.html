@@ -16,12 +16,48 @@
 <div class="detail-isi profil-halaman" id="admin-app"><p>Memeriksa akses...</p></div>
 </div></div></section></main>
 <script type="module">
-import {auth, onAuthStateChanged, ambilRole} from "./auth.js";
+import {auth, db, onAuthStateChanged, ambilRole} from "./auth.js";
+import {ref, get} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 const el = document.getElementById("admin-app");
 
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]));
+}
+
+async function muatDashboardStatistik() {
+  const box = document.getElementById("dashboard-statistik-admin");
+  if (!box) return;
+  try {
+    const dataSnap = await fetch("./data.json", {cache:"no-store"});
+    if (!dataSnap.ok) throw new Error("data.json tidak dapat dibaca.");
+    const data = await dataSnap.json();
+    const items = Object.values(data || {});
+    const [downloadSnap, likeSnap] = await Promise.all([
+      get(ref(db, "jumlah_unduh")),
+      get(ref(db, "jumlah_like"))
+    ]);
+    const downloads = downloadSnap.exists() ? downloadSnap.val() : {};
+    const likes = likeSnap.exists() ? likeSnap.val() : {};
+    const totalDownload = Object.values(downloads || {}).reduce((sum, value) => sum + (Number(value) || 0), 0);
+    const totalLike = Object.values(likes || {}).reduce((sum, value) => sum + (Number(value) || 0), 0);
+    const kategori = {addon:0, resource:0, peta:0, lainnya:0, apk:0};
+    items.forEach(item => { const key = String(item?.kategori || "lainnya").toLowerCase(); kategori[key] = (kategori[key] || 0) + 1; });
+    const labels = {addon:"Addon", resource:"Resource", peta:"Peta", lainnya:"Lainnya", apk:"APK"};
+    const max = Math.max(1, ...Object.values(kategori));
+    const bars = Object.entries(kategori).map(([key, value]) => `<div class="statistik-kategori-item"><div class="statistik-kategori-label"><span>${esc(labels[key] || key)}</span><b>${value}</b></div><div class="statistik-bar"><span style="width:${Math.round((value/max)*100)}%"></span></div></div>`).join("");
+    box.innerHTML = `
+      <div class="statistik-header"><div><h3><i class="fa fa-bar-chart"></i> Dashboard Statistik</h3><p>Ringkasan katalog dan interaksi berdasarkan data yang tersedia.</p></div><button type="button" class="tombol-sekunder" id="muat-statistik-admin"><i class="fa fa-refresh"></i> Muat ulang</button></div>
+      <div class="statistik-grid">
+        <div class="statistik-card"><i class="fa fa-database"></i><span>Total item</span><strong>${items.length}</strong><small>di data.json</small></div>
+        <div class="statistik-card"><i class="fa fa-download"></i><span>Total download</span><strong>${totalDownload.toLocaleString("id-ID")}</strong><small>semua item</small></div>
+        <div class="statistik-card"><i class="fa fa-thumbs-up"></i><span>Total like</span><strong>${totalLike.toLocaleString("id-ID")}</strong><small>semua item</small></div>
+      </div>
+      <div class="statistik-kategori"><h4>Jumlah berdasarkan kategori</h4>${bars}</div>`;
+    document.getElementById("muat-statistik-admin")?.addEventListener("click", muatDashboardStatistik);
+  } catch (error) {
+    box.innerHTML = `<div class="statistik-error"><i class="fa fa-exclamation-circle"></i> ${esc(error.message)}</div>`;
+  }
 }
 
 function slugify(text) {
@@ -90,6 +126,8 @@ onAuthStateChanged(auth, async user => {
     <div class="profil-avatar"><i class="fa fa-dashboard"></i></div>
     <h2>Panel Admin</h2>
     <p class="detail-deskripsi">Role aktif: <strong>${role === "owner" ? "Owner" : "Admin"}</strong></p>
+
+    <section id="dashboard-statistik-admin" class="statistik-box"><div class="statistik-kosong">Memuat statistik...</div></section>
 
     <div class="admin-generator">
       <div class="admin-generator-header">
@@ -456,6 +494,7 @@ onAuthStateChanged(auth, async user => {
       tombol.innerHTML = teksAsli;
     }
   });
+  await muatDashboardStatistik();
   await muatAktivitasAdmin();
 });
 </script>
