@@ -33,6 +33,32 @@ function slugify(text) {
     .slice(0, 80);
 }
 
+function validasiSlug(slug) {
+  return /^[a-z0-9_-]{1,80}$/.test(slug);
+}
+
+function validasiTipeFile(type) {
+  const value = String(type || '').trim();
+  return /^[A-Za-z0-9][A-Za-z0-9 /_-]{0,39}$/.test(value);
+}
+
+function validasiKategori(value) {
+  return ['addon', 'resource', 'peta', 'lainnya', 'apk'].includes(String(value || '').trim().toLowerCase());
+}
+
+function validasiFieldAddon(data) {
+  if (!data['nama file'] || data['nama file'].length > 120) throw new Error('Nama addon wajib diisi dan maksimal 120 karakter.');
+  if (!validasiSlug(data.slug)) throw new Error('Slug/ID hanya boleh berisi huruf kecil, angka, _ atau -, maksimal 80 karakter.');
+  if (!validasiTipeFile(data['type file'])) throw new Error('Tipe file tidak valid.');
+  if (!validasiKategori(data.kategori)) throw new Error('Kategori tidak valid.');
+  if (!data.description || data.description.length > 1000) throw new Error('Deskripsi wajib diisi dan maksimal 1000 karakter.');
+  validasiUrl(data['link gambar'], 'Link gambar');
+  validasiUrl(data['link download'], 'Link download');
+  if (data['versi mc'].length > 60) throw new Error('Versi Minecraft maksimal 60 karakter.');
+  if (data.ukuran.length > 30) throw new Error('Ukuran file maksimal 30 karakter.');
+  if (data['tanggal unggah'].length > 40) throw new Error('Tanggal upload maksimal 40 karakter.');
+}
+
 function tanggalHariIni() {
   const bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
   const d = new Date();
@@ -331,6 +357,7 @@ onAuthStateChanged(auth, async user => {
     let linkGambar, linkDownload;
     try { linkGambar=validasiUrl(gambar.value,"Link gambar"); linkDownload=validasiUrl(download.value,"Link download"); } catch(error){ alert(error.message); return; }
     const dataBaru={slug:slugValue,"nama file":namaValue,"type file":type.value.trim(),kategori:kategori.value,"link gambar":linkGambar,"link download":linkDownload,"versi mc":versi.value.trim(),ukuran:ukuran.value.trim(),"tanggal unggah":tanggal.value.trim(),description:deskripsi.value.trim()};
+    try { validasiFieldAddon(dataBaru); } catch (error) { alert(error.message); return; }
     if (sedangEditKey) {
       if (!confirm(`Simpan perubahan untuk "${dataLama[sedangEditKey]?.["nama file"] || sedangEditKey}" ke data.json di GitHub?\n\nSlug/ID tetap: ${sedangEditKey}`)) return;
       const tombol=form.querySelector('button[type="submit"]'); const asli=tombol.innerHTML; tombol.disabled=true; tombol.innerHTML='<i class="fa fa-spinner fa-spin"></i> Menyimpan...';
