@@ -54,6 +54,32 @@ let daftarAddon = [];
 let filterAktif = 'semua';
 let modeTopAddon = 'terbanyak'; // Bawaan: Paling Banyak Diunduh
 
+function tampilkanAddonDisukaiDariUrl() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("disukai") !== "1") return false;
+
+    const wadah = document.getElementById("wadah-addon");
+    if (!wadah) return false;
+
+    const disukai = penggunaLogin ? JSON.parse(localStorage.getItem(kunciLikePengguna()) || "[]") : [];
+    const hasil = penggunaLogin ? daftarAddon.filter(item => disukai.includes(item.slug)) : [];
+
+    filterAktif = "semua";
+    document.querySelectorAll(".btn-kategori").forEach(b => b.classList.remove("aktif"));
+    document.querySelector('.btn-kategori[data-filter="semua"]')?.classList.add("aktif");
+
+    const judul = document.querySelector(".daftar-addon .judul-bagian");
+    if (judul) judul.innerHTML = "👍 Addon Disukai";
+
+    if (!penggunaLogin) {
+        wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-user"></i><p>Login diperlukan</p><span>Silakan login untuk melihat addon yang kamu sukai.</span><br><a href="profil.html" class="tombol-utama tombol-login-lanjut">Login / Daftar</a></div>`;
+    } else {
+        tampilkanDaftar(hasil);
+    }
+    document.querySelector(".daftar-addon")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return true;
+}
+
 // ==============================================
 // MUAT DATA AWAL
 // ==============================================
@@ -92,6 +118,7 @@ async function tampilkanAddon() {
         wadah.innerHTML = '';
         tampilkanDaftar(daftarAddon);
         aturFilterKategori();
+        tampilkanAddonDisukaiDariUrl();
     } catch (error) {
         console.error("❌ Gagal memuat data:", error);
         wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-triangle"></i><p>Belum bisa memuat data</p><span>Pastikan file data.json ada & formatnya benar</span><br><small>Detail: ${error.message}</small></div>`;

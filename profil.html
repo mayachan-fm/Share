@@ -234,7 +234,7 @@ function tampilProfil(user, role) {
       <div class="info-item"><span>Username / akun</span>${isStaff ? escapeHtml(nama) : "@" + escapeHtml(nama)}</div>
       <div class="info-item"><span>Jenis akun</span>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</div>
     </div>
-    <a href="index.html#wadah-addon" class="tombol-sekunder profil-disukai-link"><i class="fa fa-thumbs-up"></i> Lihat addon disukai</a>
+    <a href="index.html?disukai=1#wadah-addon" class="tombol-sekunder profil-disukai-link"><i class="fa fa-thumbs-up"></i> Lihat addon disukai</a>
     ${role === "admin" ? `<a href="admin.html" class="tombol-utama tombol-akun"><i class="fa fa-dashboard"></i> Panel Admin</a>` : ""}
     ${role === "owner" ? `
       <a href="admin.html" class="tombol-utama tombol-akun"><i class="fa fa-dashboard"></i> Panel Admin</a>

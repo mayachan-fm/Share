@@ -1725,6 +1725,18 @@ body {
 .tombol-owner {
     margin-top: 10px;
 }
+.profil-disukai-link {
+    margin-bottom: 12px;
+}
+.profil-akun-login + .profil-statistik + .detail-info + .profil-disukai-link + .tombol-akun {
+    margin-top: 0;
+}
+.profil-disukai-link + .tombol-akun {
+    margin-top: 0;
+}
+.profil-disukai-link + .tombol-akun + .tombol-akun {
+    margin-top: 10px;
+}
 
 /* ===== STAGE F — GENERATOR data.json ===== */
 .admin-generator {
