@@ -731,8 +731,8 @@
     "tanggal unggah": "28 Juli 2026",
     "description": "pengalaman horor yang intens melalui kecerdasan buatan (mob AI) yang agresif, di mana monster tersebut dapat memakan seluruh desa laut serta rumah pemain. Dan menambahkan bioma palung laut dalam, perlengkapan dan sihir (enchantments) baru, pertarungan melawan bos, hingga dimensi unik Baru"
   },
-  "punchy_bedrock_2.1": {
-    "slug": "punchy_bedrock_2.1",
+  "punchy_bedrock": {
+    "slug": "punchy_bedrock",
     "nama file": "Punchy bedrock 2.1",
     "type file": "Mcpack",
     "kategori": "addon",
@@ -887,8 +887,8 @@
     "tanggal unggah": "30 Juli 2026",
     "description": "Rasakan pencahayaan dinamis di Bedrock seolah-olah Anda menggunakan Java Optifine."
   },
-  "overgrown_v_0.3": {
-    "slug": "overgrown_v_0.3",
+  "overgrown": {
+    "slug": "overgrown",
     "nama file": "Overgrown v0.3",
     "type file": "Resource Pack",
     "kategori": "resource",
@@ -1007,8 +1007,8 @@
     "tanggal unggah": "1 Agustus 2026",
     "description": "Ucapkan selamat tinggal pada rumput datar! Padang rumput 3D setinggi pinggang di setiap bioma, sepenuhnya dapat disesuaikan dalam game, tanpa perlu eksperimen."
   },
-  "the_ultimate_morph_2.0": {
-    "slug": "the_ultimate_morph_2.0",
+  "the_ultimate_morph": {
+    "slug": "the_ultimate_morph",
     "nama file": "The Ultimate Morph 2.0",
     "type file": "Addon",
     "kategori": "addon",
@@ -1055,8 +1055,8 @@
     "tanggal unggah": "1 Agustus 2026",
     "description": "ReplayCraft adalah add-on Minecraft Bedrock Edition yang canggih yang memungkinkan pemain untuk merekam dan memutar ulang aksi mereka di dalam game, mirip dengan ReplayMod yang populer untuk Java Edition. Baik Anda ingin merekam bangunan terbaik Anda, atau membuat tayangan ulang sinematik, ReplayCraft memudahkan Anda untuk merekam, memutar ulang, dan menganalisis permainan langsung di dalam Minecraft Bedrock Edition.\n\nReplayCraft kini menggunakan API server 2.5.0-Beta dan API server-ui 2.1.0-Beta , yang meningkatkan kompatibilitas dan performa untuk Minecraft Bedrock."
   },
-  "indonesian_free_nutrition_food_mbg_addon_v1.5": {
-    "slug": "indonesian_free_nutrition_food_mbg_addon_v1.5",
+  "indonesian_free_nutrition_food_mbg_addon": {
+    "slug": "indonesian_free_nutrition_food_mbg_addon",
     "nama file": "Indonesian Free Nutrition Food (MBG Addon) v1.5",
     "type file": "Addon",
     "kategori": "addon",
@@ -1079,8 +1079,8 @@
     "tanggal unggah": "2 Agustus 2026",
     "description": "Add-on Furnitur Terbaik di Minecraft Bedrock - 1700 Blok"
   },
-  "monodeco_gen_7.3.7": {
-    "slug": "monodeco_gen_7.3.7",
+  "monodeco_gen7": {
+    "slug": "monodeco_gen7",
     "nama file": "monoDeco Gen 7.3.7 - Furniture Addon",
     "type file": "Addon",
     "kategori": "addon",
