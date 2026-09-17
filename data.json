@@ -2386,5 +2386,17 @@
     "ukuran": "28.69 MB",
     "tanggal unggah": "17 September 2026",
     "description": "Teman dan tetanggamu, Spider-Man, kembali! Cobalah versi baru Add-on Spider-Man Mr. Nido di mana kamu bisa menjadi Spider-Man dan menggunakan kemampuannya, berayun seperti Spider-Man, menggunakan berbagai kostum, menggunakan alat peluncur jaringnya, melawan musuh, dan masih banyak lagi."
+  },
+  "rc_toys": {
+    "slug": "rc_toys",
+    "nama file": "RC Toys",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-17-7a04fcce-0627-438b-92cf-0424e642bef2.jpg",
+    "link download": "https://files.catbox.moe/xxd0jd.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "4.58 MB",
+    "tanggal unggah": "17 September 2026",
+    "description": "Kendalikan dengan Mainan RC! Mobil, Kapal, Kereta Api, Pesawat yang dikendalikan dari jarak jauh, dan banyak lagi!\nBalapan dengan teman Anda dan bangun trek balap mini Anda sendiri! Bangun trek gila yang penuh ledakan, tanjakan, dan peningkatan kecepatan, Anda bahkan dapat menggunakan RC sebagai alat untuk bertahan hidup!\n\n- Flips & trik yang sakit!\n- Peningkatan & penyesuaian!\n- Fitur & rintangan mini!\n- Blok aspal!\n- 26 mainan RC!"
   }
 }
