@@ -2410,5 +2410,17 @@
     "ukuran": "408 KB",
     "tanggal unggah": "17 September 2026",
     "description": "Berhenti berlari kembali ke peti. Tidak perlu lagi membawa ransel. Inventaris Tak Terbatas memberi setiap pemain sistem penyimpanan bertab dan dapat diperluas langsung di inventaris mereka! Balik halaman, ambil deposit otomatis, dan tukar hotbar Anda dalam satu ketukan! Sepenuhnya dapat disesuaikan, ramah terhadap kelangsungan hidup!"
+  },
+  "cursed_villagers": {
+    "slug": "cursed_villagers",
+    "nama file": "Cursed Villagers",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-17-311eba35-5310-4346-a3b0-a48dff438e94.jpg",
+    "link download": "https://files.catbox.moe/85ry6m.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "4.73 MB",
+    "tanggal unggah": "17 September 2026",
+    "description": "Tambahkan DESA BARU ke dunia APAPUN! Jelajahi DESA TERKUTUK baru dan PERDAGANGAN dengan Penduduk Desa Terkutuk baru dengan Add-On ini!\n\n+ PERDAGANGAN Penduduk Desa\n+ PENDUDUK DESA yang Marah\n+ ITEM KHUSUS (Totem, Makanan, Senjata, Gulungan)\n+ GOLEM TERKUTUK\n+ DESA yang dihasilkan secara acak\n+ Dapat ditumpuk dengan Add-On lainnya"
   }
 }
