@@ -2362,5 +2362,17 @@
     "ukuran": "31.17 MB",
     "tanggal unggah": "16 September 2026",
     "description": "Massa Mowzie menambahkan berbagai makhluk fiksi ke dunia Anda. Membanggakan diri dengan AI yang unik, atmosfer yang kaya, dan animasi yang lancar. Buktikan kekuatanmu melawan bos dan musuh baru dan klaim kemampuan magis mereka sebagai milikmu!\n\n- Massa Unik dengan mekanisme gameplay baru, struktur, item, kekuatan, dan banyak lagi!\n- Battle Stick: Memicu pertarungan antar monster yang dipilih"
+  },
+  "ai_player": {
+    "slug": "ai_player",
+    "nama file": "AI PLAYER",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/free/2026-09-17-b32f115c-4bb4-48cd-b7a4-56bb7599ee4c.jpg",
+    "link download": "https://files.catbox.moe/whmt4o.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "3.17 MB",
+    "tanggal unggah": "17 September 2026",
+    "description": "Undang pemain AI ke dunia Anda, dan temui teman instan baru Anda. Mereka menebang kayu, menambang, menjelajah, dan melawan gerombolan musuh tepat di samping Anda.\nPemain AI menghadirkan cara baru untuk merasakan pengalaman multipemain. Semua kegembiraan, kekacauan, dan kemajuan bahkan saat Anda offline!\nMereka selalu siap berpetualang. Cerita apa yang akan Anda buat bersama?\nDibuat oleh manusia."
   }
 }
