@@ -82,6 +82,32 @@ function validasiKategori(value) {
   return ['addon', 'resource', 'peta', 'lainnya', 'apk'].includes(String(value || '').trim().toLowerCase());
 }
 
+function bersihkanUrl(value) {
+  let url = String(value || "").trim();
+
+  // Jika pengguna menempelkan Markdown: [teks](https://contoh.com/file)
+  const markdown = url.match(/^\[.*?\]\((https?:\/\/[^\s)]+)\)$/i);
+  if (markdown) url = markdown[1];
+
+  // Hilangkan pembungkus < > jika URL ditempel dalam format tersebut.
+  if (url.startsWith("<") && url.endsWith(">")) {
+    url = url.slice(1, -1).trim();
+  }
+
+  return url;
+}
+
+function validasiUrl(value, label) {
+  const url = bersihkanUrl(value);
+  try {
+    const parsed = new URL(url);
+    if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+    return url;
+  } catch {
+    throw new Error(`${label} harus berupa URL http/https yang valid.`);
+  }
+}
+
 function validasiFieldAddon(data) {
   if (!data['nama file'] || data['nama file'].length > 120) throw new Error('Nama addon wajib diisi dan maksimal 120 karakter.');
   if (!validasiSlug(data.slug)) throw new Error('Slug/ID hanya boleh berisi huruf kecil, angka, _ atau -, maksimal 80 karakter.');
@@ -298,32 +324,6 @@ onAuthStateChanged(auth, async user => {
     slug.value = "";
     delete slug.dataset.diedit;
     descCount.textContent = "0/1000";
-  }
-
-  function bersihkanUrl(value) {
-    let url = String(value || "").trim();
-
-    // Jika pengguna menempelkan Markdown: [teks](https://contoh.com/file)
-    const markdown = url.match(/^\[.*?\]\((https?:\/\/[^\s)]+)\)$/i);
-    if (markdown) url = markdown[1];
-
-    // Hilangkan pembungkus < > jika URL ditempel dalam format tersebut.
-    if (url.startsWith("<") && url.endsWith(">")) {
-      url = url.slice(1, -1).trim();
-    }
-
-    return url;
-  }
-
-  function validasiUrl(value, label) {
-    const url = bersihkanUrl(value);
-    try {
-      const parsed = new URL(url);
-      if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
-      return url;
-    } catch {
-      throw new Error(`${label} harus berupa URL http/https yang valid.`);
-    }
   }
 
   async function updateAddonKeGithub(key, data) {
