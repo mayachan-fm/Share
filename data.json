@@ -2422,5 +2422,17 @@
     "ukuran": "4.73 MB",
     "tanggal unggah": "17 September 2026",
     "description": "Tambahkan DESA BARU ke dunia APAPUN! Jelajahi DESA TERKUTUK baru dan PERDAGANGAN dengan Penduduk Desa Terkutuk baru dengan Add-On ini!\n\n+ PERDAGANGAN Penduduk Desa\n+ PENDUDUK DESA yang Marah\n+ ITEM KHUSUS (Totem, Makanan, Senjata, Gulungan)\n+ GOLEM TERKUTUK\n+ DESA yang dihasilkan secara acak\n+ Dapat ditumpuk dengan Add-On lainnya"
+  },
+  "ocean_biomes": {
+    "slug": "ocean_biomes",
+    "nama file": "Ocean Biomes ++",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-17-8a7954b7-c3a0-491a-b742-811fac7d02cf.jpg",
+    "link download": "https://files.catbox.moe/ueduey.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "3.09 MB",
+    "tanggal unggah": "17 September 2026",
+    "description": "Selami Bioma Laut ++ Add-On dan rasakan dunia bawah laut yang hidup. Temui kehidupan laut yang dinamis dan bos epik saat Anda menemukan rahasia teknologi Atlantis yang tersembunyi di baliknya.\n\n18 BIOMES bawah air yang unik\n67 MOBS baru di bioma laut berbeda\n5 KENDARAAN, SUBMARINE, GLIDER, JET BOAT, dan banyak lagi\n3 BOS\nALAT, SENJATA, ARMOR, dan item utilitas"
   }
 }
