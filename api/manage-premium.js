@@ -92,11 +92,49 @@ module.exports = async (req, res) => {
       if (!days[duration] && duration !== 'permanen') return send(res, 400, {ok:false,error:'Durasi Premium tidak valid.'});
       if (target.uid === owner.uid) return send(res, 400, {ok:false,error:'Gunakan akun Premium target, bukan akun Owner.'});
       const mulai = Date.now();
-      const berakhir = duration === 'permanen' ? null : mulai + days[duration] * 24 * 60 * 60 * 1000;
-      const payload = {tipe: duration, mulai, berakhir, dicabutPada: null, diberikanOleh: owner.uid};
-      await db.ref(`premium/${target.uid}`).set(payload);
-      await catatAktivitas({decoded:owner, role:'owner', aksi:'premium_beri', targetId:target.uid, targetName:target.email || target.uid, detail:`Memberikan Premium ${duration}`});
-      return send(res, 200, {ok:true,message:`Premium ${duration} berhasil diberikan kepada ${target.email || 'akun tersebut'}.`});
+      const premiumRef = db.ref(`premium/${target.uid}`);
+      const currentSnap = await premiumRef.once('value');
+      const current = currentSnap.exists() && currentSnap.val() && typeof currentSnap.val() === 'object' ? currentSnap.val() : null;
+      const currentTipe = String(current?.tipe || '').toLowerCase();
+      const currentBerakhir = current?.berakhir == null ? null : Number(current.berakhir);
+      const currentDicabut = Number(current?.dicabutPada) > 0;
+      const currentPermanent = current && !currentDicabut && (currentTipe === 'permanen' || currentBerakhir == null);
+
+      let berakhir = null;
+      let renewal = false;
+      if (duration === 'permanen') {
+        // Permanent Premium stays permanent even when granted again.
+        berakhir = null;
+        renewal = !!currentPermanent;
+      } else {
+        const tambahanMs = days[duration] * 24 * 60 * 60 * 1000;
+        // If the current Premium is still active, add the new duration to its
+        // existing expiry. If it is expired/revoked/nonexistent, start from now.
+        if (current && !currentDicabut && !currentPermanent && Number.isFinite(currentBerakhir) && currentBerakhir > mulai) {
+          berakhir = currentBerakhir + tambahanMs;
+          renewal = true;
+        } else {
+          berakhir = mulai + tambahanMs;
+        }
+      }
+
+      const payload = {
+        tipe: duration,
+        mulai: renewal && current?.mulai ? current.mulai : mulai,
+        berakhir,
+        dicabutPada: null,
+        diberikanOleh: owner.uid
+      };
+      await premiumRef.set(payload);
+      const actionLabel = renewal ? `Memperpanjang Premium ${duration}` : `Memberikan Premium ${duration}`;
+      await catatAktivitas({decoded:owner, role:'owner', aksi:'premium_beri', targetId:target.uid, targetName:target.email || target.uid, detail:actionLabel});
+      return send(res, 200, {
+        ok:true,
+        renewal,
+        message: renewal
+          ? `Premium ${duration} berhasil ditambahkan ke Premium yang masih aktif milik ${target.email || 'akun tersebut'}.`
+          : `Premium ${duration} berhasil diberikan kepada ${target.email || 'akun tersebut'}.`
+      });
     }
 
     if (action === 'revoke') {
