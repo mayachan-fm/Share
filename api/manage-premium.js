@@ -44,7 +44,7 @@ function statusOf(data, now = Date.now()) {
   const revoked = Number(data.dicabutPada) > 0;
   const permanent = String(data.tipe || '').toLowerCase() === 'permanen' || data.berakhir == null;
   const expired = !permanent && Number(data.berakhir) <= now;
-  return { aktif: !revoked && !expired, kadaluarsa: expired, dicabut: revoked };
+  return { aktif: !revoked && !expired, kadaluarsa: expired, dicabut: revoked, sisaMs: (!revoked && !expired && !permanent) ? Math.max(0, Number(data.berakhir) - now) : null };
 }
 
 async function buildPremiumList() {
