@@ -2039,3 +2039,46 @@ body {
 .profil-premium.premium-kadaluarsa .profil-premium-header span{color:#e8a45c;border-color:#654721}
 .profil-premium.premium-dicabut .profil-premium-header span{color:#e77b7b;border-color:#633838}
 @media(max-width:520px){.profil-premium-grid{grid-template-columns:1fr}.profil-premium{padding:13px}}
+
+/* Stage P7 — Artikel acak pada Download Gate */
+.artikel-download-gate {
+    margin: 18px 0 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    overflow: hidden;
+}
+
+.artikel-download-konten {
+    padding: 16px;
+}
+
+.artikel-download-label {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: .75;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.artikel-download-konten h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.artikel-download-konten p {
+    margin: 0;
+    line-height: 1.65;
+    opacity: .9;
+}
+
+@media (max-width: 600px) {
+    .artikel-download-konten {
+        padding: 14px;
+    }
+
+    .artikel-download-konten h3 {
+        font-size: 16px;
+    }
+}

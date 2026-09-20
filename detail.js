@@ -14,6 +14,7 @@ const firebaseConfig = {
 import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { auth, onAuthStateChanged, ambilRole } from "./auth.js";
 import { apakahPremiumAktif } from "./premium.js";
+import { ambilArtikelAcak } from "./articles.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 const app = getApp();
@@ -176,16 +177,35 @@ async function tampilkanDetail() {
         }
 
         async function mulaiDownloadGate() {
+            const artikel = ambilArtikelAcak();
+            let wadahArtikel = document.getElementById('artikel-download-gate');
+
+            if (!wadahArtikel) {
+                wadahArtikel = document.createElement('section');
+                wadahArtikel.id = 'artikel-download-gate';
+                wadahArtikel.className = 'artikel-download-gate';
+                tombolGate.closest('.tombol-aksi')?.before(wadahArtikel);
+            }
+
+            wadahArtikel.innerHTML = `
+                <div class="artikel-download-konten">
+                    <div class="artikel-download-label"><i class="fa fa-book"></i> Artikel singkat</div>
+                    <h3>${artikel.judul}</h3>
+                    <p>${artikel.isi}</p>
+                </div>
+            `;
+            wadahArtikel.hidden = false;
+
             const durasiDetik = Math.floor(Math.random() * 11) + 10; // 10–20 detik
             let sisa = durasiDetik;
 
             tombolGate.disabled = true;
-            tombolGate.innerHTML = `<i class="fa fa-clock"></i> Tunggu ${sisa} detik`;
+            tombolGate.innerHTML = `<i class="fa fa-clock"></i> Baca artikel · ${sisa} detik`;
 
             const interval = setInterval(() => {
                 sisa--;
                 if (sisa > 0) {
-                    tombolGate.innerHTML = `<i class="fa fa-clock"></i> Tunggu ${sisa} detik`;
+                    tombolGate.innerHTML = `<i class="fa fa-clock"></i> Baca artikel · ${sisa} detik`;
                     return;
                 }
 
