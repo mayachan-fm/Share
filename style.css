@@ -2009,3 +2009,11 @@ body {
     .isi-sambutan h1 { font-size: 25px; }
     .kartu-geser { min-width: 240px; max-width: 240px; }
 }
+
+/* STAGE P2 — Premium Owner */
+.owner-premium-box .owner-add-form select { min-height: 44px; width: 100%; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; background: rgba(255,255,255,.04); color: inherit; padding: 0 12px; }
+.owner-premium-catatan { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,.04); color: #aaa; font-size: .86rem; line-height: 1.5; }
+.premium-staff-item .owner-role-badge.role-owner { background: rgba(214,174,63,.15); color: #e5c86d; }
+.premium-staff-item .owner-role-badge.role-user { opacity: .8; }
+.tombol-cabut-premium { white-space: nowrap; }
+@media (max-width: 600px) { .premium-staff-item { align-items: flex-start; } .tombol-cabut-premium { width: 100%; margin-top: 8px; } }

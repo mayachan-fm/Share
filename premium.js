@@ -21,6 +21,10 @@ export async function ambilDataPremium(uid) {
   }
 }
 
+function tipoPermanen(tipe, berakhir) {
+  return tipe === "permanen" || berakhir === null;
+}
+
 /**
  * Status Premium dihitung dari waktu saat ini.
  * Tidak perlu menghapus data ketika Premium kedaluwarsa.
@@ -42,17 +46,21 @@ export function statusPremium(data, sekarang = Date.now()) {
     ? null
     : Number(data.berakhir) || null;
 
-  const permanen = tipe === "permanen" || berakhir === null;
-  const aktif = permanen
-    ? true
-    : Number(sekarang) < berakhir;
+  const dicabutPada = data.dicabutPada === null || data.dicabutPada === undefined || data.dicabutPada === ""
+    ? null
+    : Number(data.dicabutPada) || null;
+  const permanen = tipoPermanen(tipe, berakhir);
+  const aktif = dicabutPada
+    ? false
+    : (permanen ? true : Number(sekarang) < berakhir);
 
   return {
     aktif,
     tipe: data.tipe || null,
     mulai,
     berakhir,
-    permanen
+    permanen,
+    dicabutPada
   };
 }
 

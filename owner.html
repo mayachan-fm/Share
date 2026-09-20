@@ -102,6 +102,69 @@ async function api(action, payload = {}) {
   return body;
 }
 
+async function apiPremium(action, payload = {}) {
+  const headers = await tokenHeader();
+  const response = await fetch("/api/manage-premium", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({action, ...payload})
+  });
+  let body;
+  try { body = await response.json(); } catch (_) { body = {}; }
+  if (!response.ok || !body.ok) throw new Error(body.error || `Permintaan gagal (${response.status}).`);
+  return body;
+}
+
+function formatPremiumDate(value) {
+  if (!value) return "Permanen";
+  const d = new Date(Number(value));
+  return Number.isNaN(d.getTime()) ? "-" : d.toLocaleString("id-ID", {dateStyle:"medium", timeStyle:"short"});
+}
+
+function renderPremium(list) {
+  const box = document.getElementById("owner-daftar-premium");
+  const count = document.getElementById("owner-count-premium");
+  if (!box || !count) return;
+  count.textContent = `${list.length} akun`;
+  if (!list.length) { box.innerHTML = `<div class="admin-list-empty">Belum ada akun Premium.</div>`; return; }
+  box.innerHTML = list.map(item => {
+    const badge = item.aktif ? "Aktif" : (item.dicabut ? "Dicabut" : "Kedaluwarsa");
+    return `<div class="owner-staff-item premium-staff-item">
+      <div class="owner-staff-icon"><i class="fa fa-diamond"></i></div>
+      <div class="owner-staff-main">
+        <strong>${esc(item.email || item.uid)}</strong>
+        <span class="owner-role-badge role-${item.aktif ? "owner" : "user"}">${esc(item.tipe || "Premium")}</span>
+        <small>Status: ${badge}</small>
+        <small>Mulai: ${esc(formatPremiumDate(item.mulai))}</small>
+        <small>Berakhir: ${esc(formatPremiumDate(item.berakhir))}</small>
+      </div>
+      ${item.aktif ? `<button type="button" class="tombol-hapus-admin tombol-cabut-premium" data-uid="${esc(item.uid)}"><i class="fa fa-ban"></i> Cabut Premium</button>` : ""}
+    </div>`;
+  }).join("");
+  box.querySelectorAll(".tombol-cabut-premium").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (!confirm("Cabut akses Premium dari akun ini? Data Premium tetap disimpan sebagai riwayat.")) return;
+      btn.disabled = true;
+      try {
+        const result = await apiPremium("revoke", {uid:btn.dataset.uid});
+        tampilPesan(result.message, "sukses");
+        await muatPremium();
+      } catch (error) {
+        tampilPesan(error.message, "error");
+        btn.disabled = false;
+      }
+    });
+  });
+}
+
+async function muatPremium() {
+  const box = document.getElementById("owner-daftar-premium");
+  if (!box) return;
+  box.innerHTML = `<div class="admin-list-empty">Memuat daftar Premium...</div>`;
+  try { const result = await apiPremium("list"); renderPremium(result.premium || []); }
+  catch (error) { box.innerHTML = `<div class="admin-list-empty">${esc(error.message)}</div>`; }
+}
+
 function renderStaff(staff) {
   const list = document.getElementById("owner-daftar-staf");
   const count = document.getElementById("owner-count-staf");
@@ -177,14 +240,18 @@ async function muatAktivitasOwner(){
       addon_edit:'Mengedit addon',
       addon_hapus:'Menghapus addon',
       admin_tambah:'Memberikan role Admin',
-      admin_cabut:'Mencabut role Admin'
+      admin_cabut:'Mencabut role Admin',
+      premium_beri:'Memberikan Premium',
+      premium_cabut:'Mencabut Premium'
     };
     const icon={
       addon_tambah:'fa-plus',
       addon_edit:'fa-pencil',
       addon_hapus:'fa-trash',
       admin_tambah:'fa-user-plus',
-      admin_cabut:'fa-user-times'
+      admin_cabut:'fa-user-times',
+      premium_beri:'fa-diamond',
+      premium_cabut:'fa-ban'
     };
     list.innerHTML=logs.map(item=>{
       const d=new Date(Number(item.waktu)||0);
@@ -248,6 +315,35 @@ onAuthStateChanged(auth, async user => {
       <div id="owner-daftar-staf" class="owner-daftar-staf"></div>
     </section>
 
+    <section class="owner-manage-box owner-premium-box">
+      <div class="admin-json-header">
+        <div><h3><i class="fa fa-diamond"></i> Kelola Premium</h3><p>Berikan atau cabut Premium. Admin tidak memiliki akses ke bagian ini.</p></div>
+      </div>
+      <form id="form-tambah-premium" class="owner-add-form" autocomplete="off">
+        <label>Email atau username akun
+          <input id="identifier-premium" type="text" required maxlength="160" placeholder="contoh@email.com atau username">
+        </label>
+        <label>Durasi Premium
+          <select id="durasi-premium" required>
+            <option value="7_hari">7 hari</option>
+            <option value="30_hari">30 hari</option>
+            <option value="90_hari">90 hari</option>
+            <option value="permanen">Permanen</option>
+          </select>
+        </label>
+        <button type="submit" class="tombol-utama"><i class="fa fa-diamond"></i> Berikan Premium</button>
+      </form>
+      <div class="owner-premium-catatan"><i class="fa fa-info-circle"></i> Pemberian Premium baru akan mengganti status Premium aktif akun tersebut. Perpanjangan yang menambah sisa waktu akan dibuat pada tahap berikutnya.</div>
+    </section>
+
+    <section class="owner-manage-box">
+      <div class="admin-json-header">
+        <div><h3><i class="fa fa-diamond"></i> Daftar Premium</h3><p>Data tetap disimpan meskipun Premium sudah kedaluwarsa atau dicabut.</p></div>
+        <span class="admin-data-count" id="owner-count-premium">Memuat...</span>
+      </div>
+      <div id="owner-daftar-premium" class="owner-daftar-staf"></div>
+    </section>
+
     <section class="aktivitas-box">
       <div class="aktivitas-header"><div><h3><i class="fa fa-history"></i> Semua Aktivitas</h3><p>Riwayat pengelolaan addon dan perubahan role Admin.</p></div><button type="button" class="tombol-sekunder" id="muat-aktivitas-owner"><i class="fa fa-refresh"></i> Muat ulang</button></div>
       <div id="aktivitas-owner" class="aktivitas-daftar"><div class="aktivitas-kosong">Memuat aktivitas...</div></div>
@@ -278,7 +374,31 @@ onAuthStateChanged(auth, async user => {
     }
   });
 
+  document.getElementById("form-tambah-premium").addEventListener("submit", async event => {
+    event.preventDefault();
+    const input = document.getElementById("identifier-premium");
+    const select = document.getElementById("durasi-premium");
+    const button = event.currentTarget.querySelector("button[type=submit]");
+    const identifier = input.value.trim();
+    if (!identifier) return;
+    button.disabled = true;
+    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Memproses...';
+    try {
+      const result = await apiPremium("grant", {identifier, duration:select.value});
+      tampilPesan(result.message, "sukses");
+      input.value = "";
+      await muatPremium();
+      await muatAktivitasOwner();
+    } catch (error) {
+      tampilPesan(error.message, "error");
+    } finally {
+      button.disabled = false;
+      button.innerHTML = '<i class="fa fa-diamond"></i> Berikan Premium';
+    }
+  });
+
   await muatStaff();
+  await muatPremium();
   await muatDashboardStatistikOwner();
   await muatAktivitasOwner();
   document.getElementById('muat-aktivitas-owner')?.addEventListener('click', muatAktivitasOwner);
