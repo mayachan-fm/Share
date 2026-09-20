@@ -13,7 +13,7 @@ const firebaseConfig = {
 
 import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { auth, onAuthStateChanged, ambilRole } from "./auth.js";
-import { apakahPremiumAktif } from "./premium.js";
+import { cekAksesDownload } from "./download-access.js";
 import { ambilArtikelAcak } from "./articles.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
@@ -157,17 +157,9 @@ async function tampilkanDetail() {
         async function siapkanDownloadGate() {
             if (!tombolGate || !linkDownloadAsli) return;
 
-            let bypass = false;
-            try {
-                if (usuarioActual) {
-                    const role = await ambilRole(usuarioActual);
-                    bypass = role === 'admin' || role === 'owner' || await apakahPremiumAktif(usuarioActual);
-                }
-            } catch (error) {
-                console.warn('Gagal memeriksa akses Premium:', error);
-            }
+            const akses = await cekAksesDownload(usuarioActual);
 
-            if (bypass) {
+            if (akses.bypass) {
                 tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
                 tombolGate.addEventListener('click', bukaDownloadLangsung, { once: true });
                 return;
