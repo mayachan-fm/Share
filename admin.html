@@ -29,8 +29,8 @@ async function muatDashboardStatistik() {
   const box = document.getElementById("dashboard-statistik-admin");
   if (!box) return;
   try {
-    const dataSnap = await fetch("./data.json", {cache:"no-store"});
-    if (!dataSnap.ok) throw new Error("data.json tidak dapat dibaca.");
+    const dataSnap = await fetch("/api/catalog", {cache:"no-store"});
+    if (!dataSnap.ok) throw new Error("Katalog server tidak dapat dibaca.");
     const data = await dataSnap.json();
     const items = Object.values(data || {});
     const [downloadSnap, likeSnap] = await Promise.all([
@@ -49,7 +49,7 @@ async function muatDashboardStatistik() {
     box.innerHTML = `
       <div class="statistik-header"><div><h3><i class="fa fa-bar-chart"></i> Dashboard Statistik</h3><p>Ringkasan katalog dan interaksi berdasarkan data yang tersedia.</p></div><button type="button" class="tombol-sekunder" id="muat-statistik-admin"><i class="fa fa-refresh"></i> Muat ulang</button></div>
       <div class="statistik-grid">
-        <div class="statistik-card"><i class="fa fa-database"></i><span>Total item</span><strong>${items.length}</strong><small>di data.json</small></div>
+        <div class="statistik-card"><i class="fa fa-database"></i><span>Total item</span><strong>${items.length}</strong><small>di katalog</small></div>
         <div class="statistik-card"><i class="fa fa-download"></i><span>Total download</span><strong>${totalDownload.toLocaleString("id-ID")}</strong><small>semua item</small></div>
         <div class="statistik-card"><i class="fa fa-thumbs-up"></i><span>Total like</span><strong>${totalLike.toLocaleString("id-ID")}</strong><small>semua item</small></div>
       </div>
@@ -155,13 +155,13 @@ onAuthStateChanged(auth, async user => {
       <div class="admin-generator-header">
         <div>
           <h3 id="judul-form-addon"><i class="fa fa-plus-circle"></i> Tambah Addon</h3>
-          <p>Masukkan informasi addon. File addon tetap disimpan di layanan eksternal seperti MediaFire; panel ini hanya membuat data untuk <code>data.json</code>.</p>
+          <p>Masukkan informasi addon. File addon tetap disimpan di layanan eksternal seperti MediaFire; panel ini hanya mengelola katalog server.</p>
         </div>
-        <div class="admin-data-count" id="admin-data-count">Memuat data.json...</div>
+        <div class="admin-data-count" id="admin-data-count">Memuat katalog...</div>
       </div>
 
       <div class="admin-manage-box">
-        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di <code>data.json</code>, lalu edit addon yang dipilih. Penghapusan addon hanya dapat dilakukan oleh Owner di Panel Owner.</p></div></div>
+        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di katalog server, lalu edit addon yang dipilih. Penghapusan addon hanya dapat dilakukan oleh Owner di Panel Owner.</p></div></div>
         <div class="admin-manage-search"><input id="cari-addon-lama" type="search" placeholder="Cari nama addon atau slug..." autocomplete="off"><span id="hasil-cari-addon">Memuat...</span></div>
         <div id="daftar-addon-lama" class="daftar-addon-lama"></div>
       </div>
@@ -203,7 +203,7 @@ onAuthStateChanged(auth, async user => {
         <div class="admin-json-header">
           <div>
             <h3><i class="fa fa-code"></i> Hasil Kode JSON</h3>
-            <p>Hasil ini berisi addon yang kamu masukkan pada sesi ini. Salin lalu gabungkan ke <code>data.json</code>.</p>
+            <p>Hasil ini berisi addon yang kamu masukkan pada sesi ini. Kamu bisa menyalinnya atau langsung menyimpannya ke katalog server.</p>
           </div>
           <button type="button" class="tombol-sekunder" id="buat-json"><i class="fa fa-file-code-o"></i> Buat Kode JSON</button>
         </div>
@@ -211,7 +211,7 @@ onAuthStateChanged(auth, async user => {
         <div class="admin-actions">
           <button type="button" class="tombol-utama" id="salin-json"><i class="fa fa-copy"></i> Salin Kode JSON</button>
           <button type="button" class="tombol-utama" id="simpan-github"><i class="fa fa-github"></i> Tambahkan ke data.json</button>
-          <a class="tombol-sekunder" href="data.json" target="_blank" rel="noopener"><i class="fa fa-file-text-o"></i> Lihat data.json</a>
+          <span class="tombol-sekunder" style="opacity:.75;cursor:default"><i class="fa fa-lock"></i> Katalog server privat</span>
         </div>
         <p class="catatan-staf"><i class="fa fa-shield"></i> Tombol GitHub akan meminta konfirmasi sebelum mengubah <code>data.json</code>. Token GitHub tidak disimpan di browser.</p>
       </div>
@@ -249,14 +249,14 @@ onAuthStateChanged(auth, async user => {
   let addonBaru = [];
 
   try {
-    const response = await fetch("./data.json", {cache: "no-store"});
+    const response = await fetch("/api/catalog", {cache: "no-store"});
     if (response.ok) {
       dataLama = await response.json();
-      count.textContent = `${Object.keys(dataLama).length} addon di data.json`;
+      count.textContent = `${Object.keys(dataLama).length} addon di katalog`;
     } else throw new Error("Gagal membaca data.json");
   } catch (error) {
     console.error(error);
-    count.textContent = "data.json tidak terbaca";
+    count.textContent = "Katalog server tidak terbaca";
   }
 
   function renderAddonLama() {
@@ -348,7 +348,7 @@ onAuthStateChanged(auth, async user => {
     if (sedangEditKey) {
       if (!confirm(`Simpan perubahan untuk "${dataLama[sedangEditKey]?.["nama file"] || sedangEditKey}" ke data.json di GitHub?\n\nSlug/ID tetap: ${sedangEditKey}`)) return;
       const tombol=form.querySelector('button[type="submit"]'); const asli=tombol.innerHTML; tombol.disabled=true; tombol.innerHTML='<i class="fa fa-spinner fa-spin"></i> Menyimpan...';
-      try { await updateAddonKeGithub(sedangEditKey,dataBaru); dataLama[sedangEditKey]=dataBaru; count.textContent=`${Object.keys(dataLama).length} addon di data.json`; renderAddonLama(); alert("Perubahan addon berhasil disimpan ke data.json dan GitHub."); batalEdit(); } catch(error){ alert(`Gagal menyimpan perubahan.\n\n${error.message}`); } finally { tombol.disabled=false; tombol.innerHTML=asli; }
+      try { await updateAddonKeGithub(sedangEditKey,dataBaru); dataLama[sedangEditKey]=dataBaru; count.textContent=`${Object.keys(dataLama).length} addon di katalog`; renderAddonLama(); alert("Perubahan addon berhasil disimpan ke data.json dan GitHub."); batalEdit(); } catch(error){ alert(`Gagal menyimpan perubahan.\n\n${error.message}`); } finally { tombol.disabled=false; tombol.innerHTML=asli; }
       return;
     }
     addonBaru.push({key:slugValue,data:dataBaru}); renderDaftar(); hasil.value=""; resetForm();
@@ -429,7 +429,7 @@ onAuthStateChanged(auth, async user => {
       if (!response.ok || !result.ok) throw new Error(result.error || "Gagal memperbarui data.json.");
 
       addonBaru.forEach(item => { dataLama[item.key] = item.data; });
-      count.textContent = `${Object.keys(dataLama).length} addon di data.json`;
+      count.textContent = `${Object.keys(dataLama).length} addon di katalog`;
       addonBaru = [];
       renderDaftar();
       hasil.value = "";

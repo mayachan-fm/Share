@@ -73,8 +73,8 @@ async function tampilkanDetail() {
     }
 
     try {
-        const respon = await fetch('data.json');
-        if (!respon.ok) throw new Error('Gagal memuat data.json');
+        const respon = await fetch('/api/catalog', { cache: 'no-store' });
+        if (!respon.ok) throw new Error('Gagal memuat katalog');
         const data = await respon.json();
 
         // Cari addon berdasarkan slug

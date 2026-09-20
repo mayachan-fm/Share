@@ -1,0 +1,3 @@
+# Catalog sumber tetap ada di GitHub untuk API server,
+# tetapi jangan ikut dikirim sebagai file statis ke deployment Vercel.
+data.json

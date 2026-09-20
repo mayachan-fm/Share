@@ -35,8 +35,8 @@ async function muatDashboardStatistikOwner() {
   const box = document.getElementById("dashboard-statistik-owner");
   if (!box) return;
   try {
-    const dataResponse = await fetch("./data.json", {cache:"no-store"});
-    if (!dataResponse.ok) throw new Error("data.json tidak dapat dibaca.");
+    const dataResponse = await fetch("/api/catalog", {cache:"no-store"});
+    if (!dataResponse.ok) throw new Error("Katalog server tidak dapat dibaca.");
     const data = await dataResponse.json();
     const items = Object.values(data || {});
     const [downloadSnap, likeSnap, activityResponse] = await Promise.all([
@@ -57,7 +57,7 @@ async function muatDashboardStatistikOwner() {
     box.innerHTML = `
       <div class="statistik-header"><div><h3><i class="fa fa-bar-chart"></i> Dashboard Statistik Owner</h3><p>Ringkasan katalog, interaksi, dan aktivitas pengelolaan.</p></div><button type="button" class="tombol-sekunder" id="muat-statistik-owner"><i class="fa fa-refresh"></i> Muat ulang</button></div>
       <div class="statistik-grid">
-        <div class="statistik-card"><i class="fa fa-database"></i><span>Total item</span><strong>${items.length}</strong><small>di data.json</small></div>
+        <div class="statistik-card"><i class="fa fa-database"></i><span>Total item</span><strong>${items.length}</strong><small>di katalog server</small></div>
         <div class="statistik-card"><i class="fa fa-download"></i><span>Total download</span><strong>${totalDownload.toLocaleString("id-ID")}</strong><small>semua item</small></div>
         <div class="statistik-card"><i class="fa fa-thumbs-up"></i><span>Total like</span><strong>${totalLike.toLocaleString("id-ID")}</strong><small>semua item</small></div>
         <div class="statistik-card"><i class="fa fa-history"></i><span>Aktivitas</span><strong>${logs.length}</strong><small>maks. 100 terbaru</small></div>

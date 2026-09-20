@@ -97,7 +97,7 @@ function tampilkanAddonDisukaiDariUrl() {
 async function tampilkanAddon() {
     const wadah = document.getElementById('wadah-addon');
     try {
-        const respon = await fetch('./data.json', { cache: 'no-cache' });
+        const respon = await fetch('/api/catalog', { cache: 'no-store' });
         if (!respon.ok) throw new Error(`File tidak ditemukan (Kode: ${respon.status})`);
         
         semuaDataAddon = await respon.json();
@@ -133,7 +133,7 @@ async function tampilkanAddon() {
         tampilkanAddonDisukaiDariUrl();
     } catch (error) {
         console.error("❌ Gagal memuat data:", error);
-        wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-triangle"></i><p>Belum bisa memuat data</p><span>Pastikan file data.json ada & formatnya benar</span><br><small>Detail: ${error.message}</small></div>`;
+        wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-triangle"></i><p>Belum bisa memuat data</p><span>Pastikan katalog server tersedia & formatnya benar</span><br><small>Detail: ${error.message}</small></div>`;
     }
 }
 
@@ -152,7 +152,7 @@ function tampilkanTopAddon() {
             .sort((a, b) => (b['jumlah unduh'] || 0) - (a['jumlah unduh'] || 0))
             .slice(0, 8);
     } else {
-        // ✅ OPSI 3: Yang paling bawah di data.json = paling baru diunggah
+        // ✅ OPSI 3: Yang paling bawah di katalog = paling baru diunggah
         terurut = [...daftarAddon].reverse().slice(0, 8);
     }
 
