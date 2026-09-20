@@ -121,9 +121,6 @@ async function tampilkanDetail() {
                         <button type="button" class="tombol-unduh" id="tombol-download-gate" data-id="${idAddonSekarang}">
                             <i class="fa fa-download"></i> Unduh File
                         </button>
-                        <a href="${item['link download']}" target="_blank" rel="noopener noreferrer" id="link-download-asli" class="tombol-unduh" data-id="${idAddonSekarang}" hidden>
-                            <i class="fa fa-download"></i> Unduh File
-                        </a>
                         <button class="tombol-bagi-detail" onclick="salinLink('${linkDetail}')" title="Salin Link">
                             <i class="fa fa-link"></i>
                         </button>
@@ -132,40 +129,45 @@ async function tampilkanDetail() {
             </div>
         `;
 
-        // Download Gate Stage P6 — Premium/Admin/Owner bypass timer.
+        // Download Gate Stage P9 — server-side gate/session.
         const tombolGate = document.getElementById('tombol-download-gate');
-        const linkDownloadAsli = document.getElementById('link-download-asli');
 
-        async function bukaDownloadLangsung() {
-            linkDownloadAsli.hidden = false;
-            tombolGate.hidden = true;
-            linkDownloadAsli.click();
-            await catatUnduhan();
-        }
-
-        async function catatUnduhan() {
+        async function tokenHeaderOptional() {
+            if (!usuarioActual) return {};
             try {
-                const refUnduh = ref(db, `jumlah_unduh/${idAddonSekarang}`);
-                await set(refUnduh, increment(1));
-                jumlahUnduh++;
-                document.querySelector('.detail-unduh span').textContent = `${jumlahUnduh} kali diunduh`;
-            } catch (err) {
-                console.error('Gagal menyimpan data unduh:', err);
+                const token = await usuarioActual.getIdToken(true);
+                return { Authorization: `Bearer ${token}` };
+            } catch (_) {
+                return {};
             }
         }
 
-        async function siapkanDownloadGate() {
-            if (!tombolGate || !linkDownloadAsli) return;
-
-            const akses = await cekAksesDownload(usuarioActual);
-
-            if (akses.bypass) {
-                tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
-                tombolGate.addEventListener('click', bukaDownloadLangsung, { once: true });
-                return;
+        async function mulaiSesiDownload() {
+            const headers = { 'Content-Type': 'application/json', ...(await tokenHeaderOptional()) };
+            const response = await fetch('/api/download-gate', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ slug: idAddonSekarang })
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.ok || !data.gateToken) {
+                throw new Error(data.error || 'Gagal menyiapkan Download Gate.');
             }
+            return data;
+        }
 
-            tombolGate.addEventListener('click', mulaiDownloadGate, { once: true });
+        function bukaEndpointDownload(gateToken) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/api/download-file';
+            form.style.display = 'none';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'gateToken';
+            input.value = gateToken;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
 
         function escapeHtml(value) {
@@ -177,100 +179,135 @@ async function tampilkanDetail() {
                 .replace(/'/g, '&#039;');
         }
 
-        async function mulaiDownloadGate() {
-            const artikel = ambilArtikelAcak();
-            const gambarArtikel = item['link gambar'] || '';
-            const durasiDetik = Math.floor(Math.random() * 11) + 10; // 10–20 detik
-            let sisa = durasiDetik;
+        async function siapkanDownloadGate() {
+            if (!tombolGate) return;
 
-            // Stage P7.1 — Artikel mengambang, terpisah dari kartu addon.
-            const overlayLama = document.getElementById('artikel-download-overlay');
-            if (overlayLama) overlayLama.remove();
+            // P8 remains useful for UI hints, but P9 makes the server the final authority.
+            tombolGate.addEventListener('click', async () => {
+                tombolGate.disabled = true;
+                try {
+                    const sesi = await mulaiSesiDownload();
+                    if (sesi.bypass) {
+                        bukaEndpointDownload(sesi.gateToken);
+                    } else {
+                        await mulaiDownloadGate(sesi);
+                    }
+                } catch (error) {
+                    console.error('Gagal menyiapkan Download Gate:', error);
+                    alert(error.message || 'Download tidak dapat dimulai.');
+                    tombolGate.disabled = false;
+                }
+            });
+        }
 
-            const overlay = document.createElement('div');
-            overlay.id = 'artikel-download-overlay';
-            overlay.className = 'artikel-download-overlay';
-            overlay.innerHTML = `
-                <div class="artikel-download-backdrop"></div>
-                <section class="artikel-download-modal" role="dialog" aria-modal="true" aria-labelledby="judul-artikel-download">
-                    <div class="artikel-download-modal-header">
-                        <span class="artikel-download-label"><i class="fa fa-book"></i> Artikel singkat</span>
-                        <button type="button" class="artikel-download-close" aria-label="Tutup artikel">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </div>
-                    ${gambarArtikel ? `<img class="artikel-download-gambar" src="${escapeHtml(gambarArtikel)}" alt="${escapeHtml(item['nama file'])}" loading="eager" decoding="async">` : ''}
-                    <div class="artikel-download-konten">
-                        <h3 id="judul-artikel-download">${escapeHtml(artikel.judul)}</h3>
-                        <p>${escapeHtml(artikel.isi)}</p>
-                    </div>
-                    <div class="artikel-download-timer">
-                        <div class="artikel-download-waktu">
-                            <i class="fa fa-clock"></i>
-                            <div><small>Waktu tersisa</small><strong id="artikel-download-sisa">${sisa} detik</strong></div>
+        async function mulaiDownloadGate(sesiAwal = null) {
+            let sesi = sesiAwal;
+            try {
+                if (!sesi) sesi = await mulaiSesiDownload();
+                const artikel = ambilArtikelAcak();
+                const gambarArtikel = item['link gambar'] || '';
+                const durasiDetik = Number(sesi.waitSeconds) || 10;
+                let sisa = durasiDetik;
+
+                const overlayLama = document.getElementById('artikel-download-overlay');
+                if (overlayLama) overlayLama.remove();
+
+                const overlay = document.createElement('div');
+                overlay.id = 'artikel-download-overlay';
+                overlay.className = 'artikel-download-overlay';
+                overlay.innerHTML = `
+                    <div class="artikel-download-backdrop"></div>
+                    <section class="artikel-download-modal" role="dialog" aria-modal="true" aria-labelledby="judul-artikel-download">
+                        <div class="artikel-download-modal-header">
+                            <span class="artikel-download-label"><i class="fa fa-book"></i> Artikel singkat</span>
+                            <button type="button" class="artikel-download-close" aria-label="Tutup artikel">
+                                <i class="fa fa-times"></i>
+                            </button>
                         </div>
-                        <div class="artikel-download-progress"><span id="artikel-download-progress-bar"></span></div>
-                        <button type="button" class="tombol-unduh artikel-download-lanjut" id="artikel-download-lanjut" disabled>
-                            <i class="fa fa-lock"></i> Menunggu...
-                        </button>
-                    </div>
-                </section>
-            `;
+                        ${gambarArtikel ? `<img class="artikel-download-gambar" src="${escapeHtml(gambarArtikel)}" alt="${escapeHtml(item['nama file'])}" loading="eager" decoding="async">` : ''}
+                        <div class="artikel-download-konten">
+                            <h3 id="judul-artikel-download">${escapeHtml(artikel.judul)}</h3>
+                            <p>${escapeHtml(artikel.isi)}</p>
+                        </div>
+                        <div class="artikel-download-timer">
+                            <div class="artikel-download-waktu">
+                                <i class="fa fa-clock"></i>
+                                <div><small>Waktu tersisa</small><strong id="artikel-download-sisa">${sisa} detik</strong></div>
+                            </div>
+                            <div class="artikel-download-progress"><span id="artikel-download-progress-bar"></span></div>
+                            <button type="button" class="tombol-unduh artikel-download-lanjut" id="artikel-download-lanjut" disabled>
+                                <i class="fa fa-lock"></i> Menunggu...
+                            </button>
+                        </div>
+                    </section>
+                `;
 
-            document.body.appendChild(overlay);
-            document.body.classList.add('download-gate-terbuka');
-            tombolGate.hidden = true;
+                document.body.appendChild(overlay);
+                document.body.classList.add('download-gate-terbuka');
+                tombolGate.hidden = true;
 
-            const modal = overlay.querySelector('.artikel-download-modal');
-            const tombolTutup = overlay.querySelector('.artikel-download-close');
-            const tombolLanjut = overlay.querySelector('#artikel-download-lanjut');
-            const teksSisa = overlay.querySelector('#artikel-download-sisa');
-            const progressBar = overlay.querySelector('#artikel-download-progress-bar');
-            const backdrop = overlay.querySelector('.artikel-download-backdrop');
+                const modal = overlay.querySelector('.artikel-download-modal');
+                const tombolTutup = overlay.querySelector('.artikel-download-close');
+                const tombolLanjut = overlay.querySelector('#artikel-download-lanjut');
+                const teksSisa = overlay.querySelector('#artikel-download-sisa');
+                const progressBar = overlay.querySelector('#artikel-download-progress-bar');
+                const backdrop = overlay.querySelector('.artikel-download-backdrop');
 
-            const tutupGate = () => {
-                clearInterval(interval);
-                overlay.remove();
-                document.body.classList.remove('download-gate-terbuka');
+                let interval = null;
+                const tutupGate = () => {
+                    if (interval) clearInterval(interval);
+                    overlay.remove();
+                    document.body.classList.remove('download-gate-terbuka');
+                    tombolGate.hidden = false;
+                    tombolGate.disabled = false;
+                    tombolGate.dataset.ready = '';
+                    tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
+                };
+
+                tombolTutup?.addEventListener('click', tutupGate);
+                backdrop?.addEventListener('click', tutupGate);
+                modal?.addEventListener('click', (event) => event.stopPropagation());
+
+                interval = setInterval(() => {
+                    sisa--;
+                    if (teksSisa) teksSisa.textContent = `${Math.max(sisa, 0)} detik`;
+                    if (progressBar) {
+                        const persen = Math.min(100, ((durasiDetik - sisa) / durasiDetik) * 100);
+                        progressBar.style.width = `${persen}%`;
+                    }
+                    if (sisa > 0) return;
+                    clearInterval(interval);
+                    interval = null;
+                    if (teksSisa) teksSisa.textContent = 'Selesai';
+                    if (progressBar) progressBar.style.width = '100%';
+                    if (tombolLanjut) {
+                        tombolLanjut.disabled = false;
+                        tombolLanjut.innerHTML = '<i class="fa fa-download"></i> Lanjut Download';
+                        tombolLanjut.classList.add('siap');
+                    }
+                }, 1000);
+
+                tombolLanjut?.addEventListener('click', async () => {
+                    if (tombolLanjut.disabled) return;
+                    try {
+                        // Server checks the real readyAt time; client timer alone is not trusted.
+                        bukaEndpointDownload(sesi.gateToken);
+                        overlay.remove();
+                        document.body.classList.remove('download-gate-terbuka');
+                        tombolGate.hidden = true;
+                    } catch (error) {
+                        console.error('Gagal membuka download:', error);
+                        alert(error.message || 'Download tidak dapat dibuka.');
+                    }
+                }, { once: true });
+            } catch (error) {
+                console.error('Gagal memulai Download Gate:', error);
+                alert(error.message || 'Download tidak dapat dimulai.');
                 tombolGate.hidden = false;
                 tombolGate.disabled = false;
-                tombolGate.dataset.ready = '';
                 tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
-            };
-
-            tombolTutup?.addEventListener('click', tutupGate);
-            backdrop?.addEventListener('click', tutupGate);
-            modal?.addEventListener('click', (event) => event.stopPropagation());
-
-            const interval = setInterval(() => {
-                sisa--;
-                if (teksSisa) teksSisa.textContent = `${Math.max(sisa, 0)} detik`;
-                if (progressBar) {
-                    const persen = Math.min(100, ((durasiDetik - sisa) / durasiDetik) * 100);
-                    progressBar.style.width = `${persen}%`;
-                }
-
-                if (sisa > 0) return;
-
-                clearInterval(interval);
-                if (teksSisa) teksSisa.textContent = 'Selesai';
-                if (progressBar) progressBar.style.width = '100%';
-                if (tombolLanjut) {
-                    tombolLanjut.disabled = false;
-                    tombolLanjut.innerHTML = '<i class="fa fa-download"></i> Lanjut Download';
-                    tombolLanjut.classList.add('siap');
-                }
-            }, 1000);
-
-            tombolLanjut?.addEventListener('click', async () => {
-                if (tombolLanjut.disabled) return;
-                linkDownloadAsli.hidden = false;
-                overlay.remove();
-                document.body.classList.remove('download-gate-terbuka');
-                tombolGate.hidden = true;
-                linkDownloadAsli.click();
-                await catatUnduhan();
-            }, { once: true });
+                tombolGate.dataset.ready = '';
+            }
         }
 
         siapkanDownloadGate();
