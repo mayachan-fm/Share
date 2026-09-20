@@ -121,6 +121,20 @@ function formatPremiumDate(value) {
   return Number.isNaN(d.getTime()) ? "-" : d.toLocaleString("id-ID", {dateStyle:"medium", timeStyle:"short"});
 }
 
+function formatSisaPremium(value, sekarang = Date.now()) {
+  const target = Number(value);
+  if (!Number.isFinite(target)) return "Tanpa batas waktu";
+  const ms = Math.max(0, target - Number(sekarang));
+  if (ms <= 0) return "Masa aktif telah berakhir";
+  const totalMenit = Math.floor(ms / 60000);
+  const hari = Math.floor(totalMenit / 1440);
+  const jam = Math.floor((totalMenit % 1440) / 60);
+  const menit = totalMenit % 60;
+  if (hari > 0) return `Sisa sekitar ${hari} hari ${jam} jam`;
+  if (jam > 0) return `Sisa sekitar ${jam} jam ${menit} menit`;
+  return `Sisa sekitar ${Math.max(1, menit)} menit`;
+}
+
 function renderPremium(list) {
   const box = document.getElementById("owner-daftar-premium");
   const count = document.getElementById("owner-count-premium");
@@ -129,14 +143,17 @@ function renderPremium(list) {
   if (!list.length) { box.innerHTML = `<div class="admin-list-empty">Belum ada akun Premium.</div>`; return; }
   box.innerHTML = list.map(item => {
     const badge = item.aktif ? "Aktif" : (item.dicabut ? "Dicabut" : "Kedaluwarsa");
+    const badgeClass = item.aktif ? "premium-status-aktif" : (item.dicabut ? "premium-status-dicabut" : "premium-status-kadaluarsa");
+    const sisa = item.aktif && item.berakhir ? formatSisaPremium(item.berakhir) : (item.dicabut ? "Akses dicabut" : (item.berakhir ? "Masa aktif telah berakhir" : "Tanpa batas waktu"));
     return `<div class="owner-staff-item premium-staff-item">
       <div class="owner-staff-icon"><i class="fa fa-diamond"></i></div>
       <div class="owner-staff-main">
         <strong>${esc(item.email || item.uid)}</strong>
         <span class="owner-role-badge role-${item.aktif ? "owner" : "user"}">${esc(item.tipe || "Premium")}</span>
-        <small>Status: ${badge}</small>
+        <small class="premium-status ${badgeClass}">Status: ${badge}</small>
         <small>Mulai: ${esc(formatPremiumDate(item.mulai))}</small>
         <small>Berakhir: ${esc(formatPremiumDate(item.berakhir))}</small>
+        <small class="premium-sisa">${esc(sisa)}</small>
       </div>
       ${item.aktif ? `<button type="button" class="tombol-hapus-admin tombol-cabut-premium" data-uid="${esc(item.uid)}"><i class="fa fa-ban"></i> Cabut Premium</button>` : ""}
     </div>`;
@@ -157,12 +174,40 @@ function renderPremium(list) {
   });
 }
 
-async function muatPremium() {
+let daftarPremiumOwner = [];
+
+async function muatPremium(tampilkanLoading = true) {
   const box = document.getElementById("owner-daftar-premium");
   if (!box) return;
-  box.innerHTML = `<div class="admin-list-empty">Memuat daftar Premium...</div>`;
-  try { const result = await apiPremium("list"); renderPremium(result.premium || []); }
-  catch (error) { box.innerHTML = `<div class="admin-list-empty">${esc(error.message)}</div>`; }
+  if (tampilkanLoading) box.innerHTML = `<div class="admin-list-empty">Memuat daftar Premium...</div>`;
+  try {
+    const result = await apiPremium("list");
+    daftarPremiumOwner = result.premium || [];
+    renderPremium(daftarPremiumOwner);
+  } catch (error) {
+    if (tampilkanLoading) box.innerHTML = `<div class="admin-list-empty">${esc(error.message)}</div>`;
+  }
+}
+
+function refreshTampilanSisaPremium() {
+  const box = document.getElementById("owner-daftar-premium");
+  if (!box || !daftarPremiumOwner.length) return;
+  box.querySelectorAll(".premium-sisa").forEach((el, index) => {
+    const item = daftarPremiumOwner[index];
+    if (!item) return;
+    el.textContent = item.aktif && item.berakhir ? formatSisaPremium(item.berakhir) : (item.dicabut ? "Akses dicabut" : (item.berakhir ? "Masa aktif telah berakhir" : "Tanpa batas waktu"));
+  });
+}
+
+let timerPremiumOwner = null;
+function mulaiPemantauanPremiumOwner() {
+  if (timerPremiumOwner) clearInterval(timerPremiumOwner);
+  timerPremiumOwner = setInterval(async () => {
+    const sekarang = Date.now();
+    const adaYangKedaluwarsa = daftarPremiumOwner.some(item => item.aktif && item.berakhir && Number(item.berakhir) <= sekarang);
+    if (adaYangKedaluwarsa) await muatPremium(false);
+    else refreshTampilanSisaPremium();
+  }, 60000);
 }
 
 function renderStaff(staff) {
@@ -399,6 +444,7 @@ onAuthStateChanged(auth, async user => {
 
   await muatStaff();
   await muatPremium();
+  mulaiPemantauanPremiumOwner();
   await muatDashboardStatistikOwner();
   await muatAktivitasOwner();
   document.getElementById('muat-aktivitas-owner')?.addEventListener('click', muatAktivitasOwner);

@@ -1,6 +1,6 @@
 // ==============================================
-// PREMIUM ACCESS — MC ADDON SHARE (STAGE P1)
-// Fondasi status Premium. Belum mengubah Download.
+// PREMIUM ACCESS — MC ADDON SHARE (STAGE P3)
+// Status Premium otomatis mengikuti waktu kedaluwarsa. Belum mengubah Download.
 // ==============================================
 import { db } from "./auth.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
@@ -50,17 +50,23 @@ export function statusPremium(data, sekarang = Date.now()) {
     ? null
     : Number(data.dicabutPada) || null;
   const permanen = tipoPermanen(tipe, berakhir);
+  const kadaluarsa = !permanen && !dicabutPada && Number.isFinite(berakhir) && Number(sekarang) >= berakhir;
   const aktif = dicabutPada
     ? false
-    : (permanen ? true : Number(sekarang) < berakhir);
+    : (permanen ? true : !kadaluarsa);
+  const sisaMs = aktif && !permanen && Number.isFinite(berakhir)
+    ? Math.max(0, berakhir - Number(sekarang))
+    : null;
 
   return {
     aktif,
+    kadaluarsa,
     tipe: data.tipe || null,
     mulai,
     berakhir,
     permanen,
-    dicabutPada
+    dicabutPada,
+    sisaMs
   };
 }
 
