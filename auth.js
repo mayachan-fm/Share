@@ -94,6 +94,9 @@ export function adalahOwner(role) {
   return role === "owner";
 }
 
+// Premium adalah akses tambahan; tidak menggantikan role User/Admin/Owner.
+export { ambilDataPremium, statusPremium, apakahPremiumAktif } from "./premium.js";
+
 export {
   app,
   auth,
