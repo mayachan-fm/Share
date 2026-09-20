@@ -61,6 +61,7 @@ import {
   emailKeUsername,
   ambilRole
 } from "./auth.js";
+import { ambilDataPremium, statusPremium } from "./premium.js";
 
 const appEl = document.getElementById("profil-app");
 let mode = "login";
@@ -203,7 +204,7 @@ function badgeRole(role) {
   return `<span class="badge-role role-${role}"><i class="fa ${icon}"></i> ${label}</span>`;
 }
 
-function tampilProfil(user, role) {
+async function tampilProfil(user, role) {
   const isStaff = role === "admin" || role === "owner";
   const nama = isStaff ? (user.email || "") : emailKeUsername(user.email);
   const likeKey = `sudahLike_${user.uid}`;
@@ -215,6 +216,32 @@ function tampilProfil(user, role) {
     jumlahDisukai = 0;
   }
   const labelAkun = role === "owner" ? "Pemilik" : role === "admin" ? "Staf Admin" : "Anggota";
+  let premiumData = null;
+  let premiumStatus = statusPremium(null);
+  try {
+    premiumData = await ambilDataPremium(user.uid);
+    premiumStatus = statusPremium(premiumData);
+  } catch (error) {
+    console.error("Gagal memuat status Premium:", error);
+  }
+
+  const premiumLabel = premiumStatus.aktif
+    ? (premiumStatus.permanen ? "Permanen" : "Aktif")
+    : (premiumStatus.dicabutPada ? "Dicabut" : premiumStatus.kadaluarsa ? "Kedaluwarsa" : "Tidak aktif");
+  const premiumClass = premiumStatus.aktif ? "premium-aktif" : premiumStatus.dicabutPada ? "premium-dicabut" : premiumStatus.kadaluarsa ? "premium-kadaluarsa" : "premium-tidak-aktif";
+  const formatTanggal = (ms) => Number.isFinite(ms) ? new Date(ms).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" }) : "—";
+  const formatSisa = (ms) => {
+    if (!Number.isFinite(ms) || ms <= 0) return "—";
+    const totalMenit = Math.ceil(ms / 60000);
+    const hari = Math.floor(totalMenit / 1440);
+    const jam = Math.floor((totalMenit % 1440) / 60);
+    const menit = totalMenit % 60;
+    const bagian = [];
+    if (hari) bagian.push(`${hari} hari`);
+    if (jam) bagian.push(`${jam} jam`);
+    if (!hari && !jam && menit) bagian.push(`${menit} menit`);
+    return bagian.join(" ") || "< 1 menit";
+  };
 
   appEl.innerHTML = `
     <div class="profil-avatar"><i class="fa ${isStaff ? "fa-shield" : "fa-user"}"></i></div>
@@ -233,6 +260,15 @@ function tampilProfil(user, role) {
     <div class="detail-info">
       <div class="info-item"><span>Username / akun</span>${isStaff ? escapeHtml(nama) : "@" + escapeHtml(nama)}</div>
       <div class="info-item"><span>Jenis akun</span>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</div>
+    </div>
+    <div class="profil-premium ${premiumClass}">
+      <div class="profil-premium-header"><strong><i class="fa fa-diamond"></i> Premium</strong><span>${premiumLabel}</span></div>
+      <div class="profil-premium-grid">
+        <div><small>Jenis</small><strong>${premiumStatus.permanen ? "Permanen" : (premiumData?.tipe || "—")}</strong></div>
+        <div><small>Berakhir</small><strong>${premiumStatus.permanen ? "Tidak berakhir" : formatTanggal(premiumStatus.berakhir)}</strong></div>
+        <div><small>Sisa waktu</small><strong>${premiumStatus.permanen ? "Permanen" : formatSisa(premiumStatus.sisaMs)}</strong></div>
+      </div>
+      ${premiumStatus.aktif && !premiumStatus.permanen && premiumStatus.sisaMs <= 3 * 24 * 60 * 60 * 1000 ? `<p class="profil-premium-warning"><i class="fa fa-exclamation-triangle"></i> Premium akan segera berakhir.</p>` : ""}
     </div>
     <a href="index.html?disukai=1#wadah-addon" class="tombol-sekunder profil-disukai-link"><i class="fa fa-thumbs-up"></i> Lihat addon disukai</a>
     ${role === "admin" ? `<a href="admin.html" class="tombol-utama tombol-akun"><i class="fa fa-dashboard"></i> Panel Admin</a>` : ""}

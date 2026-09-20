@@ -1,6 +1,6 @@
 // ==============================================
-// PREMIUM ACCESS — MC ADDON SHARE (STAGE P3)
-// Status Premium otomatis mengikuti waktu kedaluwarsa. Belum mengubah Download.
+// PREMIUM ACCESS — MC ADDON SHARE (STAGE P5)
+// Status Premium otomatis mengikuti waktu kedaluwarsa. Dipakai juga untuk tampilan Profil. Belum mengubah Download.
 // ==============================================
 import { db } from "./auth.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
