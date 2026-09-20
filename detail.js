@@ -12,7 +12,8 @@ const firebaseConfig = {
 };
 
 import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { auth, onAuthStateChanged } from "./auth.js";
+import { auth, onAuthStateChanged, ambilRole } from "./auth.js";
+import { apakahPremiumAktif } from "./premium.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 const app = getApp();
@@ -116,7 +117,10 @@ async function tampilkanDetail() {
                     <div class="detail-deskripsi">${item.description || 'Tidak ada deskripsi.'}</div>
 
                     <div class="tombol-aksi">
-                        <a href="${item['link download']}" target="_blank" class="tombol-unduh" data-id="${idAddonSekarang}">
+                        <button type="button" class="tombol-unduh" id="tombol-download-gate" data-id="${idAddonSekarang}">
+                            <i class="fa fa-download"></i> Unduh File
+                        </button>
+                        <a href="${item['link download']}" target="_blank" rel="noopener noreferrer" id="link-download-asli" class="tombol-unduh" data-id="${idAddonSekarang}" hidden>
                             <i class="fa fa-download"></i> Unduh File
                         </a>
                         <button class="tombol-bagi-detail" onclick="salinLink('${linkDetail}')" title="Salin Link">
@@ -127,8 +131,18 @@ async function tampilkanDetail() {
             </div>
         `;
 
-        // Hitung unduh — hanya sekali per klik
-        document.querySelector('.tombol-unduh').addEventListener('click', async () => {
+        // Download Gate Stage P6 — Premium/Admin/Owner bypass timer.
+        const tombolGate = document.getElementById('tombol-download-gate');
+        const linkDownloadAsli = document.getElementById('link-download-asli');
+
+        async function bukaDownloadLangsung() {
+            linkDownloadAsli.hidden = false;
+            tombolGate.hidden = true;
+            linkDownloadAsli.click();
+            await catatUnduhan();
+        }
+
+        async function catatUnduhan() {
             try {
                 const refUnduh = ref(db, `jumlah_unduh/${idAddonSekarang}`);
                 await set(refUnduh, increment(1));
@@ -136,9 +150,60 @@ async function tampilkanDetail() {
                 document.querySelector('.detail-unduh span').textContent = `${jumlahUnduh} kali diunduh`;
             } catch (err) {
                 console.error('Gagal menyimpan data unduh:', err);
-                alert('Gagal memperbarui jumlah unduh!');
             }
-        });
+        }
+
+        async function siapkanDownloadGate() {
+            if (!tombolGate || !linkDownloadAsli) return;
+
+            let bypass = false;
+            try {
+                if (usuarioActual) {
+                    const role = await ambilRole(usuarioActual);
+                    bypass = role === 'admin' || role === 'owner' || await apakahPremiumAktif(usuarioActual);
+                }
+            } catch (error) {
+                console.warn('Gagal memeriksa akses Premium:', error);
+            }
+
+            if (bypass) {
+                tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
+                tombolGate.addEventListener('click', bukaDownloadLangsung, { once: true });
+                return;
+            }
+
+            tombolGate.addEventListener('click', mulaiDownloadGate, { once: true });
+        }
+
+        async function mulaiDownloadGate() {
+            const durasiDetik = Math.floor(Math.random() * 11) + 10; // 10–20 detik
+            let sisa = durasiDetik;
+
+            tombolGate.disabled = true;
+            tombolGate.innerHTML = `<i class="fa fa-clock"></i> Tunggu ${sisa} detik`;
+
+            const interval = setInterval(() => {
+                sisa--;
+                if (sisa > 0) {
+                    tombolGate.innerHTML = `<i class="fa fa-clock"></i> Tunggu ${sisa} detik`;
+                    return;
+                }
+
+                clearInterval(interval);
+                tombolGate.disabled = false;
+                tombolGate.innerHTML = '<i class="fa fa-download"></i> Lanjut Download';
+                tombolGate.dataset.ready = '1';
+
+                tombolGate.addEventListener('click', async () => {
+                    linkDownloadAsli.hidden = false;
+                    tombolGate.hidden = true;
+                    linkDownloadAsli.click();
+                    await catatUnduhan();
+                }, { once: true });
+            }, 1000);
+        }
+
+        siapkanDownloadGate();
 
         // === FUNGSI KOMENTAR ===
         siapkanKomentar();
