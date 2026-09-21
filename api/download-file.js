@@ -73,33 +73,41 @@ module.exports = async (req, res) => {
     getFirebaseAdmin();
     const body = parseBody(req);
     const gateToken = String(body.gateToken || '').trim();
-    if (!gateToken || !/^[0-9a-f-]{36}$/i.test(gateToken)) return res.status(400).json({ ok: false, error: 'Token Download Gate tidak valid.' });
-
-    const gateRef = admin.database().ref(`download_gates/${gateToken}`);
-    const transaction = await gateRef.transaction((current) => {
-      if (!current || current.usedAt) return;
-      const now = Date.now();
-      if (now > Number(current.expiresAt || 0)) return;
-      if (now < Number(current.readyAt || 0)) return;
-      return { ...current, usedAt: now };
-    });
-
-    if (!transaction.committed || !transaction.snapshot.exists()) {
-      return res.status(403).json({ ok: false, error: 'Download belum siap atau token sudah digunakan.' });
+    if (!gateToken || !/^[0-9a-f-]{36}$/i.test(gateToken)) {
+      return res.status(400).json({ ok: false, error: 'Token Download Gate tidak valid.' });
     }
 
-    const session = transaction.snapshot.val();
+    // Verifikasi identitas SEBELUM token dipakai. Ini mencegah token
+    // Premium/login menjadi usedAt hanya karena request belum membawa UID.
     const currentUid = await verifyCurrentUid(req);
+
+    const gateRef = admin.database().ref(`download_gates/${gateToken}`);
+    const gateSnap = await gateRef.once('value');
+    if (!gateSnap.exists()) {
+      return res.status(403).json({ ok: false, error: 'Sesi Download Gate tidak ditemukan.' });
+    }
+
+    const session = gateSnap.val() || {};
+    const now = Date.now();
+
+    if (session.usedAt) {
+      return res.status(403).json({ ok: false, error: 'Download belum siap atau token sudah digunakan.' });
+    }
+    if (now > Number(session.expiresAt || 0)) {
+      return res.status(403).json({ ok: false, error: 'Sesi Download Gate sudah kedaluwarsa. Silakan mulai download lagi.' });
+    }
     if (session.uid && session.uid !== currentUid) {
-      await gateRef.update({ usedAt: null });
       return res.status(403).json({ ok: false, error: 'Token Download Gate bukan milik akun ini.' });
+    }
+    if (now < Number(session.readyAt || 0)) {
+      const sisa = Math.max(1, Math.ceil((Number(session.readyAt) - now) / 1000));
+      return res.status(403).json({ ok: false, error: `Download belum siap. Tunggu ${sisa} detik lagi.` });
     }
 
     // Re-check privileged access at the moment the file is opened.
     // Revoking Premium/Admin/Owner during the waiting window therefore removes the bypass.
     if (session.bypass) {
       if (!currentUid) {
-        await gateRef.update({ usedAt: null });
         return res.status(403).json({ ok: false, error: 'Login diperlukan untuk akses istimewa.' });
       }
       const roleSnap = await admin.database().ref(`roles/${currentUid}`).once('value');
@@ -115,22 +123,38 @@ module.exports = async (req, res) => {
         }
       }
       if (!stillAllowed) {
-        await gateRef.update({ usedAt: null });
         return res.status(403).json({ ok: false, error: 'Akses Premium/Admin/Owner sudah tidak aktif.' });
       }
     }
 
-    const catalog = await readCatalog();
-    const item = catalog[session.slug];
-    const link = item && item['link download'];
-    if (!link || !/^https?:\/\//i.test(String(link))) return res.status(404).json({ ok: false, error: 'Link download tidak tersedia.' });
+    // Consume token atomically only after every validation above succeeds.
+    const transaction = await gateRef.transaction((current) => {
+      if (!current || current.usedAt) return;
+      const txNow = Date.now();
+      if (txNow > Number(current.expiresAt || 0)) return;
+      if (txNow < Number(current.readyAt || 0)) return;
+      if (current.uid && current.uid !== currentUid) return;
+      return { ...current, usedAt: txNow };
+    });
 
-    const downloadRef = admin.database().ref(`jumlah_unduh/${session.slug}`);
+    if (!transaction.committed || !transaction.snapshot.exists()) {
+      return res.status(403).json({ ok: false, error: 'Download belum siap atau token sudah digunakan.' });
+    }
+
+    const consumedSession = transaction.snapshot.val() || {};
+    const catalog = await readCatalog();
+    const item = catalog[consumedSession.slug];
+    const link = item && item['link download'];
+    if (!link || !/^https?:\/\//i.test(String(link))) {
+      await gateRef.update({ usedAt: null });
+      return res.status(404).json({ ok: false, error: 'Link download tidak tersedia.' });
+    }
+
+    const downloadRef = admin.database().ref(`jumlah_unduh/${consumedSession.slug}`);
     await downloadRef.transaction((value) => Math.max(0, Number(value) || 0) + 1);
 
     res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Location', String(link));
-    return res.status(302).end();
+    return res.status(200).json({ ok: true, url: String(link) });
   } catch (error) {
     console.error('download-file error:', error);
     const status = error.code && String(error.code).startsWith('auth/') ? 401 : 500;
