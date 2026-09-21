@@ -156,16 +156,35 @@ async function tampilkanDetail() {
             return data;
         }
 
-        function bukaEndpointDownload(gateToken) {
+        async function bukaEndpointDownload(gateToken) {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '/api/download-file';
             form.style.display = 'none';
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'gateToken';
-            input.value = gateToken;
-            form.appendChild(input);
+
+            const gateInput = document.createElement('input');
+            gateInput.type = 'hidden';
+            gateInput.name = 'gateToken';
+            gateInput.value = gateToken;
+            form.appendChild(gateInput);
+
+            // The server must know which logged-in account owns the gate session.
+            // A normal form submit cannot carry the Firebase Authorization header,
+            // so pass the short-lived Firebase ID token in the POST body.
+            if (usuarioActual) {
+                try {
+                    const idToken = await usuarioActual.getIdToken();
+                    const tokenInput = document.createElement('input');
+                    tokenInput.type = 'hidden';
+                    tokenInput.name = 'idToken';
+                    tokenInput.value = idToken;
+                    form.appendChild(tokenInput);
+                } catch (error) {
+                    console.error('Gagal mengambil token login:', error);
+                    throw new Error('Sesi login tidak dapat diverifikasi. Silakan login ulang.');
+                }
+            }
+
             document.body.appendChild(form);
             form.submit();
         }
@@ -188,7 +207,7 @@ async function tampilkanDetail() {
                 try {
                     const sesi = await mulaiSesiDownload();
                     if (sesi.bypass) {
-                        bukaEndpointDownload(sesi.gateToken);
+                        await bukaEndpointDownload(sesi.gateToken);
                     } else {
                         await mulaiDownloadGate(sesi);
                     }
@@ -291,7 +310,7 @@ async function tampilkanDetail() {
                     if (tombolLanjut.disabled) return;
                     try {
                         // Server checks the real readyAt time; client timer alone is not trusted.
-                        bukaEndpointDownload(sesi.gateToken);
+                        await bukaEndpointDownload(sesi.gateToken);
                         overlay.remove();
                         document.body.classList.remove('download-gate-terbuka');
                         tombolGate.hidden = true;
