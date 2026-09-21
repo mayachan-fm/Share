@@ -35,7 +35,7 @@ async function muatDashboardStatistikOwner() {
   const box = document.getElementById("dashboard-statistik-owner");
   if (!box) return;
   try {
-    const dataResponse = await fetch("/api/catalog?mode=manage", {cache:"no-store", headers: await tokenHeader()});
+    const dataResponse = await fetch("/api/catalog", {cache:"no-store"});
     if (!dataResponse.ok) throw new Error("Katalog server tidak dapat dibaca.");
     const data = await dataResponse.json();
     const items = Object.values(data || {});
@@ -174,7 +174,42 @@ function renderPremium(list) {
   });
 }
 
+function labelAksiPremium(item) {
+  if (item.aksi === "grant") return {text:"Diberikan", cls:"premium-history-grant", icon:"fa-plus"};
+  if (item.aksi === "renewal") return {text:"Diperpanjang", cls:"premium-history-renewal", icon:"fa-refresh"};
+  if (item.aksi === "revoke") return {text:"Dicabut", cls:"premium-history-revoke", icon:"fa-ban"};
+  return {text:"Perubahan", cls:"premium-history-other", icon:"fa-diamond"};
+}
+
+function renderPremiumHistory(list) {
+  const box = document.getElementById("owner-riwayat-premium");
+  const count = document.getElementById("owner-count-riwayat-premium");
+  if (!box || !count) return;
+  count.textContent = `${list.length} riwayat terbaru`;
+  if (!list.length) {
+    box.innerHTML = `<div class="admin-list-empty">Belum ada riwayat Premium.</div>`;
+    return;
+  }
+  box.innerHTML = list.map(item => {
+    const aksi = labelAksiPremium(item);
+    const waktu = formatPremiumDate(item.waktu);
+    const target = item.email || item.uid || "Akun tidak diketahui";
+    const durasi = item.durasi ? String(item.durasi).replaceAll("_", " ") : "-";
+    const berakhir = item.berakhir ? formatPremiumDate(item.berakhir) : "Permanen";
+    const actor = item.dilakukanOlehEmail || item.dilakukanOleh || "Owner";
+    return `<div class="premium-history-item">
+      <div class="premium-history-icon ${aksi.cls}"><i class="fa ${aksi.icon}"></i></div>
+      <div class="premium-history-main">
+        <div class="premium-history-top"><strong>${esc(target)}</strong><span class="premium-history-badge ${aksi.cls}">${aksi.text}</span></div>
+        <small>${esc(waktu)} · oleh ${esc(actor)}</small>
+        <small>Durasi: ${esc(durasi)} · Berakhir: ${esc(berakhir)}</small>
+      </div>
+    </div>`;
+  }).join("");
+}
+
 let daftarPremiumOwner = [];
+let riwayatPremiumOwner = [];
 
 async function muatPremium(tampilkanLoading = true) {
   const box = document.getElementById("owner-daftar-premium");
@@ -183,7 +218,9 @@ async function muatPremium(tampilkanLoading = true) {
   try {
     const result = await apiPremium("list");
     daftarPremiumOwner = result.premium || [];
+    riwayatPremiumOwner = result.history || [];
     renderPremium(daftarPremiumOwner);
+    renderPremiumHistory(riwayatPremiumOwner);
   } catch (error) {
     if (tampilkanLoading) box.innerHTML = `<div class="admin-list-empty">${esc(error.message)}</div>`;
   }
@@ -389,6 +426,15 @@ onAuthStateChanged(auth, async user => {
       <div id="owner-daftar-premium" class="owner-daftar-staf"></div>
     </section>
 
+    <section class="owner-manage-box owner-premium-history-box">
+      <div class="admin-json-header">
+        <div><h3><i class="fa fa-history"></i> Riwayat Premium</h3><p>Semua pemberian, perpanjangan, dan pencabutan Premium tersimpan di sini.</p></div>
+        <button type="button" class="tombol-sekunder" id="muat-riwayat-premium"><i class="fa fa-refresh"></i> Muat ulang</button>
+      </div>
+      <div id="owner-count-riwayat-premium" class="admin-data-count">Memuat...</div>
+      <div id="owner-riwayat-premium" class="owner-premium-history-list"><div class="admin-list-empty">Memuat riwayat Premium...</div></div>
+    </section>
+
     <section class="aktivitas-box">
       <div class="aktivitas-header"><div><h3><i class="fa fa-history"></i> Semua Aktivitas</h3><p>Riwayat pengelolaan addon dan perubahan role Admin.</p></div><button type="button" class="tombol-sekunder" id="muat-aktivitas-owner"><i class="fa fa-refresh"></i> Muat ulang</button></div>
       <div id="aktivitas-owner" class="aktivitas-daftar"><div class="aktivitas-kosong">Memuat aktivitas...</div></div>
@@ -448,6 +494,7 @@ onAuthStateChanged(auth, async user => {
   await muatDashboardStatistikOwner();
   await muatAktivitasOwner();
   document.getElementById('muat-aktivitas-owner')?.addEventListener('click', muatAktivitasOwner);
+  document.getElementById('muat-riwayat-premium')?.addEventListener('click', () => muatPremium());
 });
 </script>
 </body>
