@@ -62,6 +62,7 @@ import {
   ambilRole
 } from "./auth.js";
 import { ambilDataPremium, statusPremium } from "./premium.js";
+import { ambilNotifikasi, tandaiSemuaNotifikasiDibaca, jumlahNotifikasiBelumDibaca } from "./notifikasi.js";
 
 const appEl = document.getElementById("profil-app");
 let mode = "login";
@@ -243,6 +244,36 @@ async function tampilProfil(user, role) {
     return bagian.join(" ") || "< 1 menit";
   };
 
+  let daftarNotifikasi = [];
+  try {
+    daftarNotifikasi = await ambilNotifikasi(user);
+  } catch (error) {
+    console.error("Gagal memuat notifikasi:", error);
+  }
+  const belumDibaca = jumlahNotifikasiBelumDibaca(daftarNotifikasi);
+  const formatWaktuNotifikasi = (ms) => Number.isFinite(Number(ms)) && Number(ms) > 0
+    ? new Date(Number(ms)).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" })
+    : "Waktu tidak diketahui";
+  const ikonNotifikasi = (tipe) => {
+    if (tipe === "premium_grant") return "fa-diamond";
+    if (tipe === "premium_renewal") return "fa-refresh";
+    if (tipe === "premium_revoke") return "fa-ban";
+    return "fa-bell";
+  };
+  const kelasNotifikasi = (tipe) => tipe === "premium_revoke" ? "notifikasi-danger" : tipe === "premium_renewal" ? "notifikasi-renewal" : "notifikasi-premium";
+  const htmlNotifikasi = daftarNotifikasi.length
+    ? daftarNotifikasi.map(item => `
+      <div class="profil-notifikasi-item ${item.dibaca ? "sudah-dibaca" : "belum-dibaca"}">
+        <div class="profil-notifikasi-icon ${kelasNotifikasi(item.tipe)}"><i class="fa ${ikonNotifikasi(item.tipe)}"></i></div>
+        <div class="profil-notifikasi-main">
+          <strong>${escapeHtml(item.judul)}</strong>
+          <p>${escapeHtml(item.pesan)}</p>
+          <small>${escapeHtml(formatWaktuNotifikasi(item.waktu))}</small>
+        </div>
+      </div>
+    `).join("")
+    : `<div class="profil-notifikasi-kosong"><i class="fa fa-bell-slash"></i><span>Belum ada notifikasi.</span></div>`;
+
   appEl.innerHTML = `
     <div class="profil-avatar"><i class="fa ${isStaff ? "fa-shield" : "fa-user"}"></i></div>
     <h2>Profil</h2>
@@ -270,6 +301,14 @@ async function tampilProfil(user, role) {
       </div>
       ${premiumStatus.aktif && !premiumStatus.permanen && premiumStatus.sisaMs <= 3 * 24 * 60 * 60 * 1000 ? `<p class="profil-premium-warning"><i class="fa fa-exclamation-triangle"></i> Premium akan segera berakhir.</p>` : ""}
     </div>
+    <div class="profil-notifikasi-box">
+      <div class="profil-notifikasi-header">
+        <strong><i class="fa fa-bell"></i> Notifikasi</strong>
+        <span class="profil-notifikasi-count">${belumDibaca ? `${belumDibaca} baru` : "Terbaru"}</span>
+      </div>
+      <div class="profil-notifikasi-list">${htmlNotifikasi}</div>
+      ${belumDibaca ? `<button id="tandai-notifikasi" type="button" class="tombol-sekunder profil-notifikasi-read"><i class="fa fa-check"></i> Tandai semua sudah dibaca</button>` : ""}
+    </div>
     <a href="index.html?disukai=1#wadah-addon" class="tombol-sekunder profil-disukai-link"><i class="fa fa-thumbs-up"></i> Lihat addon disukai</a>
     ${role === "admin" ? `<a href="admin.html" class="tombol-utama tombol-akun"><i class="fa fa-dashboard"></i> Panel Admin</a>` : ""}
     ${role === "owner" ? `
@@ -278,6 +317,23 @@ async function tampilProfil(user, role) {
     ` : ""}
     <button id="logout" class="tombol-logout" type="button"><i class="fa fa-sign-out"></i> Logout</button>
   `;
+
+  const tombolNotifikasi = document.getElementById("tandai-notifikasi");
+  if (tombolNotifikasi) {
+    tombolNotifikasi.addEventListener("click", async () => {
+      tombolNotifikasi.disabled = true;
+      tombolNotifikasi.textContent = "Memproses...";
+      try {
+        await tandaiSemuaNotifikasiDibaca(user);
+        await tampilProfil(user, role);
+      } catch (error) {
+        console.error("Gagal menandai notifikasi:", error);
+        tombolNotifikasi.disabled = false;
+        tombolNotifikasi.innerHTML = '<i class="fa fa-check"></i> Tandai semua sudah dibaca';
+        alert("Notifikasi gagal diperbarui. Coba lagi.");
+      }
+    });
+  }
 
   document.getElementById("logout").addEventListener("click", async () => {
     try {

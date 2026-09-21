@@ -21,13 +21,6 @@ import {ref, get} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-data
 
 const el = document.getElementById("admin-app");
 
-async function catalogManageHeaders() {
-  const user = auth.currentUser;
-  if (!user) throw new Error("Login diperlukan.");
-  const token = await user.getIdToken(true);
-  return { "Authorization": `Bearer ${token}` };
-}
-
 function esc(value) {
   return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]));
 }
@@ -36,7 +29,7 @@ async function muatDashboardStatistik() {
   const box = document.getElementById("dashboard-statistik-admin");
   if (!box) return;
   try {
-    const dataSnap = await fetch("/api/catalog?mode=manage", {cache:"no-store", headers: await catalogManageHeaders()});
+    const dataSnap = await fetch("/api/catalog", {cache:"no-store"});
     if (!dataSnap.ok) throw new Error("Katalog server tidak dapat dibaca.");
     const data = await dataSnap.json();
     const items = Object.values(data || {});
@@ -256,7 +249,7 @@ onAuthStateChanged(auth, async user => {
   let addonBaru = [];
 
   try {
-    const response = await fetch("/api/catalog?mode=manage", {cache: "no-store", headers: await catalogManageHeaders()});
+    const response = await fetch("/api/catalog", {cache: "no-store"});
     if (response.ok) {
       dataLama = await response.json();
       count.textContent = `${Object.keys(dataLama).length} addon di katalog`;
