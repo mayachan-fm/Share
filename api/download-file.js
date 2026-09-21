@@ -47,8 +47,15 @@ async function readCatalog() {
 
 async function verifyCurrentUid(req) {
   const header = req.headers.authorization || '';
-  if (!header.startsWith('Bearer ')) return null;
-  const decoded = await admin.auth().verifyIdToken(header.slice(7).trim());
+  if (header.startsWith('Bearer ')) {
+    const decoded = await admin.auth().verifyIdToken(header.slice(7).trim());
+    return decoded.uid;
+  }
+
+  const body = parseBody(req);
+  const idToken = String(body.idToken || '').trim();
+  if (!idToken) return null;
+  const decoded = await admin.auth().verifyIdToken(idToken);
   return decoded.uid;
 }
 
