@@ -75,6 +75,29 @@ async function buildPremiumList() {
   return entries.sort((a,b) => Number(b.mulai || 0) - Number(a.mulai || 0));
 }
 
+
+async function buildPremiumHistory(limit = 100) {
+  const snap = await admin.database().ref('premium_history').once('value');
+  const raw = snap.val();
+  if (!raw || typeof raw !== 'object') return [];
+  const rows = Object.entries(raw).map(([id, item]) => ({
+    id,
+    uid: item?.uid || '',
+    email: item?.email || '',
+    aksi: item?.aksi || 'unknown',
+    durasi: item?.durasi || null,
+    waktu: item?.waktu || null,
+    sebelumnyaBerakhir: item?.sebelumnyaBerakhir ?? null,
+    berakhir: item?.berakhir ?? null,
+    renewal: !!item?.renewal,
+    dicabutPada: item?.dicabutPada ?? null,
+    dilakukanOleh: item?.dilakukanOleh || '',
+    dilakukanOlehEmail: item?.dilakukanOlehEmail || ''
+  }));
+  rows.sort((a, b) => Number(b.waktu || 0) - Number(a.waktu || 0));
+  return rows.slice(0, Math.max(1, Math.min(Number(limit) || 100, 200)));
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return send(res, 405, {ok:false, error:'Method tidak diizinkan.'});
   try {
@@ -83,7 +106,7 @@ module.exports = async (req, res) => {
     const action = String(req.body?.action || '').trim();
     const db = admin.database();
 
-    if (action === 'list') return send(res, 200, {ok:true, premium: await buildPremiumList()});
+    if (action === 'list') return send(res, 200, {ok:true, premium: await buildPremiumList(), history: await buildPremiumHistory(100)});
 
     if (action === 'grant') {
       const target = await resolveUser(req.body?.identifier);
@@ -125,7 +148,25 @@ module.exports = async (req, res) => {
         dicabutPada: null,
         diberikanOleh: owner.uid
       };
-      await premiumRef.set(payload);
+      const historyRef = db.ref('premium_history').push();
+      const targetEmail = target.email || target.uid;
+      const historyPayload = {
+        uid: target.uid,
+        email: targetEmail,
+        aksi: renewal ? 'renewal' : 'grant',
+        durasi: duration,
+        waktu: mulai,
+        sebelumnyaBerakhir: current?.berakhir ?? null,
+        berakhir,
+        renewal,
+        dicabutPada: null,
+        dilakukanOleh: owner.uid,
+        dilakukanOlehEmail: owner.email || owner.uid
+      };
+      const updates = {};
+      updates[`premium/${target.uid}`] = payload;
+      updates[`premium_history/${historyRef.key}`] = historyPayload;
+      await db.ref().update(updates);
       const actionLabel = renewal ? `Memperpanjang Premium ${duration}` : `Memberikan Premium ${duration}`;
       await catatAktivitas({decoded:owner, role:'owner', aksi:'premium_beri', targetId:target.uid, targetName:target.email || target.uid, detail:actionLabel});
       return send(res, 200, {
@@ -145,9 +186,27 @@ module.exports = async (req, res) => {
       const snap = await ref.once('value');
       if (!snap.exists()) return send(res, 404, {ok:false,error:'Data Premium tidak ditemukan.'});
       const current = snap.val() || {};
-      await ref.update({dicabutPada:Date.now()});
+      const dicabutPada = Date.now();
       let targetEmail = uid;
       try { targetEmail = (await admin.auth().getUser(uid)).email || uid; } catch (_) {}
+      const historyRef = db.ref('premium_history').push();
+      const historyPayload = {
+        uid,
+        email: targetEmail,
+        aksi: 'revoke',
+        durasi: current?.tipe || null,
+        waktu: dicabutPada,
+        sebelumnyaBerakhir: current?.berakhir ?? null,
+        berakhir: current?.berakhir ?? null,
+        renewal: false,
+        dicabutPada,
+        dilakukanOleh: owner.uid,
+        dilakukanOlehEmail: owner.email || owner.uid
+      };
+      const updates = {};
+      updates[`premium/${uid}/dicabutPada`] = dicabutPada;
+      updates[`premium_history/${historyRef.key}`] = historyPayload;
+      await db.ref().update(updates);
       await catatAktivitas({decoded:owner, role:'owner', aksi:'premium_cabut', targetId:uid, targetName:targetEmail, detail:'Mencabut akses Premium'});
       return send(res, 200, {ok:true,message:`Premium ${targetEmail} berhasil dicabut.`});
     }
