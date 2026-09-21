@@ -157,36 +157,35 @@ async function tampilkanDetail() {
         }
 
         async function bukaEndpointDownload(gateToken) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/api/download-file';
-            form.style.display = 'none';
+            const headers = { 'Content-Type': 'application/json' };
+            const body = { gateToken };
 
-            const gateInput = document.createElement('input');
-            gateInput.type = 'hidden';
-            gateInput.name = 'gateToken';
-            gateInput.value = gateToken;
-            form.appendChild(gateInput);
-
-            // The server must know which logged-in account owns the gate session.
-            // A normal form submit cannot carry the Firebase Authorization header,
-            // so pass the short-lived Firebase ID token in the POST body.
+            // Gunakan fetch agar Firebase ID token dan respons server tetap berada
+            // dalam satu request. Jangan gunakan form submit karena browser tidak
+            // dapat meneruskan Authorization header saat navigasi ke endpoint.
             if (usuarioActual) {
                 try {
-                    const idToken = await usuarioActual.getIdToken();
-                    const tokenInput = document.createElement('input');
-                    tokenInput.type = 'hidden';
-                    tokenInput.name = 'idToken';
-                    tokenInput.value = idToken;
-                    form.appendChild(tokenInput);
+                    body.idToken = await usuarioActual.getIdToken();
                 } catch (error) {
                     console.error('Gagal mengambil token login:', error);
                     throw new Error('Sesi login tidak dapat diverifikasi. Silakan login ulang.');
                 }
             }
 
-            document.body.appendChild(form);
-            form.submit();
+            const response = await fetch('/api/download-file', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(body),
+                cache: 'no-store'
+            });
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok || !data.ok || !data.url) {
+                throw new Error(data.error || 'Download tidak dapat dibuka.');
+            }
+
+            // Server sudah memvalidasi gate dan mengonsumsi token.
+            window.location.assign(data.url);
         }
 
         function escapeHtml(value) {
