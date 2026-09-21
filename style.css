@@ -2040,92 +2040,45 @@ body {
 .profil-premium.premium-dicabut .profil-premium-header span{color:#e77b7b;border-color:#633838}
 @media(max-width:520px){.profil-premium-grid{grid-template-columns:1fr}.profil-premium{padding:13px}}
 
-/* Stage P7.1 — Artikel mengambang pada Download Gate */
-.artikel-download-overlay{
-    position:fixed;
-    inset:0;
-    z-index:99999;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:18px;
-    box-sizing:border-box;
+/* Stage P7 — Artikel acak pada Download Gate */
+.artikel-download-gate {
+    margin: 18px 0 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    overflow: hidden;
 }
-.artikel-download-backdrop{
-    position:absolute;
-    inset:0;
-    background:rgba(0,0,0,.78);
-    backdrop-filter:blur(7px);
-    -webkit-backdrop-filter:blur(7px);
+
+.artikel-download-konten {
+    padding: 16px;
 }
-.artikel-download-modal{
-    position:relative;
-    z-index:1;
-    width:min(620px,calc(100vw - 28px));
-    max-height:min(88vh,820px);
-    overflow:auto;
-    border:1px solid rgba(255,255,255,.18);
-    border-radius:26px;
-    background:linear-gradient(145deg,rgba(31,31,36,.98),rgba(13,14,18,.98));
-    box-shadow:0 24px 80px rgba(0,0,0,.65),0 0 50px rgba(255,255,255,.06);
-    animation:artikelGateMasuk .22s ease-out;
+
+.artikel-download-label {
+    font-size: 12px;
+    font-weight: 700;
+    opacity: .75;
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
 }
-@keyframes artikelGateMasuk{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
-.artikel-download-modal-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:16px 18px 10px;
+
+.artikel-download-konten h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
 }
-.artikel-download-label{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    font-size:13px;
-    font-weight:700;
-    opacity:.9;
-    letter-spacing:.02em;
+
+.artikel-download-konten p {
+    margin: 0;
+    line-height: 1.65;
+    opacity: .9;
 }
-.artikel-download-close{
-    width:38px;
-    height:38px;
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:50%;
-    background:rgba(255,255,255,.06);
-    color:inherit;
-    cursor:pointer;
-}
-.artikel-download-gambar{
-    display:block;
-    width:calc(100% - 36px);
-    max-height:290px;
-    object-fit:cover;
-    margin:4px 18px 0;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.13);
-    background:#111;
-}
-.artikel-download-konten{padding:18px 20px 8px}
-.artikel-download-konten h3{margin:0 0 9px;font-size:22px;line-height:1.25}
-.artikel-download-konten p{margin:0;line-height:1.7;opacity:.88;font-size:14px}
-.artikel-download-timer{padding:12px 20px 20px}
-.artikel-download-waktu{display:flex;align-items:center;justify-content:center;gap:11px;margin:5px 0 12px}
-.artikel-download-waktu>i{width:42px;height:42px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.18);border-radius:50%;font-size:18px}
-.artikel-download-waktu small{display:block;opacity:.62;font-size:11px}
-.artikel-download-waktu strong{display:block;font-size:19px;margin-top:1px}
-.artikel-download-progress{height:8px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.12);margin-bottom:14px}
-.artikel-download-progress span{display:block;width:0;height:100%;border-radius:inherit;background:currentColor;transition:width 1s linear}
-.artikel-download-lanjut{width:100%;min-height:48px;opacity:.55;cursor:not-allowed}
-.artikel-download-lanjut.siap{opacity:1;cursor:pointer}
-body.download-gate-terbuka{overflow:hidden}
-@media(max-width:600px){
-    .artikel-download-overlay{padding:10px}
-    .artikel-download-modal{width:calc(100vw - 20px);max-height:91vh;border-radius:22px}
-    .artikel-download-modal-header{padding:13px 14px 8px}
-    .artikel-download-gambar{width:calc(100% - 28px);margin:4px 14px 0;max-height:230px;border-radius:15px}
-    .artikel-download-konten{padding:15px 14px 7px}
-    .artikel-download-konten h3{font-size:18px}
-    .artikel-download-konten p{font-size:13px;line-height:1.6}
-    .artikel-download-timer{padding:10px 14px 15px}
+
+@media (max-width: 600px) {
+    .artikel-download-konten {
+        padding: 14px;
+    }
+
+    .artikel-download-konten h3 {
+        font-size: 16px;
+    }
 }
