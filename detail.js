@@ -149,6 +149,22 @@ async function tampilkanDetail() {
         // Download Gate Stage P9 — server-side gate/session.
         const tombolGate = document.getElementById('tombol-download-gate');
 
+        // Browser dapat mengembalikan halaman detail dari back-forward cache (bfcache).
+        // Jika itu terjadi setelah download, tombol bisa ikut kembali dalam keadaan
+        // disabled/hidden dari klik sebelumnya. Selalu pulihkan state tombol saat
+        // halaman ditampilkan kembali.
+        function resetTombolDownload() {
+            if (!tombolGate) return;
+            tombolGate.hidden = false;
+            tombolGate.disabled = false;
+            tombolGate.dataset.ready = '';
+            tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
+        }
+
+        window.addEventListener('pageshow', () => {
+            resetTombolDownload();
+        });
+
         async function tokenHeaderOptional() {
             if (!usuarioActual) return {};
             try {
@@ -300,10 +316,7 @@ async function tampilkanDetail() {
                     if (interval) clearInterval(interval);
                     overlay.remove();
                     document.body.classList.remove('download-gate-terbuka');
-                    tombolGate.hidden = false;
-                    tombolGate.disabled = false;
-                    tombolGate.dataset.ready = '';
-                    tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
+                    resetTombolDownload();
                 };
 
                 tombolTutup?.addEventListener('click', tutupGate);
@@ -336,7 +349,7 @@ async function tampilkanDetail() {
                         await bukaEndpointDownload(sesi.gateToken);
                         overlay.remove();
                         document.body.classList.remove('download-gate-terbuka');
-                        tombolGate.hidden = true;
+                        resetTombolDownload();
                     } catch (error) {
                         console.error('Gagal membuka download:', error);
                         alert(error.message || 'Download tidak dapat dibuka.');
@@ -345,10 +358,7 @@ async function tampilkanDetail() {
             } catch (error) {
                 console.error('Gagal memulai Download Gate:', error);
                 alert(error.message || 'Download tidak dapat dimulai.');
-                tombolGate.hidden = false;
-                tombolGate.disabled = false;
-                tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
-                tombolGate.dataset.ready = '';
+                resetTombolDownload();
             }
         }
 
