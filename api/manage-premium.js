@@ -47,6 +47,18 @@ function statusOf(data, now = Date.now()) {
   return { aktif: !revoked && !expired, kadaluarsa: expired, dicabut: revoked, sisaMs: (!revoked && !expired && !permanent) ? Math.max(0, Number(data.berakhir) - now) : null };
 }
 
+
+async function buatNotifikasi(uid, payload) {
+  const ref = admin.database().ref(`notifikasi/${uid}`).push();
+  await ref.set({
+    tipe: String(payload?.tipe || 'info'),
+    judul: String(payload?.judul || 'Notifikasi'),
+    pesan: String(payload?.pesan || ''),
+    waktu: Number(payload?.waktu) || Date.now(),
+    dibaca: false
+  });
+}
+
 async function buildPremiumList() {
   const snap = await admin.database().ref('premium').once('value');
   const raw = snap.val();
@@ -167,6 +179,15 @@ module.exports = async (req, res) => {
       updates[`premium/${target.uid}`] = payload;
       updates[`premium_history/${historyRef.key}`] = historyPayload;
       await db.ref().update(updates);
+      const waktuBerakhir = berakhir ? new Date(berakhir).toLocaleString('id-ID', { dateStyle:'medium', timeStyle:'short' }) : 'tidak berakhir';
+      await buatNotifikasi(target.uid, {
+        tipe: renewal ? 'premium_renewal' : 'premium_grant',
+        judul: renewal ? 'Premium diperpanjang' : 'Premium diberikan',
+        pesan: renewal
+          ? `Premium kamu diperpanjang ${duration.replace('_', ' ')}. Masa aktif berakhir ${waktuBerakhir}.`
+          : `Kamu mendapatkan Premium ${duration.replace('_', ' ')}. Masa aktif berakhir ${waktuBerakhir}.`,
+        waktu: mulai
+      });
       const actionLabel = renewal ? `Memperpanjang Premium ${duration}` : `Memberikan Premium ${duration}`;
       await catatAktivitas({decoded:owner, role:'owner', aksi:'premium_beri', targetId:target.uid, targetName:target.email || target.uid, detail:actionLabel});
       return send(res, 200, {
@@ -207,6 +228,12 @@ module.exports = async (req, res) => {
       updates[`premium/${uid}/dicabutPada`] = dicabutPada;
       updates[`premium_history/${historyRef.key}`] = historyPayload;
       await db.ref().update(updates);
+      await buatNotifikasi(uid, {
+        tipe: 'premium_revoke',
+        judul: 'Premium dicabut',
+        pesan: 'Akses Premium akun kamu telah dicabut oleh Owner.',
+        waktu: dicabutPada
+      });
       await catatAktivitas({decoded:owner, role:'owner', aksi:'premium_cabut', targetId:uid, targetName:targetEmail, detail:'Mencabut akses Premium'});
       return send(res, 200, {ok:true,message:`Premium ${targetEmail} berhasil dicabut.`});
     }
