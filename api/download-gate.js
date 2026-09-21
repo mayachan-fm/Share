@@ -9,6 +9,10 @@ const GITHUB_API = 'https://api.github.com';
 const WAIT_MIN = 10;
 const WAIT_MAX = 20;
 const SESSION_TTL = 15 * 60 * 1000;
+const CATALOG_CACHE_TTL = 60 * 1000;
+
+let catalogCache = null;
+let catalogCacheAt = 0;
 
 function getFirebaseAdmin() {
   if (admin.apps.length) return admin.app();
@@ -43,11 +47,17 @@ async function github(path) {
   return body;
 }
 
-async function readCatalog() {
+async function readCatalogCached() {
+  const now = Date.now();
+  if (catalogCache && now - catalogCacheAt < CATALOG_CACHE_TTL) return catalogCache;
+
   const current = await github(`contents/${PATH}?ref=${encodeURIComponent(BRANCH)}`);
   const jsonText = Buffer.from(String(current.content || '').replace(/\n/g, ''), 'base64').toString('utf8');
   const data = JSON.parse(jsonText);
   if (!data || Array.isArray(data) || typeof data !== 'object') throw new Error('Struktur katalog tidak valid.');
+
+  catalogCache = data;
+  catalogCacheAt = now;
   return data;
 }
 
@@ -92,9 +102,12 @@ module.exports = async (req, res) => {
     const slug = String(body.slug || '').trim();
     if (!/^[a-z0-9_-]{1,80}$/i.test(slug)) return res.status(400).json({ ok: false, error: 'Slug addon tidak valid.' });
 
-    const catalog = await readCatalog();
+    const catalog = await readCatalogCached();
     const item = catalog[slug];
-    if (!item || typeof item !== 'object' || !item['link download']) return res.status(404).json({ ok: false, error: 'Addon atau link download tidak ditemukan.' });
+    const link = item && item['link download'];
+    if (!item || typeof item !== 'object' || !/^https?:\/\//i.test(String(link || ''))) {
+      return res.status(404).json({ ok: false, error: 'Addon atau link download tidak ditemukan.' });
+    }
 
     const user = await identifyUser(req);
     const now = Date.now();
@@ -108,6 +121,7 @@ module.exports = async (req, res) => {
     const gateToken = signGatePayload({
       uid: user.uid || null,
       slug,
+      downloadUrl: String(link),
       readyAt: now + waitSeconds * 1000,
       expiresAt: now + SESSION_TTL,
       bypass,
