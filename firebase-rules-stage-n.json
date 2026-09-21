@@ -1,0 +1,39 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "jumlah_unduh": {
+      ".read": true,
+      "$addonId": {
+        ".write": true,
+        ".validate": "newData.isNumber() && newData.val() >= 0 && ((!data.exists() && newData.val() == 1) || (data.exists() && newData.val() == data.val() + 1))"
+      }
+    },
+    "jumlah_like": {
+      ".read": true,
+      "$addonId": {
+        ".write": "auth != null",
+        ".validate": "newData.isNumber() && newData.val() >= 0 && ((!data.exists() && newData.val() == 1) || (data.exists() && newData.val() == data.val() + 1))"
+      }
+    },
+    "komentar": {
+      ".read": true,
+      "$addonId": {
+        "$commentId": {
+          ".write": "auth != null && !data.exists() && newData.child('uid').val() === auth.uid",
+          ".validate": "newData.hasChildren(['isi', 'waktu', 'uid', 'username']) && newData.child('isi').isString() && newData.child('isi').val().length <= 300 && newData.child('waktu').isNumber() && newData.child('uid').val() === auth.uid && newData.child('username').isString() && newData.child('username').val().length <= 80"
+        }
+      }
+    },
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "aktivitas": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}

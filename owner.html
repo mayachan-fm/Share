@@ -35,7 +35,7 @@ async function muatDashboardStatistikOwner() {
   const box = document.getElementById("dashboard-statistik-owner");
   if (!box) return;
   try {
-    const dataResponse = await fetch("/api/catalog?mode=manage", {cache:"no-store", headers: await tokenHeader()});
+    const dataResponse = await fetch("/api/catalog", {cache:"no-store"});
     if (!dataResponse.ok) throw new Error("Katalog server tidak dapat dibaca.");
     const data = await dataResponse.json();
     const items = Object.values(data || {});
