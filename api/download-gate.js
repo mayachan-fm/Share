@@ -45,15 +45,31 @@ async function github(path) {
 
 async function readCatalog() {
   const current = await github(`contents/${PATH}?ref=${encodeURIComponent(BRANCH)}`);
-  const jsonText = Buffer.from(current.content.replace(/\n/g, ''), 'base64').toString('utf8');
+  const jsonText = Buffer.from(String(current.content || '').replace(/\n/g, ''), 'base64').toString('utf8');
   const data = JSON.parse(jsonText);
   if (!data || Array.isArray(data) || typeof data !== 'object') throw new Error('Struktur katalog tidak valid.');
   return data;
 }
 
+function signingSecret() {
+  const source = process.env.DOWNLOAD_GATE_SECRET || process.env.FIREBASE_PRIVATE_KEY || process.env.GITHUB_TOKEN;
+  if (!source) throw new Error('Secret Download Gate belum tersedia di server.');
+  return crypto.createHash('sha256').update(String(source)).digest();
+}
+
+function base64url(value) {
+  return Buffer.from(value).toString('base64url');
+}
+
+function signGatePayload(payload) {
+  const encoded = base64url(JSON.stringify(payload));
+  const signature = crypto.createHmac('sha256', signingSecret()).update(encoded).digest('base64url');
+  return `${encoded}.${signature}`;
+}
+
 async function identifyUser(req) {
   const header = req.headers.authorization || '';
-  if (!header.startsWith('Bearer ')) return { uid: null, role: 'guest' };
+  if (!header.startsWith('Bearer ')) return { uid: null, role: 'user' };
   const decoded = await admin.auth().verifyIdToken(header.slice(7).trim());
   const roleSnap = await admin.database().ref(`roles/${decoded.uid}`).once('value');
   const role = String(roleSnap.val() || 'user').toLowerCase();
@@ -61,12 +77,10 @@ async function identifyUser(req) {
 }
 
 function premiumAktif(data, now) {
-  if (!data || typeof data !== 'object') return false;
-  if (data.dicabutPada) return false;
+  if (!data || typeof data !== 'object' || data.dicabutPada) return false;
   const tipe = String(data.tipe || '').toLowerCase();
   const berakhir = data.berakhir === null || data.berakhir === undefined || data.berakhir === '' ? null : Number(data.berakhir);
-  if (tipe === 'permanen' || berakhir === null) return true;
-  return Number.isFinite(berakhir) && now < berakhir;
+  return tipe === 'permanen' || berakhir === null || (Number.isFinite(berakhir) && now < berakhir);
 }
 
 module.exports = async (req, res) => {
@@ -91,20 +105,18 @@ module.exports = async (req, res) => {
     }
 
     const waitSeconds = bypass ? 0 : Math.floor(Math.random() * (WAIT_MAX - WAIT_MIN + 1)) + WAIT_MIN;
-    const gateId = crypto.randomUUID();
-    const session = {
-      uid: user.uid,
+    const gateToken = signGatePayload({
+      uid: user.uid || null,
       slug,
       readyAt: now + waitSeconds * 1000,
       expiresAt: now + SESSION_TTL,
       bypass,
-      accessReason: bypass ? (['admin', 'owner'].includes(user.role) ? user.role : 'premium') : 'gate',
-      createdAt: now
-    };
+      createdAt: now,
+      nonce: crypto.randomUUID()
+    });
 
-    await admin.database().ref(`download_gates/${gateId}`).set(session);
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({ ok: true, gateToken: gateId, waitSeconds, bypass });
+    return res.status(200).json({ ok: true, gateToken, waitSeconds, bypass });
   } catch (error) {
     console.error('download-gate start error:', error);
     const status = error.code && String(error.code).startsWith('auth/') ? 401 : 500;
