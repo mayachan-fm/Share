@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const crypto = require('crypto');
+const { waitUntil } = require('@vercel/functions');
 
 function getFirebaseAdmin() {
   if (admin.apps.length) return admin.app();
@@ -93,7 +94,8 @@ module.exports = async (req, res) => {
     // Auth/Realtime Database lagi pada saat klik download.
     if (session.privileged === true) {
       getFirebaseAdmin();
-      await admin.database().ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
+      const counterPromise = admin.database().ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
+      waitUntil(counterPromise.catch((error) => console.error('download counter error:', error)));
       res.setHeader('Cache-Control', 'no-store');
       return res.status(200).json({ ok: true, url: String(session.downloadUrl) });
     }
@@ -121,10 +123,11 @@ module.exports = async (req, res) => {
 
     const link = String(session.downloadUrl);
 
-    // Tunggu penambahan counter selesai sebelum mengembalikan URL.
-    // ServerValue.increment() membuat penambahan tetap atomik saat banyak pengguna
-    // mengunduh addon yang sama secara bersamaan.
-    await admin.database().ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
+    // Counter tidak boleh menahan respons download. Vercel waitUntil() menjaga
+    // Promise tetap hidup setelah respons dikirim, sehingga URL bisa dibuka
+    // segera sementara counter tetap diperbarui secara atomik di background.
+    const counterPromise = admin.database().ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
+    waitUntil(counterPromise.catch((error) => console.error('download counter error:', error)));
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ok: true, url: link });
