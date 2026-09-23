@@ -93,8 +93,7 @@ module.exports = async (req, res) => {
     // Auth/Realtime Database lagi pada saat klik download.
     if (session.privileged === true) {
       getFirebaseAdmin();
-      admin.database().ref(`jumlah_unduh/${session.slug}`).transaction((value) => Math.max(0, Number(value) || 0) + 1)
-        .catch((error) => console.error('download counter error:', error));
+      await admin.database().ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
       res.setHeader('Cache-Control', 'no-store');
       return res.status(200).json({ ok: true, url: String(session.downloadUrl) });
     }
@@ -122,10 +121,10 @@ module.exports = async (req, res) => {
 
     const link = String(session.downloadUrl);
 
-    // Counter is intentionally not on the critical path. A successful authorization
-    // should not make the user wait for Firebase's counter transaction to finish.
-    admin.database().ref(`jumlah_unduh/${session.slug}`).transaction((value) => Math.max(0, Number(value) || 0) + 1)
-      .catch((error) => console.error('download counter error:', error));
+    // Tunggu penambahan counter selesai sebelum mengembalikan URL.
+    // ServerValue.increment() membuat penambahan tetap atomik saat banyak pengguna
+    // mengunduh addon yang sama secara bersamaan.
+    await admin.database().ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ok: true, url: link });
