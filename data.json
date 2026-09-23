@@ -2470,5 +2470,17 @@
     "ukuran": "14.68 MB",
     "tanggal unggah": "19 September 2026",
     "description": "Rasakan perluasan rawa yang paling nyaman! Temui peradaban amfibi menawan dengan pekerjaan dan perdagangan unik. Tangkap serangga, bangun akuarium khusus, jebak ikan, atau bentuk band dengan musik Ribbits! Dilengkapi dengan balok-balok baru yang subur dan makhluk-makhluk menggemaskan.\n\nEdisi Batuan Dasar Resmi dari Ribbits Java Mod oleh Refresh Studios & Bonsai Studios!"
+  },
+  "build_assist": {
+    "slug": "build_assist",
+    "nama file": "Build Assist",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-23-7c45571f-76be-429a-ac82-d40196453c6f.jpg",
+    "link download": "https://files.catbox.moe/zmjzzf.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "1.37 MB",
+    "tanggal unggah": "24 September 2026",
+    "description": "Build Assist Add-On membantu pemain mengoptimalkan pengeditan dunia dengan Toolbox yang memberi Anda akses instan ke alat baru.\n\n+ Isi atau hapus area yang dipilih\n+ Salin, pindahkan, susun, dan ganti blok\n+ Buat bola, silinder, lingkaran, dan garis\n+ Banjir ruang yang terhubung dan lebih banyak alat!\n\nBuild Assist Add-On berfungsi di dunia mana pun!"
   }
 }
