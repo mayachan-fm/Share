@@ -2482,5 +2482,17 @@
     "ukuran": "1.37 MB",
     "tanggal unggah": "24 September 2026",
     "description": "Build Assist Add-On membantu pemain mengoptimalkan pengeditan dunia dengan Toolbox yang memberi Anda akses instan ke alat baru.\n\n+ Isi atau hapus area yang dipilih\n+ Salin, pindahkan, susun, dan ganti blok\n+ Buat bola, silinder, lingkaran, dan garis\n+ Banjir ruang yang terhubung dan lebih banyak alat!\n\nBuild Assist Add-On berfungsi di dunia mana pun!"
+  },
+  "vibrance": {
+    "slug": "vibrance",
+    "nama file": "Vibrance",
+    "type file": "Texturepack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-24-f2d6063c-23a8-441c-96a5-db69a9e5b128.jpg",
+    "link download": "https://files.catbox.moe/ia30h9.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "40.98 MB",
+    "tanggal unggah": "24 September 2026",
+    "description": "Tinggikan dunia Anda dengan Vibrance, paket Vibrant Visuals yang sangat canggih termasuk:\n\n- Dedaunan Animasi yang Dapat Dialihkan\n- Pencahayaan Volumetrik\n- Tekstur Tinggi 3D\n- Refleksi\n- Bijih Bersinar\n- Air Berkilauan & Caustic Realistis\n- Pencahayaan Khusus, Kabut, dan Penilaian Warna per Bioma\n- Dapat digunakan di atas VV-Pack lainnya\n\nMembutuhkan Visual yang Cerah\n\nOleh Leozy & Pathway Studios"
   }
 }
