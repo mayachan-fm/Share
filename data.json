@@ -2542,5 +2542,17 @@
     "ukuran": "42.66 MB",
     "tanggal unggah": "24 September 2026",
     "description": "Jadikan duniamu lebih menyenangkan dengan MOBIL, PERAHU, dan PESAWAT konyol ini! Berkelilinglah dengan hot dog besar, atau nikmati pemandangan saat Anda menerbangkan jet pizza cepat Anda! Jika Anda ingin menjelajahi dunia dengan lebih gaya, Add-On ini sangat cocok untuk Anda!\n\n+ 20+ Kendaraan!\n+ Menambahkan Mobil, Kapal, & Pesawat!\n+ Kemampuan khusus!\n+ Tambahan sempurna untuk dunia mana pun!"
+  },
+  "vending_machines": {
+    "slug": "vending_machines",
+    "nama file": "Vending Machines",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-24-a778fc13-a72f-4f7f-a0ee-0adcf0a42ed8.jpg",
+    "link download": "https://files.catbox.moe/prieoz.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "1.38 MB",
+    "tanggal unggah": "24 September 2026",
+    "description": "Tingkatkan pengalaman bertahan hidup Anda berikutnya dengan sentuhan modern! Buat mesin penjual otomatis modern & beli item berbasis utilitas/efek dari mereka untuk dikonsumsi! Ambil kopi & dapatkan peningkatan kecepatan, beli peralatan medis & sembuhkan lebih cepat, atau gunakan untuk mendekorasi proyek kota kreatif Anda seperti furnitur!\n\n+ Paket Kesehatan.\n+ Kecepatan, peningkatan lompat & minuman kekuatan.\n+ Dapat digunakan sebagai furnitur modern!"
   }
 }
