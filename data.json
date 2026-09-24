@@ -2506,5 +2506,17 @@
     "ukuran": "25.49 MB",
     "tanggal unggah": "24 September 2026",
     "description": "Over Mob Add-On menghadirkan bos dan monster baru yang mendebarkan, bersama dengan perlengkapan yang kuat. Jelajahi, temukan, dan libatkan makhluk-makhluk ini saat Anda menjelajah ke dunia baru!\n+ 80+ monster baru (Prime, Elite, Trigger Event) dengan kemampuan dan varian unik\n+ 5 bos bertema dengan pertarungan epik\n+ 200 item baru dan 40 perlengkapan, termasuk senjata, baju besi, ramuan, dan barang habis pakai"
+  },
+  "itemate": {
+    "slug": "itemate",
+    "nama file": "ITEMATE",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-24-5bcecdd9-a349-480f-a5be-f6634dfaa884.jpg",
+    "link download": "https://files.catbox.moe/g7oiio.zip",
+    "versi mc": "1.26+",
+    "ukuran": "935 KB",
+    "tanggal unggah": "24 September 2026",
+    "description": "Singkirkan kerja keras dalam mengelola inventaris Anda.\n- Armor otomatis terpasang\n- Slot hotbar diisi ulang, dan pilih senjata/kapak/beliung terbaik\n- Peti/Hopper/dll. laporan kapasitas\n- Tempatkan obor Anda secara otomatis\n- Item isi otomatis peti kreatif\n- Pembongkaran item yang difilter\n- Magnet!"
   }
 }
