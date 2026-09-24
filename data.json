@@ -2518,5 +2518,17 @@
     "ukuran": "935 KB",
     "tanggal unggah": "24 September 2026",
     "description": "Singkirkan kerja keras dalam mengelola inventaris Anda.\n- Armor otomatis terpasang\n- Slot hotbar diisi ulang, dan pilih senjata/kapak/beliung terbaik\n- Peti/Hopper/dll. laporan kapasitas\n- Tempatkan obor Anda secara otomatis\n- Item isi otomatis peti kreatif\n- Pembongkaran item yang difilter\n- Magnet!"
+  },
+  "halloween": {
+    "slug": "halloween",
+    "nama file": "Halloween",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-24-699d722c-cdc8-427c-ba01-33fa24d5ef24.jpg",
+    "link download": "https://files.catbox.moe/53qr1o.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "3.24 MB",
+    "tanggal unggah": "24 September 2026",
+    "description": "Bersiaplah untuk petualangan Halloween yang menakutkan! Trik, suguhan, dan tantangan menakutkan menanti!\nLawan Bos Manusia Serigala Alfa Baru, atau bersantai di dekat api unggun sambil menikmati permen.\nGunakan Kuali Penyihir baru untuk membuat ramuan baru atau bertarung dengan penyihir berelemen untuk mendapatkan tongkat sihir mereka.\n\n+ 4 Set Armor Halloween\n+ Senjata Ajaib BARU\n+ Perkelahian Massa dan Bos"
   }
 }
