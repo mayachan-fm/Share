@@ -2578,5 +2578,17 @@
     "ukuran": "7.43 MB",
     "tanggal unggah": "24 September 2026",
     "description": "Hadapi BOSS TERSEMBUNYI! Tiga pertemuan kolosal, tiga tingkat kesulitan per bos, dan arena besar yang dapat dijelajahi menunggu untuk ditemukan.\n- 3 Atasan × 3 Tingkatan = Dapat Diputar Ulang Tanpa Akhir\n- Struktur Arena Adaptif\n- Beberapa Fase Tempur\n- 9 Item Hadiah Unik\n- Tingkat Kesulitan Berjenjang (I, II, III)\n\nJelajahi. Memanggil. Bertahan hidup."
+  },
+  "create_add_on": {
+    "slug": "create_add_on",
+    "nama file": "Create Add-On",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-24-17c86f5a-7376-4d5f-a692-76f90e9c68c4.jpg",
+    "link download": "https://files.catbox.moe/ibx6cd.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "21.36 MB",
+    "tanggal unggah": "24 September 2026",
+    "description": "Bangun pabrik otomatis besar-besaran, rancang jalur produksi yang kompleks, dan hidupkan dunia Anda dengan koleksi mesin baru yang sangat banyak. Mod ini menambahkan alat-alat canggih untuk otomatisasi, pembuatan, pengolahan, dan transportasi, memberi Anda semua yang Anda butuhkan untuk menciptakan kerajaan industri yang maju.\n\nGunakan tenaga mekanik untuk menjalankan mesin, memindahkan barang di seluruh markas Anda, memproses sumber daya lebih cepat, dan bereksperimen dengan desain pabrik yang kreatif. Baik Anda menginginkan pengaturan awal yang sederhana atau markas besar otomatis sepenuhnya, mod ini memberi Anda komponen untuk mewujudkannya."
   }
 }
