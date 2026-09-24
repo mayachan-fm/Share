@@ -2566,5 +2566,17 @@
     "ukuran": "5.54 MB",
     "tanggal unggah": "24 September 2026",
     "description": "Tingkatkan kelangsungan hidup Anda dengan Add-On Backpack & Stuff!\nLengkapi 4 utilitas sekaligus: gabungkan aksi, pertarungan, dan petualangan.\nRansel ini memiliki 2000+ kombinasi dan 30+ skin.\n- Pengumpanan & Peleburan Otomatis\n- Tangki Scuba & Jetpack\n- Teleportasi & Cahaya Dinamis\n\nTerapkan Add-On ini ke dunia Anda dan perluas penyimpanan Anda!"
+  },
+  "hidden_bosses": {
+    "slug": "hidden_bosses",
+    "nama file": "Hidden Bosses",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-24-7d45016d-313a-405d-9b30-55c0a8fb8620.jpg",
+    "link download": "https://files.catbox.moe/t1p2sv.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "7.43 MB",
+    "tanggal unggah": "24 September 2026",
+    "description": "Hadapi BOSS TERSEMBUNYI! Tiga pertemuan kolosal, tiga tingkat kesulitan per bos, dan arena besar yang dapat dijelajahi menunggu untuk ditemukan.\n- 3 Atasan × 3 Tingkatan = Dapat Diputar Ulang Tanpa Akhir\n- Struktur Arena Adaptif\n- Beberapa Fase Tempur\n- 9 Item Hadiah Unik\n- Tingkat Kesulitan Berjenjang (I, II, III)\n\nJelajahi. Memanggil. Bertahan hidup."
   }
 }
