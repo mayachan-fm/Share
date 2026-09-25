@@ -2638,5 +2638,17 @@
     "ukuran": "-",
     "tanggal unggah": "25 September 2026",
     "description": "Addon yg cocok untuk kalian yg suka nya main minecraft denagn texture seperti minecraft Jaman JADUL"
+  },
+  "utilities_vein_miner": {
+    "slug": "utilities_vein_miner",
+    "nama file": "Utilities Vein Miner",
+    "type file": "Mcaddon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-25-a51d8445-567f-4a38-976c-840be75a649a.png",
+    "link download": "https://www.mediafire.com/file/sck6bt6mlxud0xp/Utilities_Vein_Miner_v5.5_By_FifzzMc.mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "45,40Kb",
+    "tanggal unggah": "25 September 2026",
+    "description": "Mempermudah Saat Mengumpulkan Kayu Dan Mining Batu Dan Ore² Lainnya"
   }
 }
