@@ -2650,5 +2650,17 @@
     "ukuran": "45,40Kb",
     "tanggal unggah": "25 September 2026",
     "description": "Mempermudah Saat Mengumpulkan Kayu Dan Mining Batu Dan Ore² Lainnya"
+  },
+  "medieval_structures": {
+    "slug": "medieval_structures",
+    "nama file": "Medieval Structures (1.0)",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-25-167ba8d8-8992-4046-b69c-1f683e870e1f.jpg",
+    "link download": "https://files.catbox.moe/dh40m6.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "1.07 MB",
+    "tanggal unggah": "25 September 2026",
+    "description": "Add-On Struktur Abad Pertengahan berfungsi di DUNIA ANDA, menambahkan struktur baru yang dihasilkan secara alami dan terintegrasi dengan mulus ke dunia luar!\n\n+ Jelajahi 100+ bangunan abad pertengahan, termasuk kastil dan reruntuhan\n+ Temukan bangunan mengambang di langit, jauh di bawah tanah, dan banyak lagi\n+ Temukan struktur khusus bioma dan peti rampasan unik"
   }
 }
