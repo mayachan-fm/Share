@@ -2686,5 +2686,17 @@
     "ukuran": "4 Kb",
     "tanggal unggah": "26 September 2026",
     "description": "Skin Kece Gratis"
+  },
+  "elevators": {
+    "slug": "elevators",
+    "nama file": "Elevators",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-26-c3231935-f84c-41fa-bc5d-1b40f98c9789.jpg",
+    "link download": "https://files.catbox.moe/ax7zk6.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "4.47 MB",
+    "tanggal unggah": "26 September 2026",
+    "description": "ATAS ATAU BAWAH? ATAU PINDAHKAN LEBIH CERDAS!\nTingkatkan bangunan Anda ke level berikutnya dengan sistem elevator yang berfungsi penuh dan realistis! Dari Klasik hingga Fiksi Ilmiah, Kemewahan hingga Vanila, ciptakan sistem yang sesuai dengan dunia Anda. Turun ke kedalaman atau naik ke langit!\n\n-Mudah diatur, mudah digunakan\n-Gerakan horizontal dan vertikal\n-Koneksi dan mekanik yang cerdas\n-Pengeboran poros otomatis"
   }
 }
