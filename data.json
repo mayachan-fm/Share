@@ -2722,5 +2722,17 @@
     "ukuran": "600 KB",
     "tanggal unggah": "26 September 2026",
     "description": "Lindungi jarahan Anda dengan Add-On Lockin' & Pickin'!\nAmankan peti dan wadah dengan kunci khusus, buat kunci yang cocok, atau uji waktu Anda dengan kunci-kunci.\nSempurna untuk pangkalan, toko, dunia multipemain, dan petualangan licik!\n\n~ Amankan Kontainer Anda\n~ Kerajinan Kunci & Gantungan Kunci\n~ Mengunci"
+  },
+  "roller_coaster": {
+    "slug": "roller_coaster",
+    "nama file": "Roller Coaster 1.0",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-26-e720bd9d-fd79-4c9d-826e-fa6d7e3c0263.jpg",
+    "link download": "https://files.catbox.moe/7l10ce.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "8.17 MB",
+    "tanggal unggah": "26 September 2026",
+    "description": "Rancang roller coaster Anda sendiri dan ikut serta dalam perjalanan.\n\n- Rel pintar yang otomatis membentuk lereng, belokan, putaran, dan gulungan\n- Kendarai kreasi Anda dalam kamera POV imersif yang dapat dimiringkan dan diputar mengikuti lintasan\n- Otomatiskan semuanya: stasiun, penguat, rem, sakelar track, dan banyak lagi!\n- Bangun taman hiburan lengkap: blok bertema, animatronik, VFX & SFX\n- 18+ tatakan gelas yang sudah dibuat sebelumnya"
   }
 }
