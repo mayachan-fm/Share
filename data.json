@@ -2818,5 +2818,17 @@
     "ukuran": "2.64 MB",
     "tanggal unggah": "29 September 2026",
     "description": "Menu UI anime hosino yang dibuat oleh Yuki"
+  },
+  "combine_weapons": {
+    "slug": "combine_weapons",
+    "nama file": "Combine Weapons",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-30-aabee998-9ca4-4a8e-b218-3bab7fc916ff.jpg",
+    "link download": "https://files.catbox.moe/vw5c9q.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "7.61 MB",
+    "tanggal unggah": "30 September 2026",
+    "description": "Gabungkan item untuk membuat senjata, peralatan, tongkat ajaib, perisai kuat, baju besi epik, dan banyak lagi yang eksklusif dan baru!\n\n=> Visual yang Cerah ditingkatkan\n=> 200+ resep khusus\n=> Sekering ULTIMATE ARMOR\n=> Buat SENJATA KHUSUS\n=> Kemampuan unik dan efek visual\n=> Peningkatan ekspansi kelangsungan hidup\n=> Perlengkapan tembaga baru\n=> Alat vanilla yang ditingkatkan"
   }
 }
