@@ -3,8 +3,8 @@
     --merahMuda: #ff6b5b;
     --gelapPekat: #0f0f0f;
     --gelapSedang: #1a1a1a;
-    --gelapKartu: #9b2020;
-    --batasGelap: #d13a3a;
+    --gelapKartu: #222222;
+    --batasGelap: #333333;
     --teksPutih: #ffffff;
     --teksAbu: #b0b0b0;
 
@@ -650,8 +650,8 @@ body {
     --merahMuda: #ff6b5b;
     --gelapPekat: #0f0f0f;
     --gelapSedang: #1a1a1a;
-    --gelapKartu: #9b2020;
-    --batasGelap: #d13a3a;
+    --gelapKartu: #222222;
+    --batasGelap: #333333;
     --teksPutih: #ffffff;
     --teksAbu: #b0b0b0;
 
@@ -2383,24 +2383,24 @@ body.download-gate-terbuka{overflow:hidden}
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.48), 0 4px 14px rgba(210, 170, 0, 0.24);
 }
 
-/* Final visual tuning v2: Semua Koleksi - near-black with subtle dark-gold tint */
+/* Final visual tuning v3: Semua Koleksi - near-black with subtle dark-blue tint */
 #wadah-addon .kartu-addon {
-    background: #1b180d;
-    border-color: #4b411d;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.48), 0 2px 8px rgba(190, 150, 0, 0.12);
+    background: #101722;
+    border-color: #24405c;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.52), 0 2px 9px rgba(35, 90, 145, 0.13);
 }
 
 #wadah-addon .garis-pembatas {
-    background: #66551c;
+    background: #2a4c6b;
 }
 
 #wadah-addon .kartu-addon:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.54), 0 3px 12px rgba(210, 170, 0, 0.16);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.58), 0 3px 13px rgba(45, 105, 165, 0.18);
 }
 
 /* Kartu selain Semua Koleksi kembali ke warna asli hitam/abu */
+.kartu-addon:not(#wadah-addon .kartu-addon),
 #wadah-top .kartu-geser {
     background: var(--gelapKartu);
     border-color: var(--batasGelap);
-    box-shadow: none;
 }
