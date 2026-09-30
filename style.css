@@ -2382,3 +2382,25 @@ body.download-gate-terbuka{overflow:hidden}
 #wadah-addon .kartu-addon:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.48), 0 4px 14px rgba(210, 170, 0, 0.24);
 }
+
+/* Final visual tuning v2: Semua Koleksi - near-black with subtle dark-gold tint */
+#wadah-addon .kartu-addon {
+    background: #1b180d;
+    border-color: #4b411d;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.48), 0 2px 8px rgba(190, 150, 0, 0.12);
+}
+
+#wadah-addon .garis-pembatas {
+    background: #66551c;
+}
+
+#wadah-addon .kartu-addon:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.54), 0 3px 12px rgba(210, 170, 0, 0.16);
+}
+
+/* Kartu selain Semua Koleksi kembali ke warna asli hitam/abu */
+#wadah-top .kartu-geser {
+    background: var(--gelapKartu);
+    border-color: var(--batasGelap);
+    box-shadow: none;
+}
