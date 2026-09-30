@@ -154,7 +154,7 @@ body {
 .isi-sambutan h1 {
     font-size: 30px;
     color: var(--merahUtama);
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 800;
 }
 
@@ -1321,8 +1321,8 @@ body {
 }
 
 .logo-web img {
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     object-fit: contain;
     border-radius: 9px;
 }
@@ -2209,20 +2209,20 @@ body.download-gate-terbuka{overflow:hidden}
 
 #wadah-addon .kartu-addon .gambar-wadah img {
     width: 100% !important;
-    height: 195px !important;
+    height: 125px !important;
     object-fit: cover !important;
     object-position: center !important;
 }
 
-/* Kartu dibuat lebih lebar secara visual dan tidak terlalu tinggi. */
+/* Kartu dibuat berbentuk persegi panjang mendatar: lebar lebih dominan daripada tinggi. */
 #wadah-addon .kartu-isi {
-    padding: 11px 12px 12px;
+    padding: 9px 11px 10px;
 }
 
 #wadah-addon .kartu-isi h3 {
-    font-size: 16px;
-    line-height: 1.25;
-    margin: 0 0 7px;
+    font-size: 15px;
+    line-height: 1.2;
+    margin: 0 0 5px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -2235,7 +2235,7 @@ body.download-gate-terbuka{overflow:hidden}
 
 #wadah-addon .bagian-aksi {
     gap: 8px;
-    min-height: 38px;
+    min-height: 34px;
 }
 
 #wadah-addon .grup-tombol-kanan {
@@ -2267,7 +2267,7 @@ body.download-gate-terbuka{overflow:hidden}
     }
 
     #wadah-addon .kartu-addon .gambar-wadah img {
-        height: 155px !important;
+        height: 115px !important;
     }
 }
 
