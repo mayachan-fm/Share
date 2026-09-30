@@ -3,8 +3,8 @@
     --merahMuda: #ff6b5b;
     --gelapPekat: #0f0f0f;
     --gelapSedang: #1a1a1a;
-    --gelapKartu: #222222;
-    --batasGelap: #333333;
+    --gelapKartu: #9b2020;
+    --batasGelap: #d13a3a;
     --teksPutih: #ffffff;
     --teksAbu: #b0b0b0;
 
@@ -650,8 +650,8 @@ body {
     --merahMuda: #ff6b5b;
     --gelapPekat: #0f0f0f;
     --gelapSedang: #1a1a1a;
-    --gelapKartu: #222222;
-    --batasGelap: #333333;
+    --gelapKartu: #9b2020;
+    --batasGelap: #d13a3a;
     --teksPutih: #ffffff;
     --teksAbu: #b0b0b0;
 
@@ -2324,7 +2324,7 @@ body.download-gate-terbuka{overflow:hidden}
 #wadah-addon .garis-pembatas {
     flex: 0 0 1px;
     margin: 0 0 7px;
-    background: #5a2428;
+    background: #c52d2d;
 }
 
 #wadah-addon .bagian-aksi {
