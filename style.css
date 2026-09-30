@@ -2784,3 +2784,95 @@ body {
         height: 1px;
     }
 }
+
+/* ===== Compact filter bar — Pilihan Addon ===== */
+.bagian-top-addon .judul-dengan-tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.bagian-top-addon .judul-bagian {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.bagian-top-addon .filter-lanjutan {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+}
+
+.bagian-top-addon .filter-kontrol {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    background: rgba(255,255,255,.035);
+}
+
+.bagian-top-addon .filter-kontrol span {
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 700;
+    color: #c7ceca;
+    opacity: .95;
+    white-space: nowrap;
+}
+
+.bagian-top-addon .filter-kontrol select {
+    width: auto;
+    min-width: 118px;
+    min-height: 30px;
+    padding: 2px 22px 2px 2px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    outline: none;
+}
+
+.bagian-top-addon .filter-kontrol select:focus {
+    border: 0;
+}
+
+@media (max-width: 640px) {
+    .bagian-top-addon .judul-dengan-tab {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .bagian-top-addon .filter-lanjutan {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    .bagian-top-addon .filter-kontrol {
+        width: 100%;
+        padding: 7px 8px;
+        gap: 5px;
+    }
+
+    .bagian-top-addon .filter-kontrol span {
+        font-size: 10px;
+    }
+
+    .bagian-top-addon .filter-kontrol select {
+        min-width: 0;
+        width: 100%;
+        font-size: 11px;
+    }
+}
