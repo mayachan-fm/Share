@@ -2271,3 +2271,98 @@ body.download-gate-terbuka{overflow:hidden}
     }
 }
 
+
+/* === PENYEMPURNAAN KARTU SEMUA KOLEKSI v2 === */
+/* Semua kartu dibuat seragam: landscape, tinggi tetap, dan warna merah gelap. */
+#wadah-addon {
+    align-items: stretch;
+}
+
+#wadah-addon .kartu-addon {
+    width: 100%;
+    min-width: 0;
+    height: 235px;
+    display: flex;
+    flex-direction: column;
+    background: #3a1518;
+    border-color: #5a2428;
+}
+
+#wadah-addon .kartu-addon .gambar-wadah {
+    flex: 0 0 118px;
+    height: 118px;
+    overflow: hidden;
+}
+
+#wadah-addon .kartu-addon .gambar-wadah img {
+    width: 100% !important;
+    height: 118px !important;
+    object-fit: cover !important;
+    display: block;
+}
+
+#wadah-addon .kartu-isi {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 9px 11px 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+#wadah-addon .kartu-isi h3 {
+    flex: 0 0 36px;
+    height: 36px;
+    font-size: 15px;
+    line-height: 1.2;
+    margin: 0 0 6px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+#wadah-addon .garis-pembatas {
+    flex: 0 0 1px;
+    margin: 0 0 7px;
+    background: #5a2428;
+}
+
+#wadah-addon .bagian-aksi {
+    margin-top: auto;
+    min-height: 38px;
+}
+
+#wadah-addon .grup-tombol-kanan {
+    gap: 7px;
+}
+
+#wadah-addon .tombol-like,
+#wadah-addon .tombol-bagi {
+    width: 38px;
+    height: 38px;
+}
+
+#wadah-addon .tombol-like.sudah {
+    background: rgba(255, 59, 48, 0.35);
+    color: #ff665d;
+}
+
+@media (max-width: 380px) {
+    #wadah-addon {
+        gap: 10px;
+    }
+
+    #wadah-addon .kartu-addon {
+        height: 220px;
+    }
+
+    #wadah-addon .kartu-addon .gambar-wadah,
+    #wadah-addon .kartu-addon .gambar-wadah img {
+        flex-basis: 108px;
+        height: 108px !important;
+    }
+
+    #wadah-addon .kartu-isi {
+        padding: 8px 9px 9px;
+    }
+}
