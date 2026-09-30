@@ -144,19 +144,34 @@ function tampilkanTopAddon() {
     const wadah = document.getElementById('wadah-top');
     if (!wadah || daftarAddon.length === 0) return;
 
-    let terurut;
+    // Filter + urutan di sini KHUSUS untuk bagian “Pilihan Addon”.
+    // “Semua Koleksi” tidak ikut berubah saat Versi Minecraft / Urutkan diganti.
+    let sumber = [...daftarAddon];
 
-    if (modeTopAddon === 'terbanyak') {
-        // Urutkan: paling banyak diunduh
-        terurut = [...daftarAddon]
-            .sort((a, b) => (b['jumlah unduh'] || 0) - (a['jumlah unduh'] || 0))
-            .slice(0, 8);
-    } else {
-        // ✅ OPSI 3: Yang paling bawah di katalog = paling baru diunggah
-        terurut = [...daftarAddon].reverse().slice(0, 8);
+    if (versiAktif !== 'semua') {
+        sumber = sumber.filter(item => String(item['versi mc'] || '').trim() === versiAktif);
     }
 
+    let terurut;
+    if (urutanDaftar === 'terbanyak') {
+        terurut = sumber.sort((a, b) => (b['jumlah unduh'] || 0) - (a['jumlah unduh'] || 0));
+    } else if (urutanDaftar === 'like') {
+        terurut = sumber.sort((a, b) => (b['jumlah like'] || 0) - (a['jumlah like'] || 0));
+    } else if (urutanDaftar === 'nama') {
+        terurut = sumber.sort((a, b) => String(a['nama file'] || '').localeCompare(String(b['nama file'] || ''), undefined, { sensitivity: 'base' }));
+    } else {
+        // Posisi paling bawah di katalog dianggap paling baru.
+        terurut = sumber.reverse();
+    }
+
+    terurut = terurut.slice(0, 8);
+
     wadah.innerHTML = '';
+    if (terurut.length === 0) {
+        wadah.innerHTML = `<div class="pesan-hilang"><i class="fa fa-search-minus"></i><p>Addon tidak ditemukan</p></div>`;
+        return;
+    }
+
     terurut.forEach((item) => {
         const kartu = document.createElement('div');
         kartu.className = 'kartu-addon kartu-geser';
@@ -169,8 +184,8 @@ function tampilkanTopAddon() {
             <div class="kartu-isi">
                 <h4>${item['nama file']}</h4>
                 <div class="info-unduh">
-                    <i class="fa ${modeTopAddon === 'terbanyak' ? 'fa-download' : 'fa-calendar'}"></i>
-                    ${modeTopAddon === 'terbanyak' ? (item['jumlah unduh'] || 0) + ' unduhan' : item['tanggal unggah']}
+                    <i class="fa fa-download"></i>
+                    ${item['jumlah unduh'] || 0} unduhan
                 </div>
             </div>
         `;
@@ -325,10 +340,12 @@ function terapkanFilterDanCari() {
         const kat = String(item.kategori || 'lainnya').toLowerCase();
         const versi = String(item['versi mc'] || '').trim();
         const cocokKat = filterAktif === 'semua' || kat === filterAktif;
-        const cocokVersi = versiAktif === 'semua' || versi === versiAktif;
         const cocokKata = kunci === '' || nama.includes(kunci) || desc.includes(kunci) || tipe.includes(kunci) || versi.toLowerCase().includes(kunci) || kat.includes(kunci);
-        return cocokKat && cocokVersi && cocokKata;
+        return cocokKat && cocokKata;
     });
+
+    // Pencarian/kategori tetap memengaruhi “Semua Koleksi”.
+    // Versi Minecraft + Urutkan hanya untuk “Pilihan Addon”.
     tampilkanDaftar(terapkanUrutan(hasil));
 }
 
@@ -390,10 +407,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('kotak-cari')?.addEventListener('keydown', e => { if(e.key==='Enter') { clearTimeout(timerPencarian); terapkanFilterDanCari(); } });
     document.getElementById('filter-versi')?.addEventListener('change', e => {
         versiAktif = e.target.value === 'semua' ? 'semua' : decodeURIComponent(e.target.value);
-        terapkanFilterDanCari();
+        tampilkanTopAddon();
     });
     document.getElementById('urutkan-addon')?.addEventListener('change', e => {
         urutanDaftar = e.target.value;
-        terapkanFilterDanCari();
+        tampilkanTopAddon();
     });
 });
