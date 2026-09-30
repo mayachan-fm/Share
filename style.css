@@ -2405,9 +2405,10 @@ body.download-gate-terbuka{overflow:hidden}
     border-color: var(--batasGelap);
 }
 
-/* Latar halaman: hitam lebih cerah dengan pencahayaan lembut */
+/* Latar halaman: hitam dominan + cahaya merah lembut */
 body {
     background:
-        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0) 34%),
-        linear-gradient(180deg, #1b1b1b 0%, #171717 42%, #141414 100%);
+        radial-gradient(circle at 50% 0%, rgba(255, 59, 48, 0.14) 0%, rgba(255, 59, 48, 0.035) 24%, rgba(255, 59, 48, 0) 48%),
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.035) 0%, rgba(255, 255, 255, 0) 38%),
+        linear-gradient(180deg, #191313 0%, #141111 38%, #111111 72%, #0f0f0f 100%);
 }
