@@ -2404,3 +2404,10 @@ body.download-gate-terbuka{overflow:hidden}
     background: var(--gelapKartu);
     border-color: var(--batasGelap);
 }
+
+/* Latar halaman: hitam lebih cerah dengan pencahayaan lembut */
+body {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.065) 0%, rgba(255, 255, 255, 0) 34%),
+        linear-gradient(180deg, #1b1b1b 0%, #171717 42%, #141414 100%);
+}
