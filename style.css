@@ -2366,3 +2366,19 @@ body.download-gate-terbuka{overflow:hidden}
         padding: 8px 9px 9px;
     }
 }
+
+
+/* Final visual tuning: Semua Koleksi - dark gold cards + shadow */
+#wadah-addon .kartu-addon {
+    background: #6b5200;
+    border-color: #9a7600;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.42), 0 3px 10px rgba(190, 150, 0, 0.20);
+}
+
+#wadah-addon .garis-pembatas {
+    background: #b38a00;
+}
+
+#wadah-addon .kartu-addon:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.48), 0 4px 14px rgba(210, 170, 0, 0.24);
+}
