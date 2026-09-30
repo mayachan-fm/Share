@@ -2902,5 +2902,17 @@
     "ukuran": "13.28 MB",
     "tanggal unggah": "30 September 2026",
     "description": "Atur dan jelajahi tidak seperti sebelumnya dengan Paket Ekspansi Penyimpanan dan Transportasi! Bawalah beragam wadah penyimpanan khusus untuk berbagai jenis barang, serta kendaraan darat, laut, dan udara — masing-masing dilengkapi dengan tempat penyimpanannya sendiri. Paket ini adalah solusi lengkap untuk penyimpanan efisien dan transportasi penuh petualangan di dunia Anda!"
+  },
+  "redstone_plus": {
+    "slug": "redstone_plus",
+    "nama file": "Redstone Plus",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-09-30-3f4ba203-c29b-4deb-b03e-40ec233f409f.jpg",
+    "link download": "https://files.catbox.moe/uh0i2o.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "1.42 MB",
+    "tanggal unggah": "30 September 2026",
+    "description": "Perluas kemampuan alat redstone Anda ke tingkat yang lebih tinggi!\n\n- 16 blok penghubung redstone baru\n- Deteksi massa dari jarak jauh dengan Detektor Massa\n- Mengirimkan redstone melalui udara dengan pemancar nirkabel / lampu nirkabel\n- Mengangkut item dengan Item Elevator\n- Bangun sirkuit dengan 7 gerbang logika berbeda\n\nTambahkan Add-On ini ke dunia mana pun!"
   }
 }
