@@ -2193,3 +2193,60 @@ body.download-gate-terbuka{overflow:hidden}
   .dukungan-header h2{font-size:18px}
   .dukungan-item{padding:12px}
 }
+/* === GRID 2 KOLOM: SEMUA KOLEKSI SAJA === */
+/* Hanya #wadah-addon yang diubah. Bagian Pilihan Addon/.wadah-geser tetap horizontal. */
+#wadah-addon {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    align-items: start;
+}
+
+#wadah-addon .kartu-addon {
+    width: 100%;
+    min-width: 0;
+}
+
+#wadah-addon .kartu-addon .gambar-wadah img {
+    width: 100% !important;
+    height: 160px !important;
+    object-fit: cover !important;
+}
+
+#wadah-addon .kartu-isi {
+    padding: 13px;
+}
+
+#wadah-addon .kartu-isi h3 {
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+#wadah-addon .bagian-aksi {
+    gap: 8px;
+}
+
+#wadah-addon .info-unduh {
+    min-width: 0;
+    white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+    #wadah-addon {
+        gap: 10px;
+    }
+
+    #wadah-addon .kartu-isi {
+        padding: 11px;
+    }
+
+    #wadah-addon .kartu-isi h3 {
+        font-size: 15px;
+    }
+
+    #wadah-addon .kartu-addon .gambar-wadah img {
+        height: 140px !important;
+    }
+}
+
