@@ -141,7 +141,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(15,15,15,0.7), rgba(15,15,15,0.9)), url('https://images.unsplash.com/photo-1627856014596-f80c430f4133?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+    background: linear-gradient(rgba(15,15,15,0.7), rgba(15,15,15,0.9)), url('minecraft-hero.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -703,7 +703,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(rgba(15,15,15,0.7), rgba(15,15,15,0.9)), url('https://images.unsplash.com/photo-1627856014596-f80c430f4133?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+    background-image: linear-gradient(rgba(15,15,15,0.48), rgba(15,15,15,0.68)), url('./minecraft-hero.jpg') !important;
     background-size: cover;
     background-position: center;
 }
@@ -2413,7 +2413,471 @@ body {
         linear-gradient(180deg, #121916 0%, #111514 38%, #101211 72%, #0f0f0f 100%);
 }
 
-/* Tombol lanjut Pilihan Addon — muncul di ujung carousel */
+
+/* ==========================================================
+   REDESIGN MC ADDON SHARE — VISUAL HOMEPAGE
+   Data, kartu Semua Koleksi, dan fungsi JavaScript tetap.
+   ========================================================== */
+:root {
+    --latar-hitam: #0b0f0e;
+    --latar-hitam-2: #101615;
+    --panel-hitam: rgba(20, 27, 25, 0.92);
+    --panel-border: rgba(92, 120, 108, 0.28);
+    --cahaya-hijau: rgba(44, 135, 88, 0.16);
+    --cahaya-hijau-kuat: rgba(53, 160, 103, 0.22);
+}
+
+body {
+    background:
+        radial-gradient(650px 300px at 50% -30px, rgba(53, 160, 103, 0.19), transparent 72%),
+        radial-gradient(520px 280px at 8% 46%, rgba(38, 105, 71, 0.08), transparent 70%),
+        radial-gradient(520px 280px at 92% 76%, rgba(38, 105, 71, 0.07), transparent 70%),
+        linear-gradient(180deg, #101716 0%, #0d1211 42%, #0b0f0e 100%);
+    background-attachment: fixed;
+}
+
+/* HEADER */
+.header-tetap {
+    height: var(--tinggi-header);
+    background: rgba(8, 12, 11, 0.90);
+    border-bottom: 1px solid rgba(89, 124, 108, 0.28);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28), 0 0 32px rgba(39, 126, 82, 0.07);
+}
+
+.header-dalam {
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.logo-web {
+    gap: 11px;
+    font-size: 18px;
+    letter-spacing: -0.2px;
+}
+
+.logo-web img {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    box-shadow: 0 0 18px rgba(255, 59, 48, 0.16);
+}
+
+.header-aksi {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.header-ikon {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #aebbb5;
+    text-decoration: none;
+    font-size: 17px;
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.header-ikon:hover,
+.header-ikon:focus-visible {
+    color: #fff;
+    background: rgba(67, 125, 96, 0.18);
+    transform: translateY(-1px);
+}
+
+.header-profil {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* KONTEN */
+.container {
+    width: min(92%, 980px);
+}
+
+.konten-utama {
+    position: relative;
+}
+
+/* HERO */
+.bagian-sambutan {
+    width: min(92%, 980px);
+    height: 250px;
+    margin: 18px auto 0;
+    border: 1px solid rgba(105, 139, 124, 0.30);
+    border-radius: 18px;
+    justify-content: flex-start;
+    text-align: left;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.26), 0 0 35px rgba(37, 126, 82, 0.08);
+}
+
+.latar-gambar {
+    background:
+        linear-gradient(90deg, rgba(5, 9, 8, 0.92) 0%, rgba(7, 12, 11, 0.70) 42%, rgba(7, 12, 11, 0.28) 100%),
+        linear-gradient(180deg, rgba(5, 8, 7, 0.20), rgba(5, 8, 7, 0.72)),
+        url('./minecraft-hero.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.isi-sambutan {
+    width: min(620px, 78%);
+    margin-left: 32px;
+}
+
+.isi-sambutan h1 {
+    color: #fff;
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.08;
+    margin-bottom: 12px;
+    letter-spacing: -0.8px;
+}
+
+.isi-sambutan h1 span {
+    display: block;
+    color: var(--merahUtama);
+    text-shadow: 0 0 24px rgba(255, 59, 48, 0.18);
+}
+
+.isi-sambutan p {
+    max-width: 560px;
+    color: #c0cbc6;
+    font-size: 15px;
+}
+
+/* STATISTIK */
+.info-utama {
+    margin-top: 18px;
+}
+
+.info-utama .container {
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    background: rgba(18, 24, 22, 0.90);
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
+}
+
+.kotak-info {
+    min-width: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 18px 22px;
+    position: relative;
+}
+
+.kotak-info + .kotak-info::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 20%;
+    bottom: 20%;
+    width: 1px;
+    background: rgba(120, 145, 135, 0.20);
+}
+
+.kotak-info i {
+    color: var(--merahUtama);
+    font-size: 23px;
+}
+
+.kotak-info span {
+    font-size: 24px;
+}
+
+.kotak-info p {
+    color: #aebbb5;
+}
+
+/* SEARCH */
+.bagian-filter {
+    padding: 26px 0 8px;
+}
+
+.pencarian {
+    max-width: none;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+#kotak-cari {
+    min-width: 0;
+    height: 52px;
+    padding: 12px 18px;
+    background: rgba(17, 23, 21, 0.94);
+    border: 1px solid rgba(104, 132, 120, 0.34);
+    border-radius: 14px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.025), 0 8px 24px rgba(0,0,0,.15);
+}
+
+#kotak-cari:focus {
+    border-color: rgba(255, 59, 48, 0.72);
+    box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.08);
+}
+
+.tombol-cari {
+    width: 58px;
+    height: 52px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(255, 59, 48, 0.16);
+}
+
+.filter-kategori {
+    gap: 8px;
+}
+
+.btn-kategori {
+    min-width: 76px;
+    border: 1px solid rgba(105, 128, 118, 0.20);
+    background: rgba(22, 29, 27, 0.86);
+    border-radius: 12px;
+}
+
+.btn-kategori.aktif {
+    background: linear-gradient(135deg, #ff3b30, #e92e27);
+    box-shadow: 0 7px 18px rgba(255, 59, 48, 0.16);
+}
+
+/* JUDUL & PILIHAN ADDON */
+.judul-bagian {
+    font-size: 22px;
+    margin: 24px 0 14px;
+    letter-spacing: -0.3px;
+}
+
+.judul-dengan-tab {
+    margin-bottom: 14px;
+}
+
+.tab-top {
+    background: rgba(21, 28, 26, 0.92);
+    border: 1px solid rgba(100, 126, 115, 0.22);
+    border-radius: 11px;
+}
+
+/* PILIHAN ADDON: tetap horizontal, hanya visualnya diperhalus */
+.kartu-geser {
+    border-color: rgba(100, 126, 115, 0.28);
+    background: #222222;
+    box-shadow: 0 10px 25px rgba(0,0,0,.16);
+}
+
+.kartu-addon:not(#wadah-addon .kartu-addon),
+#wadah-top .kartu-geser {
+    background: #222222;
+    border-color: #333333;
+}
+
+/* Semua Koleksi: jangan ubah ukuran/warna kartu yang sudah diset sebelumnya. */
+
+.footer {
+    border-top-color: rgba(100, 126, 115, 0.18);
+    background: rgba(8, 12, 11, 0.35);
+}
+
+/* MOBILE */
+@media (max-width: 640px) {
+    .header-tetap {
+        height: 64px;
+    }
+
+    .header-aksi {
+        gap: 1px;
+    }
+
+    .header-ikon {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+    }
+
+    .logo-web {
+        font-size: 16px;
+    }
+
+    .logo-web img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .bagian-sambutan {
+        height: 230px;
+        margin-top: 14px;
+        border-radius: 16px;
+    }
+
+    .isi-sambutan {
+        width: 84%;
+        margin-left: 22px;
+    }
+
+    .isi-sambutan h1 {
+        font-size: 27px;
+        letter-spacing: -0.6px;
+    }
+
+    .isi-sambutan p {
+        font-size: 14px;
+        line-height: 1.45;
+    }
+
+    .info-utama .container {
+        width: 92%;
+    }
+
+    .kotak-info {
+        padding: 15px 16px;
+    }
+
+    .kotak-info span {
+        font-size: 21px;
+    }
+
+    .kotak-info p {
+        font-size: 12px;
+    }
+
+    .bagian-filter {
+        padding-top: 22px;
+    }
+
+    .judul-bagian {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 380px) {
+    .header-ikon {
+        width: 31px;
+        height: 31px;
+    }
+
+    .logo-web span {
+        font-size: 15px;
+    }
+
+    .isi-sambutan {
+        margin-left: 18px;
+    }
+
+    .isi-sambutan h1 {
+        font-size: 24px;
+    }
+
+    .info-utama .container {
+        grid-template-columns: 1fr;
+    }
+
+    .kotak-info + .kotak-info::before {
+        left: 8%;
+        right: 8%;
+        top: 0;
+        bottom: auto;
+        width: auto;
+        height: 1px;
+    }
+}
+
+/* ===== Compact filter bar — Pilihan Addon ===== */
+.bagian-top-addon .judul-dengan-tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.bagian-top-addon .judul-bagian {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.bagian-top-addon .filter-lanjutan {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    flex: 1 1 auto;
+    justify-content: flex-end;
+}
+
+.bagian-top-addon .filter-kontrol {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 12px;
+    background: rgba(255,255,255,.035);
+}
+
+.bagian-top-addon .filter-kontrol span {
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 700;
+    color: #c7ceca;
+    opacity: .95;
+    white-space: nowrap;
+}
+
+.bagian-top-addon .filter-kontrol select {
+    width: auto;
+    min-width: 118px;
+    min-height: 30px;
+    padding: 2px 22px 2px 2px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    outline: none;
+}
+
+.bagian-top-addon .filter-kontrol select:focus {
+    border: 0;
+}
+
+@media (max-width: 640px) {
+    .bagian-top-addon .judul-dengan-tab {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .bagian-top-addon .filter-lanjutan {
+        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    .bagian-top-addon .filter-kontrol {
+        width: 100%;
+        padding: 7px 8px;
+        gap: 5px;
+    }
+
+    .bagian-top-addon .filter-kontrol span {
+        font-size: 10px;
+    }
+
+    .bagian-top-addon .filter-kontrol select {
+        min-width: 0;
+        width: 100%;
+        font-size: 11px;
+    }
+}
+
+/* ===== Pilihan Addon: tombol lanjut ===== */
 #wadah-top .tombol-lanjut-pilihan {
     flex: 0 0 64px;
     width: 64px;
