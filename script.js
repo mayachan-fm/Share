@@ -64,6 +64,8 @@ let filterAktif = 'semua';
 let modeTopAddon = 'terbanyak'; // Bawaan: Paling Banyak Diunduh
 let urutanDaftar = 'terbaru';
 let versiAktif = 'semua';
+let batasPilihanAddon = 8;
+const jumlahTambahPilihanAddon = 8;
 
 function tampilkanAddonDisukaiDariUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -164,7 +166,8 @@ function tampilkanTopAddon() {
         terurut = sumber.reverse();
     }
 
-    terurut = terurut.slice(0, 8);
+    const totalTersedia = terurut.length;
+    terurut = terurut.slice(0, batasPilihanAddon);
 
     wadah.innerHTML = '';
     if (terurut.length === 0) {
@@ -192,6 +195,24 @@ function tampilkanTopAddon() {
         kartu.addEventListener('click', () => window.location.href = `detail.html?slug=${item.slug}`);
         wadah.appendChild(kartu);
     });
+
+    // Tombol panah di ujung Pilihan Addon untuk menampilkan batch berikutnya.
+    if (batasPilihanAddon < totalTersedia) {
+        const tombolLanjut = document.createElement('button');
+        tombolLanjut.type = 'button';
+        tombolLanjut.className = 'tombol-lanjut-pilihan';
+        tombolLanjut.setAttribute('aria-label', 'Tampilkan lebih banyak addon');
+        tombolLanjut.innerHTML = '<i class="fa fa-arrow-right"></i>';
+        tombolLanjut.addEventListener('click', (event) => {
+            event.stopPropagation();
+            batasPilihanAddon += jumlahTambahPilihanAddon;
+            tampilkanTopAddon();
+            requestAnimationFrame(() => {
+                wadah.scrollTo({ left: wadah.scrollWidth, behavior: 'smooth' });
+            });
+        });
+        wadah.appendChild(tombolLanjut);
+    }
 }
 
 // ==============================================
@@ -407,10 +428,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('kotak-cari')?.addEventListener('keydown', e => { if(e.key==='Enter') { clearTimeout(timerPencarian); terapkanFilterDanCari(); } });
     document.getElementById('filter-versi')?.addEventListener('change', e => {
         versiAktif = e.target.value === 'semua' ? 'semua' : decodeURIComponent(e.target.value);
+        batasPilihanAddon = 8;
         tampilkanTopAddon();
     });
     document.getElementById('urutkan-addon')?.addEventListener('change', e => {
         urutanDaftar = e.target.value;
+        batasPilihanAddon = 8;
         tampilkanTopAddon();
     });
 });
