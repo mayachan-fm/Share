@@ -249,11 +249,25 @@ onAuthStateChanged(auth, async user => {
   let addonBaru = [];
 
   try {
-    const response = await fetch("/api/catalog", {cache: "no-store"});
+    // Panel Kelola Addon membutuhkan katalog lengkap, termasuk link download.
+    // Endpoint publik sengaja menyembunyikan field ini, jadi gunakan mode=manage
+    // dengan token Firebase pengguna yang sedang login.
+    const idToken = await user.getIdToken();
+    const response = await fetch("/api/catalog?mode=manage", {
+      cache: "no-store",
+      headers: { Authorization: `Bearer ${idToken}` }
+    });
     if (response.ok) {
       dataLama = await response.json();
       count.textContent = `${Object.keys(dataLama).length} addon di katalog`;
-    } else throw new Error("Gagal membaca data.json");
+    } else {
+      let pesan = "Gagal membaca data katalog.";
+      try {
+        const body = await response.json();
+        if (body?.error) pesan = body.error;
+      } catch (_) {}
+      throw new Error(pesan);
+    }
   } catch (error) {
     console.error(error);
     count.textContent = "Katalog server tidak terbaca";
