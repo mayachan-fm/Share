@@ -2938,5 +2938,17 @@
     "ukuran": "130 MB",
     "tanggal unggah": "1 Oktober 2026",
     "description": "Menu utama Minecraft yang didesain ulang dengan tema estetika anime yang memukau! Latar belakang menampilkan karakter cantik berambut merah muda panjang dengan mata berwarna ganda, mengenakan pakaian tradisional biru-putih yang elegan, berpadu dengan suasana malam berair yang tenang dan mempesona. Teks menu ditata rapi dengan gaya font modern yang mudah dibaca, mempertahankan daftar fitur lengkap: Play, Settings, Skins, Achievements, Inbox, Friends, Marketplace, Profile, hingga Exit. Tampilan ini memadukan kesan klasik Minecraft dengan sentuhan seni anime yang segar, lembut, dan penuh kehangatan — menjadikan momen masuk ke dunia blok terasa lebih istimewa."
+  },
+  "freecam": {
+    "slug": "freecam",
+    "nama file": "FreeCam",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-01-17a4773a-67e9-4ca6-8d37-a6e334f2a115.jpg",
+    "link download": "https://files.catbox.moe/qtff8t.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "792 KB",
+    "tanggal unggah": "1 Oktober 2026",
+    "description": "Add-on FreeCam ini berfungsi untuk Minecraft Bedrock di perangkat seluler dan PC, serta kompatibel dengan dunia Survival dan Hardcore, dan lainnya. Anda perlu menonton video untuk melihat cara kerjanya. Add-on ini tidak menonaktifkan pencapaian (achievements)."
   }
 }
