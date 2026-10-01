@@ -2950,5 +2950,17 @@
     "ukuran": "792 KB",
     "tanggal unggah": "1 Oktober 2026",
     "description": "Add-on FreeCam ini berfungsi untuk Minecraft Bedrock di perangkat seluler dan PC, serta kompatibel dengan dunia Survival dan Hardcore, dan lainnya. Anda perlu menonton video untuk melihat cara kerjanya. Add-on ini tidak menonaktifkan pencapaian (achievements)."
+  },
+  "alylica_s_dungeons_music_box": {
+    "slug": "alylica_s_dungeons_music_box",
+    "nama file": "Alylica's Dungeons - Music Box",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-01-d1044ef6-17ad-4660-bed1-a4678e196436.png",
+    "link download": "https://files.catbox.moe/stexnm.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "90.49 MB",
+    "tanggal unggah": "1 Oktober 2026",
+    "description": "Alylica's Dungeons - Music Box adalah subpack untuk Alylica's Dungeons.\n\nSaat kedua add-on digunakan bersamaan, setiap pertarungan bos akan memiliki musik tema tersendiri yang diputar di latar belakang. Selain itu, loot bos akan diperbarui dengan menyertakan cakram musik baru untuk mewakili setiap lagu."
   }
 }
