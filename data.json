@@ -2998,5 +2998,17 @@
     "ukuran": "194 KB",
     "tanggal unggah": "3 Oktober 2026",
     "description": "Harvester menambahkan bos akhir permainan baru yang menakutkan dan tingkatan progres kustom penuh ke dunia bertahan hidup Bedrock Anda. Kumpulkan Steel, tempa set Dark Knight, lalu tantang Harvester itu sendiri — monster yang cukup kuat untuk membunuh pemain yang menggunakan perlengkapan Netherite dalam hitungan detik.\n\nSemua elemen dalam add-on ini terhubung dalam satu rantai progres, mulai dari ingot besi pertama Anda hingga sabit pemanen."
+  },
+  "weapons_true_yamato": {
+    "slug": "weapons_true_yamato",
+    "nama file": "WEAPONS-True Yamato",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-02-204a2b2d-bb2c-44b7-85ec-4e11ea48e731.gif",
+    "link download": "https://files.catbox.moe/b9l5y3.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "321 KB",
+    "tanggal unggah": "3 Oktober 2026",
+    "description": "True Yamato memberi Anda katana Vergil dari Devil May Cry, dengan set gerakan lengkap, Devil Trigger dan Majin Trigger, partikel kustom, dan animasi pemain. Tidak perlu pengaturan eksperimental."
   }
 }
