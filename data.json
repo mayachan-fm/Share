@@ -2974,5 +2974,17 @@
     "ukuran": "543 KB",
     "tanggal unggah": "3 Oktober 2026",
     "description": "Fiery Combat menggantikan sistem pertarungan bawaan Minecraft dengan sistem pertarungan yang lebih responsif dan berbasis keterampilan yang berfokus pada pengaturan waktu, posisi, dan penanganan senjata . Serangan, pertahanan, pergerakan, dan reaksi terhadap serangan dirancang untuk membuat setiap pertarungan terasa lebih terencana dan menarik."
+  },
+  "ygp_immortal_dog": {
+    "slug": "ygp_immortal_dog",
+    "nama file": "YGP! Immortal Dog",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-02-748847e9-f2c7-4811-ac97-fdc149d2bb31.jpg",
+    "link download": "https://files.catbox.moe/c7xe0m.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "277 KB",
+    "tanggal unggah": "3 Oktober 2026",
+    "description": "YGP! Immortal Dog adalah add-on Minecraft Bedrock yang mengubah serigala peliharaan Anda menjadi pendamping yang sangat kuat dan terlindungi.\n\nAnjing Abadi Anda dapat memiliki 240 HP, 35 kerusakan serangan, perlindungan terhadap kerusakan akibat jatuh, efek pertahanan yang kuat, kebangkitan otomatis, pengikatan pemilik, kepemilikan yang aman untuk multipemain, dan item kontrol YGP khusus.\n\nPembaruan v3.0.x terbaru memperkenalkan YGP Dog Control Bone, ID anjing dan pemilik pribadi, pertahanan diri otomatis, peningkatan perlindungan anjing, pembuatan Control Bone, dukungan keep-on-death, dan ikon item kustom baru.\n\nDibuat oleh Yojitgamingpro / YGP Studio / YGP Minecraft."
   }
 }
