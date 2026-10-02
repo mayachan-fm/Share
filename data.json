@@ -3022,5 +3022,17 @@
     "ukuran": "3.74 MB",
     "tanggal unggah": "3 Oktober 2026",
     "description": "Lempar adalah serangan spesialnya: Melempar entitas yang memiliki resistensi dorongan ringan menjauh. Serangan ini memiliki peluang 60% terjadi jika pemain berada dalam jarak 3 blok, dan peluang 100% terjadi jika yang dilempar adalah entitas lain. Menimbulkan 30 kerusakan. Jangan mendekat!"
+  },
+  "the_sift_dimension": {
+    "slug": "the_sift_dimension",
+    "nama file": "The Sift Dimension",
+    "type file": "Mcaddon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-02-fa20367a-324c-481f-b63c-a939d38515c9.jpg",
+    "link download": "https://sfl.gl/XYymX",
+    "versi mc": "1.26+",
+    "ukuran": "600 Kb",
+    "tanggal unggah": "3 Oktober 2026",
+    "description": "Menambahkan Dimensi Baru Yg Akan Ditambahkan Mojang Pada Tahun Depan"
   }
 }
