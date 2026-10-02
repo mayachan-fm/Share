@@ -2986,5 +2986,17 @@
     "ukuran": "277 KB",
     "tanggal unggah": "3 Oktober 2026",
     "description": "YGP! Immortal Dog adalah add-on Minecraft Bedrock yang mengubah serigala peliharaan Anda menjadi pendamping yang sangat kuat dan terlindungi.\n\nAnjing Abadi Anda dapat memiliki 240 HP, 35 kerusakan serangan, perlindungan terhadap kerusakan akibat jatuh, efek pertahanan yang kuat, kebangkitan otomatis, pengikatan pemilik, kepemilikan yang aman untuk multipemain, dan item kontrol YGP khusus.\n\nPembaruan v3.0.x terbaru memperkenalkan YGP Dog Control Bone, ID anjing dan pemilik pribadi, pertahanan diri otomatis, peningkatan perlindungan anjing, pembuatan Control Bone, dukungan keep-on-death, dan ikon item kustom baru.\n\nDibuat oleh Yojitgamingpro / YGP Studio / YGP Minecraft."
+  },
+  "boss_the_harvester": {
+    "slug": "boss_the_harvester",
+    "nama file": "BOSS-THE HARVESTER",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-02-49400935-cdab-4685-a87d-90c12cbe9381.gif",
+    "link download": "https://files.catbox.moe/0bz9na.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "194 KB",
+    "tanggal unggah": "3 Oktober 2026",
+    "description": "Harvester menambahkan bos akhir permainan baru yang menakutkan dan tingkatan progres kustom penuh ke dunia bertahan hidup Bedrock Anda. Kumpulkan Steel, tempa set Dark Knight, lalu tantang Harvester itu sendiri — monster yang cukup kuat untuk membunuh pemain yang menggunakan perlengkapan Netherite dalam hitungan detik.\n\nSemua elemen dalam add-on ini terhubung dalam satu rantai progres, mulai dari ingot besi pertama Anda hingga sabit pemanen."
   }
 }
