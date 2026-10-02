@@ -3010,5 +3010,17 @@
     "ukuran": "321 KB",
     "tanggal unggah": "3 Oktober 2026",
     "description": "True Yamato memberi Anda katana Vergil dari Devil May Cry, dengan set gerakan lengkap, Devil Trigger dan Majin Trigger, partikel kustom, dan animasi pemain. Tidak perlu pengaturan eksperimental."
+  },
+  "el_gigante_boss": {
+    "slug": "el_gigante_boss",
+    "nama file": "El Gigante Boss",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-02-6661a605-2ac4-4cb9-97d6-8d72317778e2.png",
+    "link download": "https://files.catbox.moe/ydne0b.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "3.74 MB",
+    "tanggal unggah": "3 Oktober 2026",
+    "description": "Lempar adalah serangan spesialnya: Melempar entitas yang memiliki resistensi dorongan ringan menjauh. Serangan ini memiliki peluang 60% terjadi jika pemain berada dalam jarak 3 blok, dan peluang 100% terjadi jika yang dilempar adalah entitas lain. Menimbulkan 30 kerusakan. Jangan mendekat!"
   }
 }
