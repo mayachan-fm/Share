@@ -2962,5 +2962,17 @@
     "ukuran": "90.49 MB",
     "tanggal unggah": "1 Oktober 2026",
     "description": "Alylica's Dungeons - Music Box adalah subpack untuk Alylica's Dungeons.\n\nSaat kedua add-on digunakan bersamaan, setiap pertarungan bos akan memiliki musik tema tersendiri yang diputar di latar belakang. Selain itu, loot bos akan diperbarui dengan menyertakan cakram musik baru untuk mewakili setiap lagu."
+  },
+  "fiery_combat": {
+    "slug": "fiery_combat",
+    "nama file": "Fiery Combat",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-02-426382ce-ee50-45b2-8f85-ca6a94c8d827.jpg",
+    "link download": "https://files.catbox.moe/2js0od.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "543 KB",
+    "tanggal unggah": "3 Oktober 2026",
+    "description": "Fiery Combat menggantikan sistem pertarungan bawaan Minecraft dengan sistem pertarungan yang lebih responsif dan berbasis keterampilan yang berfokus pada pengaturan waktu, posisi, dan penanganan senjata . Serangan, pertahanan, pergerakan, dan reaksi terhadap serangan dirancang untuk membuat setiap pertarungan terasa lebih terencana dan menarik."
   }
 }
