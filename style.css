@@ -2923,3 +2923,62 @@ body {
         font-size: 20px;
     }
 }
+
+
+/* OWNER DASHBOARD — separate section cards */
+.owner-panel-shell {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+.owner-panel-shell .detail-isi { padding: 0; }
+.owner-section-card {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 0 18px;
+  padding: 20px;
+  text-align: left;
+  background: rgba(24,24,24,.97);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+.owner-intro-card { text-align: center; padding: 28px 20px; }
+.owner-intro-card .profil-avatar { margin-bottom: 16px; }
+.owner-intro-card h2 { margin: 0 0 10px; }
+.owner-intro-card .detail-deskripsi { margin: 0; }
+.owner-section-title { margin-bottom: 18px; }
+.owner-section-title h3 { margin: 0 0 6px; font-size: 1.08rem; color: #fff; }
+.owner-section-title h3 i { margin-right: 7px; color: #ddd; }
+.owner-section-title p { margin: 0; color: var(--teksAbu); font-size: .82rem; line-height: 1.5; }
+.owner-manage-subsection + .owner-manage-subsection {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.owner-section-card .admin-json-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.owner-section-card .admin-json-header h3 { margin: 0 0 6px; color: #fff; font-size: .98rem; }
+.owner-section-card .admin-json-header p { margin: 0; color: var(--teksAbu); line-height: 1.5; }
+.owner-section-card.statistik-box {
+  margin-top: 0;
+  padding: 20px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+.owner-section-card.aktivitas-box {
+  margin-top: 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,.10);
+}
+.owner-section-card .aktivitas-header { margin-bottom: 14px; }
+.owner-section-card:last-of-type { margin-bottom: 18px; }
+@media (max-width: 620px) {
+  .owner-section-card { padding: 17px; border-radius: 14px; }
+  .owner-intro-card { padding: 23px 17px; }
+}

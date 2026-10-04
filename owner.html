@@ -12,7 +12,7 @@
 <header class="header-tetap"><div class="container header-dalam">
 <a href="index.html" class="logo-web"><img src="logo.png" alt="MC Addon Share"><span>MC Addon Share</span></a>
 </div></header>
-<main class="konten-utama"><section class="halaman-detail"><div class="container"><div class="kartu-detail">
+<main class="konten-utama"><section class="halaman-detail"><div class="container"><div class="kartu-detail owner-panel-shell">
 <div class="detail-isi profil-halaman" id="owner-app"><p>Memeriksa akses...</p></div>
 </div></div></section></main>
 <nav class="navigasi-bawah" aria-label="Navigasi utama">
@@ -368,77 +368,81 @@ onAuthStateChanged(auth, async user => {
   }
 
   el.innerHTML = `
-    <div class="profil-avatar"><i class="fa fa-star"></i></div>
-    <h2>Panel Owner</h2>
-    <p class="detail-deskripsi">Kontrol Owner aktif. Owner adalah role tertinggi dan tidak dapat dikelola oleh Admin.</p>
-
-    <section id="dashboard-statistik-owner" class="statistik-box"><div class="statistik-kosong">Memuat statistik...</div></section>
-
-    <div class="owner-dashboard-grid">
-      <div class="owner-info-card"><i class="fa fa-shield"></i><div><strong>Kelola Admin</strong><span>Tambahkan atau cabut akses Admin.</span></div></div>
-      <div class="owner-info-card"><i class="fa fa-database"></i><div><strong>Data website</strong><span>Pengelolaan addon tetap melalui Panel Admin.</span></div></div>
-    </div>
-
-    <section class="owner-manage-box">
-      <div class="admin-json-header">
-        <div><h3><i class="fa fa-user-plus"></i> Tambah Admin</h3><p>Masukkan email akun Firebase yang sudah terdaftar. Akun tersebut akan mendapatkan role Admin.</p></div>
-      </div>
-      <form id="form-tambah-admin" class="owner-add-form" autocomplete="off">
-        <label>Email atau username akun
-          <input id="identifier-admin" type="text" required maxlength="160" placeholder="contoh@email.com atau username">
-        </label>
-        <button type="submit" class="tombol-utama"><i class="fa fa-user-plus"></i> Jadikan Admin</button>
-      </form>
-      <div id="owner-pesan" class="owner-pesan info" role="alert"></div>
+    <section class="owner-section-card owner-intro-card">
+      <div class="profil-avatar"><i class="fa fa-star"></i></div>
+      <h2>Panel Owner</h2>
+      <p class="detail-deskripsi">Kontrol Owner aktif. Owner adalah role tertinggi dan tidak dapat dikelola oleh Admin.</p>
     </section>
 
-    <section class="owner-manage-box">
-      <div class="admin-json-header">
-        <div><h3><i class="fa fa-users"></i> Admin & Owner</h3><p>Daftar akun yang memiliki role khusus.</p></div>
-        <span class="admin-data-count" id="owner-count-staf">Memuat...</span>
+    <section id="dashboard-statistik-owner" class="statistik-box owner-section-card"><div class="statistik-kosong">Memuat statistik...</div></section>
+
+    <section class="owner-section-card owner-admin-card">
+      <div class="owner-section-title">
+        <div><h3><i class="fa fa-shield"></i> Kelola Admin</h3><p>Tambahkan atau cabut akses Admin. Daftar role khusus dikelola di bagian ini.</p></div>
       </div>
-      <div id="owner-daftar-staf" class="owner-daftar-staf"></div>
+      <div class="owner-manage-subsection">
+        <div class="admin-json-header">
+          <div><h3><i class="fa fa-user-plus"></i> Tambah Admin</h3><p>Masukkan email akun Firebase yang sudah terdaftar. Akun tersebut akan mendapatkan role Admin.</p></div>
+        </div>
+        <form id="form-tambah-admin" class="owner-add-form" autocomplete="off">
+          <label>Email atau username akun
+            <input id="identifier-admin" type="text" required maxlength="160" placeholder="contoh@email.com atau username">
+          </label>
+          <button type="submit" class="tombol-utama"><i class="fa fa-user-plus"></i> Jadikan Admin</button>
+        </form>
+        <div id="owner-pesan" class="owner-pesan info" role="alert"></div>
+      </div>
+      <div class="owner-manage-subsection">
+        <div class="admin-json-header">
+          <div><h3><i class="fa fa-users"></i> Admin & Owner</h3><p>Daftar akun yang memiliki role khusus.</p></div>
+          <span class="admin-data-count" id="owner-count-staf">Memuat...</span>
+        </div>
+        <div id="owner-daftar-staf" class="owner-daftar-staf"></div>
+      </div>
     </section>
 
-    <section class="owner-manage-box owner-premium-box">
-      <div class="admin-json-header">
-        <div><h3><i class="fa fa-diamond"></i> Kelola Premium</h3><p>Berikan atau cabut Premium. Admin tidak memiliki akses ke bagian ini.</p></div>
+    <section class="owner-section-card owner-premium-section">
+      <div class="owner-section-title">
+        <div><h3><i class="fa fa-diamond"></i> Kelola Premium</h3><p>Berikan, cabut, dan lihat riwayat Premium. Admin tidak memiliki akses ke bagian ini.</p></div>
       </div>
-      <form id="form-tambah-premium" class="owner-add-form" autocomplete="off">
-        <label>Email atau username akun
-          <input id="identifier-premium" type="text" required maxlength="160" placeholder="contoh@email.com atau username">
-        </label>
-        <label>Durasi Premium
-          <select id="durasi-premium" required>
-            <option value="7_hari">7 hari</option>
-            <option value="30_hari">30 hari</option>
-            <option value="90_hari">90 hari</option>
-            <option value="permanen">Permanen</option>
-          </select>
-        </label>
-        <button type="submit" class="tombol-utama"><i class="fa fa-diamond"></i> Berikan Premium</button>
-      </form>
-      <div class="owner-premium-catatan"><i class="fa fa-info-circle"></i> Jika akun masih memiliki Premium aktif, durasi baru akan ditambahkan ke masa berlaku yang tersisa. Jika sudah kedaluwarsa/dicabut, durasi baru dimulai dari sekarang.</div>
+      <div class="owner-manage-subsection">
+        <div class="admin-json-header">
+          <div><h3><i class="fa fa-diamond"></i> Berikan Premium</h3><p>Atur durasi Premium untuk akun yang sudah terdaftar.</p></div>
+        </div>
+        <form id="form-tambah-premium" class="owner-add-form" autocomplete="off">
+          <label>Email atau username akun
+            <input id="identifier-premium" type="text" required maxlength="160" placeholder="contoh@email.com atau username">
+          </label>
+          <label>Durasi Premium
+            <select id="durasi-premium" required>
+              <option value="7_hari">7 hari</option>
+              <option value="30_hari">30 hari</option>
+              <option value="90_hari">90 hari</option>
+              <option value="permanen">Permanen</option>
+            </select>
+          </label>
+          <button type="submit" class="tombol-utama"><i class="fa fa-diamond"></i> Berikan Premium</button>
+        </form>
+        <div class="owner-premium-catatan"><i class="fa fa-info-circle"></i> Jika akun masih memiliki Premium aktif, durasi baru akan ditambahkan ke masa berlaku yang tersisa. Jika sudah kedaluwarsa/dicabut, durasi baru dimulai dari sekarang.</div>
+      </div>
+      <div class="owner-manage-subsection">
+        <div class="admin-json-header">
+          <div><h3><i class="fa fa-diamond"></i> Daftar Premium</h3><p>Data tetap disimpan meskipun Premium sudah kedaluwarsa atau dicabut.</p></div>
+          <span class="admin-data-count" id="owner-count-premium">Memuat...</span>
+        </div>
+        <div id="owner-daftar-premium" class="owner-daftar-staf"></div>
+      </div>
+      <div class="owner-manage-subsection owner-premium-history-box">
+        <div class="admin-json-header">
+          <div><h3><i class="fa fa-history"></i> Riwayat Premium</h3><p>Semua pemberian, perpanjangan, dan pencabutan Premium tersimpan di sini.</p></div>
+          <button type="button" class="tombol-sekunder" id="muat-riwayat-premium"><i class="fa fa-refresh"></i> Muat ulang</button>
+        </div>
+        <div id="owner-count-riwayat-premium" class="admin-data-count">Memuat...</div>
+        <div id="owner-riwayat-premium" class="owner-premium-history-list"><div class="admin-list-empty">Memuat riwayat Premium...</div></div>
+      </div>
     </section>
 
-    <section class="owner-manage-box">
-      <div class="admin-json-header">
-        <div><h3><i class="fa fa-diamond"></i> Daftar Premium</h3><p>Data tetap disimpan meskipun Premium sudah kedaluwarsa atau dicabut.</p></div>
-        <span class="admin-data-count" id="owner-count-premium">Memuat...</span>
-      </div>
-      <div id="owner-daftar-premium" class="owner-daftar-staf"></div>
-    </section>
-
-    <section class="owner-manage-box owner-premium-history-box">
-      <div class="admin-json-header">
-        <div><h3><i class="fa fa-history"></i> Riwayat Premium</h3><p>Semua pemberian, perpanjangan, dan pencabutan Premium tersimpan di sini.</p></div>
-        <button type="button" class="tombol-sekunder" id="muat-riwayat-premium"><i class="fa fa-refresh"></i> Muat ulang</button>
-      </div>
-      <div id="owner-count-riwayat-premium" class="admin-data-count">Memuat...</div>
-      <div id="owner-riwayat-premium" class="owner-premium-history-list"><div class="admin-list-empty">Memuat riwayat Premium...</div></div>
-    </section>
-
-    <section class="aktivitas-box">
+    <section class="aktivitas-box owner-section-card">
       <div class="aktivitas-header"><div><h3><i class="fa fa-history"></i> Semua Aktivitas</h3><p>Riwayat pengelolaan addon dan perubahan role Admin.</p></div><button type="button" class="tombol-sekunder" id="muat-aktivitas-owner"><i class="fa fa-refresh"></i> Muat ulang</button></div>
       <div id="aktivitas-owner" class="aktivitas-daftar"><div class="aktivitas-kosong">Memuat aktivitas...</div></div>
     </section>
