@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+<title>Panel Admin — MC Addon Share</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+<header class="header-tetap"><div class="container header-dalam">
+<a href="index.html" class="logo-web"><img src="logo.png" alt="MC Addon Share"><span>MC Addon Share</span></a>
+</div></header>
+<main class="konten-utama"><section class="halaman-detail"><div class="container"><div class="kartu-detail">
+<div class="detail-isi profil-halaman" id="admin-app"><p>Memeriksa akses...</p></div>
+</div></div></section></main>
+<script type="module">
+import {auth, db, onAuthStateChanged, ambilRole} from "./auth.js";
+import {ref, get} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+const el = document.getElementById("admin-app");
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[ch]));
+}
+
+async function muatDashboardStatistik() {
+  const box = document.getElementById("dashboard-statistik-admin");
+  if (!box) return;
+  try {
+    const dataSnap = await fetch("/api/catalog", {cache:"no-store"});
+    if (!dataSnap.ok) throw new Error("Katalog server tidak dapat dibaca.");
+    const data = await dataSnap.json();
+    const items = Object.values(data || {});
+    const [downloadSnap, likeSnap] = await Promise.all([
+      get(ref(db, "jumlah_unduh")),
+      get(ref(db, "jumlah_like"))
+    ]);
+    const downloads = downloadSnap.exists() ? downloadSnap.val() : {};
+    const likes = likeSnap.exists() ? likeSnap.val() : {};
+    const totalDownload = Object.values(downloads || {}).reduce((sum, value) => sum + (Number(value) || 0), 0);
+    const totalLike = Object.values(likes || {}).reduce((sum, value) => sum + (Number(value) || 0), 0);
+    const kategori = {addon:0, resource:0, peta:0, lainnya:0, apk:0};
+    items.forEach(item => { const key = String(item?.kategori || "lainnya").toLowerCase(); kategori[key] = (kategori[key] || 0) + 1; });
+    const labels = {addon:"Addon", resource:"Resource", peta:"Peta", lainnya:"Lainnya", apk:"APK"};
+    const max = Math.max(1, ...Object.values(kategori));
+    const bars = Object.entries(kategori).map(([key, value]) => `<div class="statistik-kategori-item"><div class="statistik-kategori-label"><span>${esc(labels[key] || key)}</span><b>${value}</b></div><div class="statistik-bar"><span style="width:${Math.round((value/max)*100)}%"></span></div></div>`).join("");
+    box.innerHTML = `
+      <div class="statistik-header"><div><h3><i class="fa fa-bar-chart"></i> Dashboard Statistik</h3><p>Ringkasan katalog dan interaksi berdasarkan data yang tersedia.</p></div><button type="button" class="tombol-sekunder" id="muat-statistik-admin"><i class="fa fa-refresh"></i> Muat ulang</button></div>
+      <div class="statistik-grid">
+        <div class="statistik-card"><i class="fa fa-database"></i><span>Total item</span><strong>${items.length}</strong><small>di katalog</small></div>
+        <div class="statistik-card"><i class="fa fa-download"></i><span>Total download</span><strong>${totalDownload.toLocaleString("id-ID")}</strong><small>semua item</small></div>
+        <div class="statistik-card"><i class="fa fa-thumbs-up"></i><span>Total like</span><strong>${totalLike.toLocaleString("id-ID")}</strong><small>semua item</small></div>
+      </div>
+      <div class="statistik-kategori"><h4>Jumlah berdasarkan kategori</h4>${bars}</div>`;
+    document.getElementById("muat-statistik-admin")?.addEventListener("click", muatDashboardStatistik);
+  } catch (error) {
+    box.innerHTML = `<div class="statistik-error"><i class="fa fa-exclamation-circle"></i> ${esc(error.message)}</div>`;
+  }
+}
+
+function slugify(text) {
+  return String(text || "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 80);
+}
+
+function validasiSlug(slug) {
+  return /^[a-z0-9_-]{1,80}$/.test(slug);
+}
+
+function validasiTipeFile(type) {
+  const value = String(type || '').trim();
+  return /^[A-Za-z0-9][A-Za-z0-9 /_-]{0,39}$/.test(value);
+}
+
+function validasiKategori(value) {
+  return ['addon', 'resource', 'peta', 'lainnya', 'apk'].includes(String(value || '').trim().toLowerCase());
+}
+
+function bersihkanUrl(value) {
+  let url = String(value || "").trim();
+
+  // Jika pengguna menempelkan Markdown: [teks](https://contoh.com/file)
+  const markdown = url.match(/^\[.*?\]\((https?:\/\/[^\s)]+)\)$/i);
+  if (markdown) url = markdown[1];
+
+  // Hilangkan pembungkus < > jika URL ditempel dalam format tersebut.
+  if (url.startsWith("<") && url.endsWith(">")) {
+    url = url.slice(1, -1).trim();
+  }
+
+  return url;
+}
+
+function validasiUrl(value, label) {
+  const url = bersihkanUrl(value);
+  try {
+    const parsed = new URL(url);
+    if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+    return url;
+  } catch {
+    throw new Error(`${label} harus berupa URL http/https yang valid.`);
+  }
+}
+
+function validasiFieldAddon(data) {
+  if (!data['nama file'] || data['nama file'].length > 120) throw new Error('Nama addon wajib diisi dan maksimal 120 karakter.');
+  if (!validasiSlug(data.slug)) throw new Error('Slug/ID hanya boleh berisi huruf kecil, angka, _ atau -, maksimal 80 karakter.');
+  if (!validasiTipeFile(data['type file'])) throw new Error('Tipe file tidak valid.');
+  if (!validasiKategori(data.kategori)) throw new Error('Kategori tidak valid.');
+  if (!data.description || data.description.length > 1000) throw new Error('Deskripsi wajib diisi dan maksimal 1000 karakter.');
+  validasiUrl(data['link gambar'], 'Link gambar');
+  validasiUrl(data['link download'], 'Link download');
+  if (data['versi mc'].length > 60) throw new Error('Versi Minecraft maksimal 60 karakter.');
+  if (data.ukuran.length > 30) throw new Error('Ukuran file maksimal 30 karakter.');
+  if (data['tanggal unggah'].length > 40) throw new Error('Tanggal upload maksimal 40 karakter.');
+}
+
+function tanggalHariIni() {
+  const bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  const d = new Date();
+  return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function buatKunciUnik(base, digunakan) {
+  let slug = slugify(base) || `addon_${Date.now()}`;
+  const asli = slug;
+  let nomor = 2;
+  while (digunakan.has(slug)) slug = `${asli}_${nomor++}`;
+  return slug;
+}
+
+onAuthStateChanged(auth, async user => {
+  if (!user) { location.href = "profil.html"; return; }
+
+  const role = await ambilRole(user);
+  if (role !== "admin" && role !== "owner") {
+    el.innerHTML = `<h2>Akses ditolak</h2><p class="detail-deskripsi">Halaman ini hanya untuk Admin atau Owner.</p><a class="tombol-utama tombol-akun" href="profil.html">Kembali ke Profil</a>`;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="profil-avatar"><i class="fa fa-dashboard"></i></div>
+    <h2>Panel Admin</h2>
+    <p class="detail-deskripsi">Role aktif: <strong>${role === "owner" ? "Owner" : "Admin"}</strong></p>
+
+    <section id="dashboard-statistik-admin" class="statistik-box"><div class="statistik-kosong">Memuat statistik...</div></section>
+
+    <div class="admin-generator">
+      <div class="admin-generator-header">
+        <div>
+          <h3 id="judul-form-addon"><i class="fa fa-plus-circle"></i> Tambah Addon</h3>
+          <p>Masukkan informasi addon. File addon tetap disimpan di layanan eksternal seperti MediaFire; panel ini hanya mengelola katalog server.</p>
+        </div>
+        <div class="admin-data-count" id="admin-data-count">Memuat katalog...</div>
+      </div>
+
+      <div class="admin-manage-box">
+        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di katalog server, lalu edit addon yang dipilih. Penghapusan addon hanya dapat dilakukan oleh Owner di Panel Owner.</p></div></div>
+        <div class="admin-manage-search"><input id="cari-addon-lama" type="search" placeholder="Cari nama addon atau slug..." autocomplete="off"><span id="hasil-cari-addon">Memuat...</span></div>
+        <div id="daftar-addon-lama" class="daftar-addon-lama"></div>
+      </div>
+
+      <div id="mode-edit-addon" class="mode-edit-addon" hidden><div class="mode-edit-header"><div><h3><i class="fa fa-pencil"></i> Edit Addon</h3><p id="edit-addon-target"></p></div><button type="button" class="tombol-sekunder" id="batal-edit-addon">Batal Edit</button></div></div>
+
+      <form id="form-addon" autocomplete="off">
+        <div class="form-grid-admin">
+          <label>Nama Addon *<input id="nama-addon" required maxlength="120" placeholder="Contoh: Furina UI"></label>
+          <label>Slug / ID<input id="slug-addon" maxlength="80" placeholder="Otomatis dari nama addon"></label>
+          <label>Tipe File *<input id="type-file" required maxlength="40" placeholder="Contoh: mcpack"></label>
+          <label>Kategori *<select id="kategori-addon" required>
+            <option value="">Pilih kategori</option>
+            <option value="addon">Addon</option>
+            <option value="resource">Resource</option>
+            <option value="peta">Peta</option>
+            <option value="lainnya">Lainnya</option>
+            <option value="apk">APK</option>
+          </select></label>
+          <label>Link Gambar *<input id="link-gambar" type="url" required placeholder="https://...jpg / .png"></label>
+          <label>Link Download *<input id="link-download" type="url" required placeholder="https://mediafire.com/... atau link lainnya"></label>
+          <label>Versi Minecraft<input id="versi-mc" maxlength="60" placeholder="Contoh: 1.26+" value="1.26+"></label>
+          <label>Ukuran File<input id="ukuran-file" maxlength="30" placeholder="Contoh: 28.5 MB"></label>
+          <label>Tanggal Upload<input id="tanggal-upload" maxlength="40" placeholder="Contoh: 15 September 2026"></label>
+        </div>
+        <label class="label-full">Deskripsi Singkat *<textarea id="deskripsi-addon" required maxlength="1000" rows="5" placeholder="Jelaskan addon secara singkat..."></textarea></label>
+        <div class="batas-form-admin"><span id="hitung-deskripsi">0/1000</span><span>Field bertanda * wajib diisi</span></div>
+        <div class="admin-actions">
+          <button type="submit" class="tombol-utama"><i class="fa fa-plus"></i> Masukkan ke Daftar</button>
+          <button type="button" class="tombol-sekunder" id="kosongkan-form"><i class="fa fa-refresh"></i> Kosongkan Form</button>
+        </div>
+      </form>
+
+      <div class="daftar-admin-addon" id="daftar-admin-addon">
+        <div class="admin-list-empty">Belum ada addon baru. Isi formulir di atas.</div>
+      </div>
+
+      <div class="admin-json-area">
+        <div class="admin-json-header">
+          <div>
+            <h3><i class="fa fa-code"></i> Hasil Kode JSON</h3>
+            <p>Hasil ini berisi addon yang kamu masukkan pada sesi ini. Kamu bisa menyalinnya atau langsung menyimpannya ke katalog server.</p>
+          </div>
+          <button type="button" class="tombol-sekunder" id="buat-json"><i class="fa fa-file-code-o"></i> Buat Kode JSON</button>
+        </div>
+        <textarea id="hasil-json" class="hasil-json" readonly placeholder="Belum ada kode. Masukkan addon ke daftar lalu klik Buat Kode JSON."></textarea>
+        <div class="admin-actions">
+          <button type="button" class="tombol-utama" id="salin-json"><i class="fa fa-copy"></i> Salin Kode JSON</button>
+          <button type="button" class="tombol-utama" id="simpan-github"><i class="fa fa-github"></i> Tambahkan ke data.json</button>
+          <span class="tombol-sekunder" style="opacity:.75;cursor:default"><i class="fa fa-lock"></i> Katalog server privat</span>
+        </div>
+        <p class="catatan-staf"><i class="fa fa-shield"></i> Tombol GitHub akan meminta konfirmasi sebelum mengubah <code>data.json</code>. Token GitHub tidak disimpan di browser.</p>
+      </div>
+    </div>
+
+    <a class="tombol-sekunder tombol-kembali-admin" href="profil.html"><i class="fa fa-arrow-left"></i> Kembali ke Profil</a>
+  `;
+
+  const nama = document.getElementById("nama-addon");
+  const slug = document.getElementById("slug-addon");
+  const type = document.getElementById("type-file");
+  const kategori = document.getElementById("kategori-addon");
+  const gambar = document.getElementById("link-gambar");
+  const download = document.getElementById("link-download");
+  const versi = document.getElementById("versi-mc");
+  const ukuran = document.getElementById("ukuran-file");
+  const tanggal = document.getElementById("tanggal-upload");
+  const deskripsi = document.getElementById("deskripsi-addon");
+  const form = document.getElementById("form-addon");
+  const daftar = document.getElementById("daftar-admin-addon");
+  const hasil = document.getElementById("hasil-json");
+  const count = document.getElementById("admin-data-count");
+  const descCount = document.getElementById("hitung-deskripsi");
+  const cariAddonLama = document.getElementById("cari-addon-lama");
+  const daftarAddonLama = document.getElementById("daftar-addon-lama");
+  const hasilCariAddon = document.getElementById("hasil-cari-addon");
+  const modeEditAddon = document.getElementById("mode-edit-addon");
+  const editAddonTarget = document.getElementById("edit-addon-target");
+  const batalEditAddon = document.getElementById("batal-edit-addon");
+  const judulFormAddon = document.getElementById("judul-form-addon");
+  let sedangEditKey = null;
+
+  tanggal.value = tanggalHariIni();
+  let dataLama = {};
+  let addonBaru = [];
+
+  try {
+    // Panel Kelola Addon membutuhkan katalog lengkap, termasuk link download.
+    // Endpoint publik sengaja menyembunyikan field ini, jadi gunakan mode=manage
+    // dengan token Firebase pengguna yang sedang login.
+    const idToken = await user.getIdToken();
+    const response = await fetch("/api/catalog?mode=manage", {
+      cache: "no-store",
+      headers: { Authorization: `Bearer ${idToken}` }
+    });
+    if (response.ok) {
+      dataLama = await response.json();
+      count.textContent = `${Object.keys(dataLama).length} addon di katalog`;
+    } else {
+      let pesan = "Gagal membaca data katalog.";
+      try {
+        const body = await response.json();
+        if (body?.error) pesan = body.error;
+      } catch (_) {}
+      throw new Error(pesan);
+    }
+  } catch (error) {
+    console.error(error);
+    count.textContent = "Katalog server tidak terbaca";
+  }
+
+  function renderAddonLama() {
+    const q = String(cariAddonLama.value || "").trim().toLowerCase();
+    const hasil = Object.entries(dataLama).filter(([key, item]) => {
+      const teks = `${key} ${item?.["nama file"] || ""} ${item?.kategori || ""} ${item?.["type file"] || ""}`.toLowerCase();
+      return !q || teks.includes(q);
+    });
+    hasilCariAddon.textContent = `${hasil.length} addon ditemukan`;
+    if (!hasil.length) { daftarAddonLama.innerHTML = '<div class="admin-list-empty">Addon tidak ditemukan.</div>'; return; }
+    daftarAddonLama.innerHTML = hasil.slice(0,60).map(([key,item]) => `<div class="addon-lama-item"><div class="addon-lama-main"><strong>${esc(item["nama file"] || key)}</strong><span>${esc(key)} · ${esc(item["type file"] || "-")} · ${esc(item.kategori || "-")}</span></div><div class="addon-lama-actions"><button type="button" class="tombol-edit-addon" data-key="${esc(key)}"><i class="fa fa-pencil"></i> Edit</button></div></div>`).join("");
+    if (hasil.length > 60) daftarAddonLama.insertAdjacentHTML("beforeend", '<div class="admin-list-empty">Menampilkan 60 hasil pertama. Gunakan pencarian untuk mempersempit.</div>');
+    daftarAddonLama.querySelectorAll(".tombol-edit-addon").forEach(btn => btn.addEventListener("click", () => mulaiEditAddon(btn.dataset.key)));
+  }
+
+  function isiFormDariAddon(key) {
+    const item = dataLama[key]; if (!item) return;
+    nama.value = item["nama file"] || ""; slug.value = key; slug.dataset.diedit = "true"; type.value = item["type file"] || ""; kategori.value = item.kategori || ""; gambar.value = item["link gambar"] || ""; download.value = item["link download"] || ""; versi.value = item["versi mc"] || ""; ukuran.value = item.ukuran || ""; tanggal.value = item["tanggal unggah"] || ""; deskripsi.value = item.description || ""; descCount.textContent = `${deskripsi.value.length}/1000`;
+  }
+
+  function mulaiEditAddon(key) {
+    if (!dataLama[key]) return;
+    sedangEditKey = key; isiFormDariAddon(key); modeEditAddon.hidden = false; editAddonTarget.textContent = `Mengedit: ${dataLama[key]["nama file"] || key} · slug/ID: ${key}`; judulFormAddon.innerHTML = '<i class="fa fa-pencil"></i> Edit Addon'; slug.disabled = true; form.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  function batalEdit() {
+    sedangEditKey = null; modeEditAddon.hidden = true; judulFormAddon.innerHTML = '<i class="fa fa-plus-circle"></i> Tambah Addon'; slug.disabled = false; resetForm();
+  }
+
+  cariAddonLama.addEventListener("input", renderAddonLama);
+  batalEditAddon.addEventListener("click", batalEdit);
+  renderAddonLama();
+
+  nama.addEventListener("input", () => {
+    if (!slug.dataset.diedit) slug.value = slugify(nama.value);
+  });
+  slug.addEventListener("input", () => { slug.dataset.diedit = "true"; });
+  deskripsi.addEventListener("input", () => { descCount.textContent = `${deskripsi.value.length}/1000`; });
+
+  function renderDaftar() {
+    if (!addonBaru.length) {
+      daftar.innerHTML = '<div class="admin-list-empty">Belum ada addon baru. Isi formulir di atas.</div>';
+      return;
+    }
+    daftar.innerHTML = addonBaru.map((item, index) => `
+      <div class="admin-addon-item">
+        <div class="admin-addon-item-main">
+          <strong>${esc(item.data["nama file"])}</strong>
+          <span>${esc(item.key)} · ${esc(item.data["type file"])} · ${esc(item.data.kategori)}</span>
+        </div>
+        <button type="button" class="tombol-hapus-addon" data-index="${index}" title="Buang dari daftar sementara"><i class="fa fa-trash"></i></button>
+      </div>
+    `).join("");
+    daftar.querySelectorAll(".tombol-hapus-addon").forEach(btn => btn.addEventListener("click", () => {
+      addonBaru.splice(Number(btn.dataset.index), 1);
+      renderDaftar();
+      hasil.value = "";
+    }));
+  }
+
+  function resetForm() {
+    form.reset();
+    versi.value = "1.26+";
+    tanggal.value = tanggalHariIni();
+    slug.value = "";
+    delete slug.dataset.diedit;
+    descCount.textContent = "0/1000";
+  }
+
+  async function updateAddonKeGithub(key, data) {
+    if (!auth.currentUser) throw new Error("Sesi login sudah berakhir. Silakan login kembali.");
+    const idToken = await auth.currentUser.getIdToken();
+    const response = await fetch("/api/update-addon", {method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${idToken}`},body:JSON.stringify({key,addon:data})});
+    const result = await response.json().catch(()=>({}));
+    if (!response.ok || !result.ok) throw new Error(result.error || "Gagal memperbarui addon.");
+    return result;
+  }
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    const namaValue = nama.value.trim();
+    const slugValue = sedangEditKey || slug.value.trim() || slugify(namaValue);
+    if (!slugValue) { alert("Slug/ID addon tidak valid."); return; }
+    if (!sedangEditKey && (Object.prototype.hasOwnProperty.call(dataLama, slugValue) || addonBaru.some(x=>x.key===slugValue))) { alert(`Slug "${slugValue}" sudah digunakan. Ganti slug agar addon tidak menimpa data lama.`); slug.focus(); return; }
+    let linkGambar, linkDownload;
+    try { linkGambar=validasiUrl(gambar.value,"Link gambar"); linkDownload=validasiUrl(download.value,"Link download"); } catch(error){ alert(error.message); return; }
+    const dataBaru={slug:slugValue,"nama file":namaValue,"type file":type.value.trim(),kategori:kategori.value,"link gambar":linkGambar,"link download":linkDownload,"versi mc":versi.value.trim(),ukuran:ukuran.value.trim(),"tanggal unggah":tanggal.value.trim(),description:deskripsi.value.trim()};
+    try { validasiFieldAddon(dataBaru); } catch (error) { alert(error.message); return; }
+    if (sedangEditKey) {
+      if (!confirm(`Simpan perubahan untuk "${dataLama[sedangEditKey]?.["nama file"] || sedangEditKey}" ke data.json di GitHub?\n\nSlug/ID tetap: ${sedangEditKey}`)) return;
+      const tombol=form.querySelector('button[type="submit"]'); const asli=tombol.innerHTML; tombol.disabled=true; tombol.innerHTML='<i class="fa fa-spinner fa-spin"></i> Menyimpan...';
+      try { await updateAddonKeGithub(sedangEditKey,dataBaru); dataLama[sedangEditKey]=dataBaru; count.textContent=`${Object.keys(dataLama).length} addon di katalog`; renderAddonLama(); alert("Perubahan addon berhasil disimpan ke data.json dan GitHub."); batalEdit(); } catch(error){ alert(`Gagal menyimpan perubahan.\n\n${error.message}`); } finally { tombol.disabled=false; tombol.innerHTML=asli; }
+      return;
+    }
+    addonBaru.push({key:slugValue,data:dataBaru}); renderDaftar(); hasil.value=""; resetForm();
+  });
+
+
+  document.getElementById("kosongkan-form").addEventListener("click", resetForm);
+
+  document.getElementById("buat-json").addEventListener("click", () => {
+    if (!addonBaru.length) {
+      alert("Belum ada addon di daftar.");
+      return;
+    }
+    const output = {};
+    addonBaru.forEach(item => {
+      output[item.key] = {
+        "slug": item.data.slug,
+        "nama file": item.data["nama file"],
+        "type file": item.data["type file"],
+        "kategori": item.data.kategori,
+        "link gambar": bersihkanUrl(item.data["link gambar"]),
+        "link download": bersihkanUrl(item.data["link download"]),
+        "versi mc": item.data["versi mc"],
+        "ukuran": item.data.ukuran,
+        "tanggal unggah": item.data["tanggal unggah"],
+        "description": item.data.description
+      };
+    });
+    hasil.value = JSON.stringify(output, null, 2);
+    hasil.focus();
+  });
+
+  document.getElementById("salin-json").addEventListener("click", async () => {
+    if (!hasil.value.trim()) {
+      alert("Buat kode JSON terlebih dahulu.");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(hasil.value);
+      alert("Kode JSON berhasil disalin.");
+    } catch (error) {
+      hasil.focus();
+      hasil.select();
+      alert("Clipboard otomatis tidak tersedia. Kode sudah dipilih, silakan salin manual.");
+    }
+  });
+
+  document.getElementById("simpan-github").addEventListener("click", async () => {
+    if (!addonBaru.length) {
+      alert("Belum ada addon di daftar.");
+      return;
+    }
+
+    const namaAddon = addonBaru.map(item => item.data["nama file"]).join(", ");
+    const konfirmasi = confirm(
+      `Tambahkan ${addonBaru.length} addon ke data.json di GitHub?\n\n${namaAddon}\n\nPerubahan akan membuat commit ke mayachan-fm/Share pada branch main.`
+    );
+    if (!konfirmasi) return;
+
+    const tombol = document.getElementById("simpan-github");
+    const teksAsli = tombol.innerHTML;
+    tombol.disabled = true;
+    tombol.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Menyimpan ke GitHub...';
+
+    try {
+      if (!auth.currentUser) throw new Error("Sesi login sudah berakhir. Silakan login kembali.");
+      const idToken = await auth.currentUser.getIdToken();
+      const response = await fetch("/api/add-addon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ addons: addonBaru })
+      });
+
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) throw new Error(result.error || "Gagal memperbarui data.json.");
+
+      addonBaru.forEach(item => { dataLama[item.key] = item.data; });
+      count.textContent = `${Object.keys(dataLama).length} addon di katalog`;
+      addonBaru = [];
+      renderDaftar();
+      hasil.value = "";
+      alert(`Berhasil! ${result.count} addon sudah ditambahkan ke data.json dan commit GitHub telah dibuat.`);
+    } catch (error) {
+      console.error(error);
+      alert(`Gagal menyimpan ke GitHub.\n\n${error.message}`);
+    } finally {
+      tombol.disabled = false;
+      tombol.innerHTML = teksAsli;
+    }
+  });
+  await muatDashboardStatistik();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <title>MC Addon Share</title>
+    <meta name="theme-color" content="#101916">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mc-share.vercel.app/">
+    <meta property="og:site_name" content="MC Addon Share">
+    <meta property="og:title" content="MC Addon Share">
+    <meta property="og:description" content="Kumpulan Addon & Mod Minecraft Bedrock terlengkap">
+    <meta property="og:image" content="https://mc-share.vercel.app/favicon.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="MC Addon Share">
+    <meta name="twitter:description" content="Kumpulan Addon & Mod Minecraft Bedrock terlengkap">
+    <meta name="twitter:image" content="https://mc-share.vercel.app/favicon.png">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header-tetap">
+    <div class="container header-dalam">
+        <a href="index.html" class="logo-web">
+            <img src="logo.png" alt="MC Addon Share">
+            <span>MC Addon Share</span>
+        </a>
+        <div class="header-aksi" aria-label="Aksi cepat">
+            <a href="#kotak-cari" class="header-ikon" aria-label="Cari"><i class="fa fa-search"></i></a>
+            <a href="profil.html" class="header-ikon" aria-label="Notifikasi dan profil"><i class="fa fa-bell"></i></a>
+            <a href="profil.html" class="header-ikon header-profil" aria-label="Profil"><i class="fa fa-user"></i></a>
+        </div>
+    </div>
+</header>
+
+<main class="konten-utama">
+
+<!-- BAGIAN UTAMA SAMBUTAN -->
+<section class="bagian-sambutan">
+    <div class="latar-gambar"></div>
+    <div class="isi-sambutan">
+        <h1>Selamat Datang di <span>MC Addon Share</span></h1>
+        <p>Temukan, bagikan, dan unduh berbagai addon Minecraft Bedrock dengan mudah.</p>
+    </div>
+</section>
+
+<!-- BAGIAN INFO UTAMA -->
+<section class="info-utama">
+    <div class="container">
+        <div class="kotak-info">
+            <i class="fa fa-cubes"></i>
+            <div>
+                <span id="jumlah-total">0</span>
+                <p>Total Addon</p>
+            </div>
+        </div>
+        <div class="kotak-info">
+            <i class="fa fa-download"></i>
+            <div>
+                <span id="jumlah-unduh-total">0</span>
+                <p>Total Unduhan</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BAGIAN PENCARIAN & KATEGORI BARU -->
+<section class="bagian-filter">
+    <div class="container">
+        <div class="pencarian">
+            <input type="text" id="kotak-cari" placeholder="Cari nama addon/mod...">
+            <button class="tombol-cari" id="tombol-cari">
+                <i class="fa fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="filter-kategori">
+            <button class="btn-kategori aktif" data-filter="semua">
+                <i class="fa fa-th"></i>
+                <span>Semua</span>
+            </button>
+            <button class="btn-kategori" data-filter="addon">
+                <i class="fa fa-puzzle-piece"></i>
+                <span>Addons</span>
+            </button>
+            <button class="btn-kategori" data-filter="peta">
+                <i class="fa fa-map-o"></i>
+                <span>Maps</span>
+            </button>
+            <button class="btn-kategori" data-filter="resource">
+                <i class="fa fa-th-large"></i>
+                <span>Textures</span>
+            </button>
+            <button class="btn-kategori" data-filter="lainnya">
+                <i class="fa fa-user"></i>
+                <span>Skins</span>
+            </button>
+            <button class="btn-kategori" data-filter="apk">
+                <i class="fa fa-android"></i>
+                <span>APK</span>
+            </button>
+        </div>
+
+    </div>
+</section>
+
+<!-- BAGIAN TOP ADDON — TAB PILIHAN -->
+<section class="bagian-top-addon">
+    <div class="container">
+        <div class="judul-dengan-tab">
+            <h2 class="judul-bagian">🔥 Pilihan Addon</h2>
+            <div class="filter-lanjutan" aria-label="Filter lanjutan">
+                <label class="filter-kontrol">
+                    <span>Versi Minecraft</span>
+                    <select id="filter-versi">
+                        <option value="semua">Semua versi</option>
+                    </select>
+                </label>
+                <label class="filter-kontrol">
+                    <span>Urutkan</span>
+                    <select id="urutkan-addon">
+                        <option value="terbaru">Terbaru</option>
+                        <option value="terbanyak">Paling banyak diunduh</option>
+                        <option value="like">Paling banyak disukai</option>
+                        <option value="nama">Nama A–Z</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="wadah-geser" id="wadah-top"></div>
+    </div>
+</section>
+
+
+<!-- DAFTAR ADDON UTAMA -->
+<section class="daftar-addon">
+    <div class="container">
+        <h2 class="judul-bagian">📁 Semua Koleksi</h2>
+        <div id="wadah-addon">
+            <div class="pesan-kosong">
+                <i class="fa fa-folder-open"></i>
+                <p>Belum ada addon</p>
+                <span>Katalog addon dimuat dari server</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 MC Addon Share</p>
+    </div>
+</footer>
+
+</main>
+
+<nav class="navigasi-bawah" aria-label="Navigasi utama">
+    <a href="index.html" class="nav-item aktif" data-nav="beranda">
+        <i class="fa fa-home"></i><span>Beranda</span>
+    </a>
+    <button class="nav-item" type="button" data-nav="cari">
+        <i class="fa fa-search"></i><span>Cari</span>
+    </button>
+    <button class="nav-item" type="button" data-nav="disukai">
+        <i class="fa fa-thumbs-up"></i><span>Disukai</span>
+    </button>
+    <a href="profil.html" class="nav-item" data-nav="profil">
+        <i class="fa fa-user"></i><span>Profil</span>
+    </a>
+</nav>
+
+<div id="notif-salin" class="notifikasi">✅ Link disalin ke papan klip!</div>
+
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<script type="module" src="script.js"></script>
+</body>
+</html>
