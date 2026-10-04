@@ -39,16 +39,18 @@ async function muatDashboardStatistikOwner() {
     if (!dataResponse.ok) throw new Error("Katalog server tidak dapat dibaca.");
     const data = await dataResponse.json();
     const items = Object.values(data || {});
-    const [downloadSnap, likeSnap, activityResponse] = await Promise.all([
+    const [downloadSnap, likeSnap, activityResponse, userStatsResponse] = await Promise.all([
       get(ref(db, "jumlah_unduh")),
       get(ref(db, "jumlah_like")),
-      (async () => { const headers = await tokenHeader(); const r = await fetch("/api/activity", {headers}); if (!r.ok) throw new Error("Gagal membaca aktivitas."); return r.json(); })()
+      (async () => { const headers = await tokenHeader(); const r = await fetch("/api/activity", {headers}); if (!r.ok) throw new Error("Gagal membaca aktivitas."); return r.json(); })(),
+      (async () => { const headers = await tokenHeader(); const r = await fetch("/api/user-stats", {headers}); if (!r.ok) { let body = {}; try { body = await r.json(); } catch (_) {} throw new Error(body.error || "Gagal membaca jumlah pengguna."); } return r.json(); })()
     ]);
     const downloads = downloadSnap.exists() ? downloadSnap.val() : {};
     const likes = likeSnap.exists() ? likeSnap.val() : {};
     const totalDownload = Object.values(downloads || {}).reduce((sum, value) => sum + (Number(value) || 0), 0);
     const totalLike = Object.values(likes || {}).reduce((sum, value) => sum + (Number(value) || 0), 0);
     const logs = activityResponse.logs || [];
+    const totalPengguna = Number(userStatsResponse.totalUsers) || 0;
     const kategori = {addon:0, resource:0, peta:0, lainnya:0, apk:0};
     items.forEach(item => { const key = String(item?.kategori || "lainnya").toLowerCase(); kategori[key] = (kategori[key] || 0) + 1; });
     const labels = {addon:"Addon", resource:"Resource", peta:"Peta", lainnya:"Lainnya", apk:"APK"};
@@ -61,6 +63,7 @@ async function muatDashboardStatistikOwner() {
         <div class="statistik-card"><i class="fa fa-download"></i><span>Total download</span><strong>${totalDownload.toLocaleString("id-ID")}</strong><small>semua item</small></div>
         <div class="statistik-card"><i class="fa fa-thumbs-up"></i><span>Total like</span><strong>${totalLike.toLocaleString("id-ID")}</strong><small>semua item</small></div>
         <div class="statistik-card"><i class="fa fa-history"></i><span>Aktivitas</span><strong>${logs.length}</strong><small>maks. 100 terbaru</small></div>
+        <div class="statistik-card" style="grid-column:1 / -1"><i class="fa fa-users"></i><span>Total pengguna</span><strong>${totalPengguna.toLocaleString("id-ID")}</strong><small>akun terdaftar di Firebase</small></div>
       </div>
       <div class="statistik-kategori"><h4>Jumlah berdasarkan kategori</h4>${bars}</div>`;
     document.getElementById("muat-statistik-owner")?.addEventListener("click", muatDashboardStatistikOwner);
