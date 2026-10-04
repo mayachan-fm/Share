@@ -67,6 +67,25 @@ let versiAktif = 'semua';
 let batasPilihanAddon = 8;
 const jumlahTambahPilihanAddon = 8;
 
+// Ambil jumlah akun pengguna dari Firebase Authentication melalui API server.
+async function muatJumlahPengguna() {
+    const elemen = document.getElementById('jumlah-pengguna-total');
+    if (!elemen) return;
+
+    try {
+        const respon = await fetch('/api/public-stats', { cache: 'no-store' });
+        if (!respon.ok) throw new Error(`HTTP ${respon.status}`);
+        const data = await respon.json();
+        if (!data || data.ok !== true || !Number.isFinite(Number(data.totalPengguna))) {
+            throw new Error('Data jumlah pengguna tidak valid.');
+        }
+        elemen.textContent = Number(data.totalPengguna).toLocaleString('id-ID');
+    } catch (error) {
+        console.warn('⚠️ Jumlah pengguna tidak dapat dimuat:', error);
+        elemen.textContent = '—';
+    }
+}
+
 function tampilkanAddonDisukaiDariUrl() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("disukai") !== "1") return false;
@@ -126,6 +145,7 @@ async function tampilkanAddon() {
         document.getElementById('jumlah-total').textContent = daftarAddon.length;
         const totalUnduh = daftarAddon.reduce((jml, item) => jml + (item['jumlah unduh'] || 0), 0);
         document.getElementById('jumlah-unduh-total').textContent = totalUnduh;
+        muatJumlahPengguna();
 
         tampilkanTopAddon();
         wadah.innerHTML = '';
