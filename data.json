@@ -3082,5 +3082,17 @@
     "ukuran": "11.09 MB",
     "tanggal unggah": "4 Oktober 2026",
     "description": "Sebuah add-on yang menambahkan lebih banyak monster dan bos yang lebih ganas ke dalam game Anda!"
+  },
+  "cooked_up_add_on": {
+    "slug": "cooked_up_add_on",
+    "nama file": "Cooked Up Add-On",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-05-7b19c83e-fb2b-43fa-a47d-01e93e90ceb8.png",
+    "link download": "https://files.catbox.moe/pyfty7.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "75.59 KB",
+    "tanggal unggah": "5 Oktober 2026",
+    "description": "Ubah dapurmu menjadi surga makanan !  Cooked Up  menambahkan  20 makanan baru yang terbuat dari bahan-bahan vanilla dan 12 efek khusus untuk meningkatkan petualanganmu."
   }
 }
