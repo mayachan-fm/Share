@@ -14,14 +14,14 @@
   "furina_ui": {
     "slug": "furina_ui",
     "nama file": "Furina UI",
-    "link gambar": "https://cdn.phototourl.com/free/2026-07-14-cb2d466e-ed14-42df-832b-081461d6823c.jpg",
-    "link download": "https://www.mediafire.com/file/t6m5rztonuhzxma/FurinaMenuV1_1_1_FIXED.mcpack/download",
-    "description": "UI Menu tema Furina yang keren & ringan untuk Minecraft Bedrock!",
     "type file": "texturepack",
     "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-06-610fdb37-bf70-405f-a7c7-bb24a6477f43.jpg",
+    "link download": "https://www.mediafire.com/file/t6m5rztonuhzxma/FurinaMenuV1_1_1_FIXED.mcpack/download",
     "versi mc": "1.26+",
     "ukuran": "28.5 MB",
-    "tanggal unggah": "14 Juli 2026"
+    "tanggal unggah": "14 Juli 2026",
+    "description": "UI Menu tema Furina yang keren & ringan untuk Minecraft Bedrock!"
   },
   "realism_craft": {
     "slug": "realism_craft",
