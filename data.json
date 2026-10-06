@@ -26,14 +26,14 @@
   "realism_craft": {
     "slug": "realism_craft",
     "nama file": "Realism Craft",
-    "link gambar": "https://cdn.phototourl.com/free/2026-07-15-c4fb8698-aac7-47e2-997b-e869c578956a.jpg",
-    "link download": "https://www.mediafire.com/file/d49ptoq5spm2vfe/RealismCraft+2.4.mctemplate/file",
-    "description": "Rasakan permainan baru dengan Realism Craft: Visual dinamis khusus, generasi dunia, monster baru, item & blok.",
     "type file": "mcpack",
     "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-06-8a62e94e-2f1c-475c-8b51-5a821bdaad23.jpg",
+    "link download": "https://www.mediafire.com/file/d49ptoq5spm2vfe/RealismCraft+2.4.mctemplate/file",
     "versi mc": "1.26+",
     "ukuran": "187 MB+",
-    "tanggal unggah": "14 Juli 2026"
+    "tanggal unggah": "14 Juli 2026",
+    "description": "Rasakan permainan baru dengan Realism Craft: Visual dinamis khusus, generasi dunia, monster baru, item & blok."
   },
   "mystics_megic": {
     "slug": "mystics_megic",
