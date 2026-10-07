@@ -3130,5 +3130,17 @@
     "ukuran": "19.59 MB",
     "tanggal unggah": "7 Oktober 2026",
     "description": "Add-On Blasters Tingkat Lanjut menambahkan blaster baru ke dunia ANDA! Sesuaikan, modifikasi, dan tingkatkan item baru ini!\n\n+ 100+ peledakan\n+ Dapat dibuat\n+ Gunakan Add-On di dunia APAPUN!"
+  },
+  "find_your_way": {
+    "slug": "find_your_way",
+    "nama file": "Find Your Way",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-07-21d5b014-669a-4fe4-8ba9-7d480c244fb2.jpg",
+    "link download": "https://files.catbox.moe/ept54s.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "259 KB",
+    "tanggal unggah": "7 Oktober 2026",
+    "description": "Berhenti tersesat! Buat Perangkat Pencari Lokasi untuk menandai titik arah khusus di mana pun di dunia Anda. Tandai pangkalan dan bangunan dengan spidol warna-warni, lalu ikuti kompas di layar langsung kembali ke sana. Bagikan titik jalan dengan teman, buat pemuat bongkahan, atau letakkan penanda sementara untuk perjalanan singkat."
   }
 }
