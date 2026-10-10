@@ -3190,5 +3190,17 @@
     "ukuran": "2 Kb",
     "tanggal unggah": "8 Oktober 2026",
     "description": "Skin Kece Gratis #8"
+  },
+  "minimaps": {
+    "slug": "minimaps",
+    "nama file": "MiniMaps",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-10-42182820-7a93-469d-951c-f37ecd00a5db.jpg",
+    "link download": "https://sfl.gl/R3Xtt",
+    "versi mc": "1.26+",
+    "ukuran": "1 Mb+",
+    "tanggal unggah": "10 Oktober 2026",
+    "description": "Menambahkan Mini Map Yg Lengkap Kedalam Minecraft"
   }
 }
