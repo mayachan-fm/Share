@@ -3238,5 +3238,17 @@
     "ukuran": "28.69 MB",
     "tanggal unggah": "13 Oktober 2026",
     "description": "Temukan celah dimensi yang tersembunyi di seluruh dunia Anda dalam Add-On ini. Gunakan pecahan khusus untuk membuka kunci dan melawan gelombang massa yang rusak! Jelajahi pulau terapung, dapatkan jarahan epik, dan buat celah portabel Anda sendiri untuk membangun peternakan mafia yang unik!\n\n* Visual yang Cerah Direkomendasikan\n* Perpecahan Portabel\n* Barang Khusus\n* Struktur Ruang Bawah Tanah Khusus\n* Bekerja dengan Add-On lainnya"
+  },
+  "basic_backpacks": {
+    "slug": "basic_backpacks",
+    "nama file": "Basic Backpacks",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-13-c8c5cf09-818b-4f07-8d3f-03a2f1be9d2c.jpg",
+    "link download": "https://files.catbox.moe/bgfm5v.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "809 KB",
+    "tanggal unggah": "13 Oktober 2026",
+    "description": "Basic Backpacks menawarkan sistem ransel vanilla, berinteraksi pada item tanpa meletakkan tanah untuk membuka ransel Anda - Desain Kulit, Barel, Dada & Shulker!"
   }
 }
