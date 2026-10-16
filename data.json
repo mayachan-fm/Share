@@ -3274,5 +3274,17 @@
     "ukuran": "3.53 MB",
     "tanggal unggah": "16 Oktober 2026",
     "description": "Ultimate Dimension Modpack menggabungkan 7 add-on menjadi satu pengalaman bertahan hidup Minecraft Bedrock yang masif. Jelajahi dimensi baru, temukan bijih langka, lawan bos berbahaya, selesaikan misi, perluas sumber daya Anda, dan gunakan sistem permainan yang canggih — semuanya dalam satu paket."
+  },
+  "hardcore_revive_mode": {
+    "slug": "hardcore_revive_mode",
+    "nama file": "Hardcore Revive Mode",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-16-62151186-6574-441b-a950-a02eaf5aa0fb.png",
+    "link download": "https://files.catbox.moe/ahmnbi.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "34 KB",
+    "tanggal unggah": "16 Oktober 2026",
+    "description": "CATATAN: ADDON INI MENAMBAHKAN MODE HARDCORE KE DUNIA ANDA SECARA OTOMATIS DAN TIDAK BERFUNGSI DENGAN SISTEM BAWAAN!\n\nPernahkah kamu ingin bermain Minecraft mode hardcore bersama teman-teman, tetapi mereka sangat buruk dalam permainan dan terus mati? Untungnya, aku telah membuat Mod Minecraft ini yang mengubah pengalaman bertahan hidup mode hardcore dalam game saat ini sehingga semua orang dapat bersenang-senang dalam mode permainan yang menantang ini!"
   }
 }
