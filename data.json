@@ -3250,5 +3250,17 @@
     "ukuran": "809 KB",
     "tanggal unggah": "13 Oktober 2026",
     "description": "Basic Backpacks menawarkan sistem ransel vanilla, berinteraksi pada item tanpa meletakkan tanah untuk membuka ransel Anda - Desain Kulit, Barel, Dada & Shulker!"
+  },
+  "more_body_actions_pickup_carry": {
+    "slug": "more_body_actions_pickup_carry",
+    "nama file": "More Body Actions + Pickup & Carry!",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-16-5afe9ead-72a1-4dc1-bf87-24a610c40c35.jpg",
+    "link download": "https://files.catbox.moe/6v04mt.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "516 KB",
+    "tanggal unggah": "16 Oktober 2026",
+    "description": "Addon ini memungkinkan Anda untuk duduk, berbaring, merangkak, memanjat dinding, dan mengangkat monster, pemain, atau balok lalu membawanya! Anda juga bisa merangkak melewati lubang selebar 1 balok! Addon ini juga berfungsi dalam mode multipemain!"
   }
 }
