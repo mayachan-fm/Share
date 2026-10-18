@@ -43,6 +43,21 @@ async function github(path) {
   return body;
 }
 
+
+//TOKEN_GITHUB
+async function github(path) {
+  const token = process.env.TOKEN_GITHUB;
+  if (!token) throw new Error('GITHUB_TOKEN belum disetel di Vercel.');
+  const response = await fetch(`${GITHUB_API}/repos/${OWNER}/${REPO}/${path}`, {
+    headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2026-03-10' }
+  });
+  const text = await response.text();
+  let body;
+  try { body = JSON.parse(text); } catch (_) { body = { message: text }; }
+  if (!response.ok) { const e = new Error(body.message || `GitHub API error ${response.status}`); e.status = response.status; throw e; }
+  return body;
+}
+
 async function readCatalogCached() {
   const now = Date.now();
   if (catalogCache && now - catalogCacheAt < CATALOG_CACHE_TTL) return catalogCache;
@@ -58,7 +73,7 @@ async function readCatalogCached() {
 }
 
 function signingSecret() {
-  const source = process.env.DOWNLOAD_GATE_SECRET || process.env.FIREBASE_PRIVATE_KEY || process.env.GITHUB_TOKEN;
+  const source = process.env.DOWNLOAD_GATE_SECRET || process.env.FIREBASE_PRIVATE_KEY || process.env.GITHUB_TOKEN || process.env.TOKEN_GITHUB;
   if (!source) throw new Error('Secret Download Gate belum tersedia di server.');
   return crypto.createHash('sha256').update(String(source)).digest();
 }
