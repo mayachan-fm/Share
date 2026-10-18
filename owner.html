@@ -359,18 +359,8 @@ async function muatAktivitasOwner(){
 }
 
 async function apiLaporan(method, payload={}) {
-  const headers={...(await tokenHeader()),'Content-Type':'application/json'};
-  let url='/api/notifications';
-  let requestMethod=method;
-  let body;
-  if(method==='GET') {
-    url+ '?action=reports';
-  } else {
-    requestMethod='POST';
-    const action=method==='PATCH'?'updateReport':'deleteReport';
-    body=JSON.stringify({...payload,action});
-  }
-  const response=await fetch(url,{method:requestMethod,headers,...(body?{body}:{})});
+  const headers=await tokenHeader();
+  const response=await fetch('/api/notifications?action=report',{method,headers, ...(method==='GET'?{}:{body:JSON.stringify(payload)})});
   let data={}; try{data=await response.json();}catch(_){}
   if(!response.ok||!data.ok) throw new Error(data.error||'Gagal memproses laporan.');
   return data;
