@@ -134,7 +134,7 @@ function bukaFormLaporan(slug, nama) {
             button.disabled=true; button.textContent="Mengirim...";
             try {
                 const token=await user.getIdToken();
-                const response=await fetch("/api/reports",{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token}`},body:JSON.stringify({slug:form.dataset.slug,reason:alasan,message:pesan})});
+                const response=await fetch("/api/notifications?action=reports",{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token}`},body:JSON.stringify({slug:form.dataset.slug,reason:alasan,message:pesan})});
                 const result=await response.json();
                 if(!response.ok || !result.ok) throw new Error(result.error || "Laporan gagal dikirim.");
                 status.textContent="Laporan berhasil dikirim. Terima kasih sudah membantu!"; status.className="status-laporan-sukses"; form.reset();

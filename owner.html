@@ -360,7 +360,7 @@ async function muatAktivitasOwner(){
 
 async function apiLaporan(method, payload={}) {
   const headers=await tokenHeader();
-  const response=await fetch('/api/reports',{method,headers, ...(method==='GET'?{}:{body:JSON.stringify(payload)})});
+  const response=await fetch('/api/notifications?action=reports',{method,headers, ...(method==='GET'?{}:{body:JSON.stringify(payload)})});
   let data={}; try{data=await response.json();}catch(_){}
   if(!response.ok||!data.ok) throw new Error(data.error||'Gagal memproses laporan.');
   return data;
