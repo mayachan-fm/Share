@@ -44,20 +44,6 @@ async function github(path) {
 }
 
 
-//TOKEN_GITHUB
-async function github(path) {
-  const token = process.env.TOKEN_GITHUB;
-  if (!token) throw new Error('GITHUB_TOKEN belum disetel di Vercel.');
-  const response = await fetch(`${GITHUB_API}/repos/${OWNER}/${REPO}/${path}`, {
-    headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2026-03-10' }
-  });
-  const text = await response.text();
-  let body;
-  try { body = JSON.parse(text); } catch (_) { body = { message: text }; }
-  if (!response.ok) { const e = new Error(body.message || `GitHub API error ${response.status}`); e.status = response.status; throw e; }
-  return body;
-}
-
 async function readCatalogCached() {
   const now = Date.now();
   if (catalogCache && now - catalogCacheAt < CATALOG_CACHE_TTL) return catalogCache;
