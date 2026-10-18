@@ -358,6 +358,27 @@ async function muatAktivitasOwner(){
   }
 }
 
+async function apiLaporan(method, payload={}) {
+  const headers=await tokenHeader();
+  const response=await fetch('/api/reports',{method,headers, ...(method==='GET'?{}:{body:JSON.stringify(payload)})});
+  let data={}; try{data=await response.json();}catch(_){}
+  if(!response.ok||!data.ok) throw new Error(data.error||'Gagal memproses laporan.');
+  return data;
+}
+function labelStatusLaporan(status){return ({belum_ditinjau:'Belum ditinjau',sedang_diperiksa:'Sedang diperiksa',selesai:'Selesai'})[status]||'Belum ditinjau';}
+async function muatLaporanOwner(){
+  const list=document.getElementById('daftar-laporan-owner'); if(!list)return;
+  list.innerHTML='<p class="statistik-kosong">Memuat laporan...</p>';
+  try{
+    const data=await apiLaporan('GET'); const filter=document.getElementById('filter-status-laporan')?.value||'semua';
+    const reports=(data.reports||[]).filter(r=>filter==='semua'||(r.status||'belum_ditinjau')===filter);
+    if(!reports.length){list.innerHTML='<div class="aktivitas-kosong">Belum ada laporan untuk status ini.</div>';return;}
+    list.innerHTML=reports.map(r=>{const when=Number(r.waktu)?new Date(Number(r.waktu)).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):'-';return `<article class="laporan-owner-item"><div class="laporan-owner-header"><strong>${esc(r.namaAddon||r.slug||'Addon')}</strong><span class="laporan-status status-${esc(r.status||'belum_ditinjau')}">${esc(labelStatusLaporan(r.status))}</span></div><small>${esc(r.username||'Pengguna')} · ${esc(when)}</small><p class="laporan-alasan"><b>Alasan:</b> ${esc(r.reason||'Lainnya')}</p><p class="laporan-pesan">${esc(r.message||'')}</p><div class="laporan-owner-actions"><a class="tombol-sekunder" href="detail.html?slug=${encodeURIComponent(r.slug||'')}" target="_blank" rel="noopener">Buka addon</a><select class="laporan-ubah-status" data-id="${esc(r.id)}" aria-label="Ubah status laporan"><option value="belum_ditinjau" ${(r.status||'belum_ditinjau')==='belum_ditinjau'?'selected':''}>Belum ditinjau</option><option value="sedang_diperiksa" ${r.status==='sedang_diperiksa'?'selected':''}>Sedang diperiksa</option><option value="selesai" ${r.status==='selesai'?'selected':''}>Selesai</option></select><button type="button" class="tombol-hapus-laporan" data-id="${esc(r.id)}">Hapus</button></div></article>`;}).join('');
+    list.querySelectorAll('.laporan-ubah-status').forEach(sel=>sel.addEventListener('change',async()=>{sel.disabled=true;try{await apiLaporan('PATCH',{id:sel.dataset.id,status:sel.value});await muatLaporanOwner();}catch(e){alert(e.message);sel.disabled=false;}}));
+    list.querySelectorAll('.tombol-hapus-laporan').forEach(btn=>btn.addEventListener('click',async()=>{if(!confirm('Yakin ingin menghapus laporan ini?'))return;btn.disabled=true;try{await apiLaporan('DELETE',{id:btn.dataset.id});await muatLaporanOwner();}catch(e){alert(e.message);btn.disabled=false;}}));
+  }catch(error){list.innerHTML=`<div class="statistik-error">${esc(error.message)}</div>`;}
+}
+
 onAuthStateChanged(auth, async user => {
   if (!user) { location.href = "profil.html"; return; }
 
@@ -375,6 +396,12 @@ onAuthStateChanged(auth, async user => {
     </section>
 
     <section id="dashboard-statistik-owner" class="statistik-box owner-section-card"><div class="statistik-kosong">Memuat statistik...</div></section>
+
+    <section class="owner-section-card owner-laporan-card" id="bagian-laporan-owner">
+      <div class="owner-section-title"><div><h3><i class="fa fa-flag"></i> Report / Laporan</h3><p>Laporan masalah addon dari pengguna.</p></div><button type="button" class="tombol-sekunder" id="muat-laporan-owner"><i class="fa fa-refresh"></i> Muat ulang</button></div>
+      <div class="laporan-filter"><label for="filter-status-laporan">Status</label><select id="filter-status-laporan"><option value="semua">Semua laporan</option><option value="belum_ditinjau">Belum ditinjau</option><option value="sedang_diperiksa">Sedang diperiksa</option><option value="selesai">Selesai</option></select></div>
+      <div id="daftar-laporan-owner" class="daftar-laporan-owner"><p class="statistik-kosong">Memuat laporan...</p></div>
+    </section>
 
     <section class="owner-section-card owner-admin-card">
       <div class="owner-section-title">
@@ -499,6 +526,9 @@ onAuthStateChanged(auth, async user => {
   await muatPremium();
   mulaiPemantauanPremiumOwner();
   await muatDashboardStatistikOwner();
+  await muatLaporanOwner();
+  document.getElementById("muat-laporan-owner")?.addEventListener("click", muatLaporanOwner);
+  document.getElementById("filter-status-laporan")?.addEventListener("change", muatLaporanOwner);
   await muatAktivitasOwner();
   document.getElementById('muat-aktivitas-owner')?.addEventListener('click', muatAktivitasOwner);
   document.getElementById('muat-riwayat-premium')?.addEventListener('click', () => muatPremium());

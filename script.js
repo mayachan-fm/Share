@@ -112,6 +112,45 @@ function tampilkanAddonDisukaiDariUrl() {
     return true;
 }
 
+// Form laporan addon — laporan disimpan melalui API server.
+function bukaFormLaporan(slug, nama) {
+    let modal = document.getElementById("modal-laporkan-addon");
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "modal-laporkan-addon";
+        modal.className = "login-overlay modal-laporan-overlay";
+        modal.innerHTML = `<form class="login-card form-laporan-addon" id="form-laporkan-addon"><button class="login-tutup" type="button" aria-label="Tutup">×</button><div class="profil-avatar"><i class="fa fa-flag"></i></div><h3>Laporkan Addon</h3><p id="nama-addon-laporan"></p><label>Alasan laporan<select id="alasan-laporan" required><option value="">Pilih alasan</option><option>Link download bermasalah</option><option>Gambar tidak sesuai</option><option>Informasi atau deskripsi salah</option><option>Addon bermasalah / tidak berfungsi</option><option>Konten tidak pantas atau berbahaya</option><option>Lainnya</option></select></label><label>Pesan laporan<textarea id="pesan-laporan" maxlength="800" rows="4" required placeholder="Jelaskan masalah yang kamu temukan (10–800 karakter)..."></textarea></label><small class="batas-laporan">Minimal 10 karakter. Laporan hanya dapat dikirim oleh pengguna yang sudah login.</small><div id="status-laporan-form" role="status"></div><button class="tombol-utama tombol-login-lanjut" type="submit">Kirim laporan</button></form>`;
+        document.body.appendChild(modal);
+        modal.querySelector(".login-tutup").addEventListener("click", () => modal.remove());
+        modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
+        modal.querySelector("form").addEventListener("submit", async e => {
+            e.preventDefault();
+            const form=e.currentTarget, button=form.querySelector('button[type="submit"]'), status=document.getElementById("status-laporan-form");
+            const user=penggunaLogin;
+            if (!authSiap || !user) { status.textContent="Silakan login terlebih dahulu untuk mengirim laporan."; status.className="status-laporan-error"; return; }
+            const alasan=document.getElementById("alasan-laporan").value;
+            const pesan=document.getElementById("pesan-laporan").value.trim();
+            if (!alasan || pesan.length<10) { status.textContent="Pilih alasan dan tulis pesan minimal 10 karakter."; status.className="status-laporan-error"; return; }
+            button.disabled=true; button.textContent="Mengirim...";
+            try {
+                const token=await user.getIdToken();
+                const response=await fetch("/api/reports",{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token}`},body:JSON.stringify({slug:form.dataset.slug,reason:alasan,message:pesan})});
+                const result=await response.json();
+                if(!response.ok || !result.ok) throw new Error(result.error || "Laporan gagal dikirim.");
+                status.textContent="Laporan berhasil dikirim. Terima kasih sudah membantu!"; status.className="status-laporan-sukses"; form.reset();
+                setTimeout(()=>modal.remove(),1400);
+            } catch(error) { status.textContent=error.message; status.className="status-laporan-error"; }
+            finally { button.disabled=false; button.textContent="Kirim laporan"; }
+        });
+    }
+    modal.querySelector("#nama-addon-laporan").textContent=nama;
+    modal.querySelector("form").dataset.slug=slug;
+    modal.querySelector("#status-laporan-form").textContent="";
+    modal.querySelector("form").reset();
+    modal.style.display="flex";
+    if (!penggunaLogin) modal.querySelector("#status-laporan-form").textContent="Login diperlukan untuk mengirim laporan.";
+}
+
 // ==============================================
 // MUAT DATA AWAL
 // ==============================================
@@ -283,6 +322,7 @@ function tampilkanDaftar(dataYangDitampilkan) {
                 <div class="garis-pembatas"></div>
                 <div class="bagian-aksi">
                     <div class="info-unduh"><i class="fa fa-download"></i> ${item['jumlah unduh'] || 0}</div>
+                    <button type="button" class="tombol-laporkan-addon" data-slug="${item.slug}" data-nama="${String(item['nama file'] || 'Addon').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')}" aria-label="Laporkan ${item['nama file']}"><i class="fa fa-flag"></i> Laporkan</button>
                     <div class="grup-tombol-kanan">
                         <button class="tombol-like ${sudahDiLike ? 'sudah' : ''}" data-slug="${item.slug}">
                             <i class="fa fa-thumbs-up"></i> <span>${jumlahLike}</span>
@@ -296,7 +336,11 @@ function tampilkanDaftar(dataYangDitampilkan) {
         `;
 
         kartu.addEventListener('click', e => {
-            if (!e.target.closest('.tombol-bagi') && !e.target.closest('.tombol-like')) window.location.href = linkDetail;
+            if (!e.target.closest('.tombol-bagi') && !e.target.closest('.tombol-like') && !e.target.closest('.tombol-laporkan-addon')) window.location.href = linkDetail;
+        });
+        kartu.querySelector('.tombol-laporkan-addon')?.addEventListener('click', e => {
+            e.stopPropagation();
+            bukaFormLaporan(e.currentTarget.dataset.slug, e.currentTarget.dataset.nama);
         });
         kartu.querySelector('.tombol-bagi').addEventListener('click', e => {
             e.stopPropagation();

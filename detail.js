@@ -65,6 +65,17 @@ function siapkanInputKomentar() {
 
 let idAddonSekarang = null;
 
+function bukaLaporanDetail(slug, nama) {
+    let modal=document.getElementById('modal-laporkan-addon-detail');
+    if(!modal){
+      modal=document.createElement('div'); modal.id='modal-laporkan-addon-detail'; modal.className='login-overlay modal-laporan-overlay';
+      modal.innerHTML=`<form class="login-card form-laporan-addon" id="form-laporkan-addon-detail"><button class="login-tutup" type="button" aria-label="Tutup">×</button><div class="profil-avatar"><i class="fa fa-flag"></i></div><h3>Laporkan Addon</h3><p id="nama-addon-laporan-detail"></p><label>Alasan laporan<select id="alasan-laporan-detail" required><option value="">Pilih alasan</option><option>Link download bermasalah</option><option>Gambar tidak sesuai</option><option>Informasi atau deskripsi salah</option><option>Addon bermasalah / tidak berfungsi</option><option>Konten tidak pantas atau berbahaya</option><option>Lainnya</option></select></label><label>Pesan laporan<textarea id="pesan-laporan-detail" maxlength="800" rows="4" required placeholder="Jelaskan masalah (10–800 karakter)..."></textarea></label><small class="batas-laporan">Login diperlukan. Maksimal satu laporan untuk addon yang sama setiap 10 menit.</small><div id="status-laporan-detail" role="status"></div><button class="tombol-utama tombol-login-lanjut" type="submit">Kirim laporan</button></form>`;
+      document.body.appendChild(modal); modal.querySelector('.login-tutup').addEventListener('click',()=>modal.remove()); modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+      modal.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,button=form.querySelector('button[type="submit"]'),status=document.getElementById('status-laporan-detail');if(!usuarioActual){status.textContent='Silakan login terlebih dahulu untuk mengirim laporan.';status.className='status-laporan-error';return;}const reason=document.getElementById('alasan-laporan-detail').value,message=document.getElementById('pesan-laporan-detail').value.trim();if(!reason||message.length<10){status.textContent='Pilih alasan dan tulis pesan minimal 10 karakter.';status.className='status-laporan-error';return;}button.disabled=true;button.textContent='Mengirim...';try{const token=await usuarioActual.getIdToken();const response=await fetch('/api/reports',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({slug:form.dataset.slug,reason,message})});const data=await response.json();if(!response.ok||!data.ok)throw new Error(data.error||'Laporan gagal dikirim.');status.textContent='Laporan berhasil dikirim. Terima kasih!';status.className='status-laporan-sukses';form.reset();setTimeout(()=>modal.remove(),1400);}catch(error){status.textContent=error.message;status.className='status-laporan-error';}finally{button.disabled=false;button.textContent='Kirim laporan';}});
+    }
+    modal.querySelector('#nama-addon-laporan-detail').textContent=nama;modal.querySelector('form').dataset.slug=slug;modal.querySelector('#status-laporan-detail').textContent='';modal.querySelector('form').reset();modal.style.display='flex';
+}
+
 async function tampilkanDetail() {
     const wadah = document.getElementById('isi-detail');
     const urlParams = new URLSearchParams(window.location.search);
@@ -120,9 +131,9 @@ async function tampilkanDetail() {
                             <span class="tipe-file">${item['type file'] || 'File'}</span>
                             <h2>${item['nama file']}</h2>
                         </div>
-                        <div class="detail-unduh">
-                            <i class="fa fa-eye"></i>
-                            <span>${jumlahUnduh} kali diunduh</span>
+                        <div class="detail-header-aksi">
+                            <div class="detail-unduh"><i class="fa fa-eye"></i><span>${jumlahUnduh} kali diunduh</span></div>
+                            <button type="button" class="tombol-laporkan-addon tombol-laporkan-detail" id="tombol-laporkan-detail"><i class="fa fa-flag"></i> Laporkan</button>
                         </div>
                     </div>
 
@@ -145,6 +156,8 @@ async function tampilkanDetail() {
                 </div>
             </div>
         `;
+
+        document.getElementById('tombol-laporkan-detail')?.addEventListener('click', () => bukaLaporanDetail(idAddonSekarang, item['nama file'] || 'Addon'));
 
         // Download Gate Stage P9 — server-side gate/session.
         const tombolGate = document.getElementById('tombol-download-gate');
