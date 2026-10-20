@@ -3358,5 +3358,17 @@
     "ukuran": "2.34 MB",
     "tanggal unggah": "18 Oktober 2026",
     "description": "Pernah ingin bertransformasi menjadi hewan berbulu yang kuat?\n\nMenjadi Hewan memungkinkan Anda bertransformasi menjadi hewan peliharaan menggemaskan dan bentuk humanoidnya, melawan musuh berbahaya, menggunakan senjata unik, memakai kosmetik menyenangkan, dan menghiasi dunia Anda dengan furnitur bertema!\n\n- 6 bentuk hewan untuk diubah!\n- 7 hewan peliharaan untuk dijinakkan!\n- Oleh Studio Kelinci"
+  },
+  "frost_magic": {
+    "slug": "frost_magic",
+    "nama file": "Frost Magic",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-20-d0a28df1-c95a-454d-a60b-8efa0b221282.jpg",
+    "link download": "https://files.catbox.moe/wrh8cf.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "395 KB",
+    "tanggal unggah": "20 Oktober 2026",
+    "description": "Aktifkan kemampuanmu untuk membekukan musuh dan lepaskan. Biarkan mereka tahu bahwa kamu dapat membekukan mereka hingga mati. Lemparkan gletser yang dahsyat. Bekukan musuh dan perlambat gerakan mereka."
   }
 }
