@@ -322,7 +322,6 @@ function tampilkanDaftar(dataYangDitampilkan) {
                 <div class="garis-pembatas"></div>
                 <div class="bagian-aksi">
                     <div class="info-unduh"><i class="fa fa-download"></i> ${item['jumlah unduh'] || 0}</div>
-                    <button type="button" class="tombol-laporkan-addon" data-slug="${item.slug}" data-nama="${String(item['nama file'] || 'Addon').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')}" aria-label="Laporkan ${item['nama file']}"><i class="fa fa-flag"></i> Laporkan</button>
                     <div class="grup-tombol-kanan">
                         <button class="tombol-like ${sudahDiLike ? 'sudah' : ''}" data-slug="${item.slug}">
                             <i class="fa fa-thumbs-up"></i> <span>${jumlahLike}</span>
@@ -336,11 +335,7 @@ function tampilkanDaftar(dataYangDitampilkan) {
         `;
 
         kartu.addEventListener('click', e => {
-            if (!e.target.closest('.tombol-bagi') && !e.target.closest('.tombol-like') && !e.target.closest('.tombol-laporkan-addon')) window.location.href = linkDetail;
-        });
-        kartu.querySelector('.tombol-laporkan-addon')?.addEventListener('click', e => {
-            e.stopPropagation();
-            bukaFormLaporan(e.currentTarget.dataset.slug, e.currentTarget.dataset.nama);
+            if (!e.target.closest('.tombol-bagi') && !e.target.closest('.tombol-like')) window.location.href = linkDetail;
         });
         kartu.querySelector('.tombol-bagi').addEventListener('click', e => {
             e.stopPropagation();
