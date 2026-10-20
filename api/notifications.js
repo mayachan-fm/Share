@@ -49,12 +49,9 @@ module.exports = async (req, res) => {
           return send(res, 400, { ok: false, error: 'Pilih alasan dan tulis pesan minimal 10 karakter (maksimal 800).' });
         }
 
-        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://mc-share.vercel.app';
-        const catalogRes = await fetch(`${baseUrl}/api/catalog?slug=${encodeURIComponent(slug)}`);
-        if (!catalogRes.ok) return send(res, 404, { ok: false, error: 'Addon tidak ditemukan.' });
-        const catalog = await catalogRes.json();
-        const addon = catalog?.item || catalog;
-        if (!addon || !addon.slug) return send(res, 404, { ok: false, error: 'Addon tidak ditemukan.' });
+        // Nama addon dikirim dari client (detail.js) agar tidak perlu self-fetch ke /api/catalog
+        // yang memicu cold-start bertingkat dan sering timeout di Vercel Hobby (batas 10 detik).
+        const namaAddon = clean(body.namaAddon || slug, 180);
 
         const rateRef = db.ref(`batas_laporan/${user.uid}/${slug}`);
         const now = Date.now();
@@ -66,7 +63,7 @@ module.exports = async (req, res) => {
         await reportRef.set({
           id: reportRef.key,
           slug,
-          namaAddon: clean(addon['nama file'] || addon.nama || slug, 180),
+          namaAddon,
           reason,
           message,
           uid: user.uid,
