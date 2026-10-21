@@ -39,6 +39,25 @@ function ambilDaftarLikeLokal() {
         return [];
     }
 }
+// ===== Premium: cache status premium untuk batas like (50 untuk gratis, unlimited premium) =====
+let _cachePremiumUid = null, _cachePremiumAktif = false;
+async function apakahPenggunaPremium(user) {
+    if (!user?.uid) return false;
+    if (_cachePremiumUid === user.uid) return _cachePremiumAktif;
+    try {
+        const snap = await get(ref(db, `premium/${user.uid}`));
+        let aktif = false;
+        if (snap.exists()) {
+            const d = snap.val();
+            const tipe = String(d.tipe || '').toLowerCase();
+            const berakhir = (d.berakhir === null || d.berakhir === undefined || d.berakhir === '') ? null : Number(d.berakhir);
+            const dicabut = d.dicabutPada ? true : false;
+            aktif = dicabut ? false : (tipe === 'permanen' || berakhir === null || (Number.isFinite(berakhir) && Date.now() < berakhir));
+        }
+        _cachePremiumUid = user.uid; _cachePremiumAktif = aktif;
+        return aktif;
+    } catch (e) { return false; }
+}
 
 function tampilkanKartuLogin() {
     if (document.getElementById("kartu-login-overlay")) return;
@@ -353,6 +372,10 @@ function tampilkanDaftar(dataYangDitampilkan) {
             const kunci = kunciLikePengguna();
             const daftar = ambilDaftarLikeLokal();
             if (!daftar.includes(slug)) {
+                if (daftar.length >= 50 && !(await apakahPenggunaPremium(penggunaLogin))) {
+                    alert('Batas maksimal 50 addon disukai untuk akun gratis.\n\nUpgrade Premium untuk unlimited likes + tema eksklusif + bebas iklan! 👑');
+                    return;
+                }
                 daftar.push(slug);
                 localStorage.setItem(kunci, JSON.stringify(daftar));
                 const idAddon = Object.keys(semuaDataAddon).find(k => semuaDataAddon[k].slug === slug);

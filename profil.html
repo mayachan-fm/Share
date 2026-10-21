@@ -257,6 +257,7 @@ async function tampilProfil(user, role) {
     ? (premiumStatus.permanen ? "Permanen" : "Aktif")
     : (premiumStatus.dicabutPada ? "Dicabut" : premiumStatus.kadaluarsa ? "Kedaluwarsa" : "Tidak aktif");
   const premiumClass = premiumStatus.aktif ? "premium-aktif" : premiumStatus.dicabutPada ? "premium-dicabut" : premiumStatus.kadaluarsa ? "premium-kadaluarsa" : "premium-tidak-aktif";
+  window.__premiumAktif = premiumStatus.aktif;
   const formatTanggal = (ms) => Number.isFinite(ms) ? new Date(ms).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" }) : "—";
   const formatSisa = (ms) => {
     if (!Number.isFinite(ms) || ms <= 0) return "—";
@@ -327,6 +328,11 @@ async function tampilProfil(user, role) {
         <div><small>Sisa waktu</small><strong>${premiumStatus.permanen ? "Permanen" : formatSisa(premiumStatus.sisaMs)}</strong></div>
       </div>
       ${premiumStatus.aktif && !premiumStatus.permanen && premiumStatus.sisaMs <= 3 * 24 * 60 * 60 * 1000 ? `<p class="profil-premium-warning"><i class="fa fa-exclamation-triangle"></i> Premium akan segera berakhir.</p>` : ""}
+      <div class="profil-tema-box">
+        <strong><i class="fa fa-paint-brush"></i> Tema Tampilan</strong>
+        <p class="profil-tema-desc">${premiumStatus.aktif ? 'Semua tema terbuka untukmu! 👑' : 'Tema bertanda 🔒 khusus Premium. Upgrade untuk membuka!'}</p>
+        <div class="pemilih-tema" id="pemilih-tema-profil"></div>
+      </div>
     </div>
     <div class="profil-notifikasi-box">
       <div class="profil-notifikasi-header">
@@ -394,6 +400,51 @@ onAuthStateChanged(auth, async (user) => {
     tampilErrorFirebase();
   }
 });
+</script>
+<script>
+(function(){
+  var TEMAS=[
+    {id:'default',nama:'Default',premium:false,warna:'#5D9C41'},
+    {id:'gelap',nama:'Ultra Gelap',premium:false,warna:'#111111'},
+    {id:'nether',nama:'Nether',premium:true,warna:'#ff5a36'},
+    {id:'end',nama:'The End',premium:true,warna:'#a855f7'},
+    {id:'emerald',nama:'Emerald',premium:true,warna:'#10b981'}
+  ];
+  function simpan(id){try{localStorage.setItem('tema-mcaddon',id||'default');}catch(e){}}
+  function terapkan(id){
+    var h=document.documentElement;
+    TEMAS.forEach(function(t){h.classList.remove('tema-'+t.id);});
+    if(id&&id!=='default')h.classList.add('tema-'+id);
+    simpan(id);
+  }
+  function render(){
+    var box=document.getElementById('pemilih-tema-profil');
+    if(!box){setTimeout(render,300);return;}
+    var aktif=localStorage.getItem('tema-mcaddon')||'default';
+    box.innerHTML=TEMAS.map(function(t){
+      var kunci=t.premium && !window.__premiumAktif;
+      return '<div class="tema-item '+(aktif===t.id?'aktif':'')+(kunci?' kunci':'')+'" data-id="'+t.id+'">'+
+        '<span class="tema-pratinjau" style="background:'+t.warna+'"></span>'+
+        '<span class="tema-nama">'+t.nama+'</span>'+
+        (kunci?'<span class="tema-kunci"><i class="fa fa-lock"></i> Premium</span>':'')+
+        '</div>';
+    }).join('');
+    box.querySelectorAll('.tema-item').forEach(function(el){
+      el.addEventListener('click',function(){
+        var id=el.dataset.id;
+        var t=TEMAS.find(function(x){return x.id===id;});
+        if(t.premium && !window.__premiumAktif){
+          alert('Tema "'+t.nama+'" khusus Premium 👑\n\nUpgrade Premium untuk membuka semua tema + unlimited likes + bebas iklan!');
+          return;
+        }
+        terapkan(id);
+        box.querySelectorAll('.tema-item').forEach(function(x){x.classList.remove('aktif');});
+        el.classList.add('aktif');
+      });
+    });
+  }
+  render();
+})();
 </script>
 </body>
 </html>

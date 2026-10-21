@@ -15,6 +15,7 @@ import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.
 import { auth, onAuthStateChanged, ambilRole } from "./auth.js";
 import { cekAksesDownload } from "./download-access.js";
 import { ambilArtikelAcak } from "./articles.js";
+import { badgePremiumHtml, ambilSetPremiumUid, apakahUidPremiumSync } from "./premium-ui.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 const app = getApp();
@@ -400,7 +401,8 @@ function mulaiPantauKomentar() {
 
     const komentarRef = ref(db, `komentar/${idAddonSekarang}`);
 
-    onValue(komentarRef, (snapshot) => {
+    onValue(komentarRef, async (snapshot) => {
+        await ambilSetPremiumUid();
         if (!snapshot.exists()) {
             daftar.innerHTML = `<div class="pesan-kosong-komentar">Belum ada komentar, jadilah yang pertama!</div>`;
             return;
@@ -472,7 +474,7 @@ function buatKomentarHtml(komen, level, anak, map) {
         <div class="item-komentar item-komentar-level-${Math.min(level, 6)}" data-id="${escapeHtml(komen.id)}" style="--indent:${margin}px">
             <div class="komentar-kepala">
                 <div class="komentar-pengguna">
-                    <strong class="nama-pengguna-komentar" style="--warna-nama:${warnaNama}">@${nama}</strong>${replyInfo}
+                    <strong class="nama-pengguna-komentar${apakahUidPremiumSync(komen.uid)?' premium':''}" style="--warna-nama:${warnaNama}">@${nama}</strong>${apakahUidPremiumSync(komen.uid)?badgePremiumHtml():''}${replyInfo}
                 </div>
                 <span>${waktu}</span>
             </div>

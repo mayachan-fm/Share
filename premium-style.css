@@ -1,0 +1,108 @@
+/* ==============================================
+   PREMIUM UI STYLE — MC ADDON SHARE
+   Sisipkan: <link rel="stylesheet" href="premium-style.css"> di <head> (setelah style.css)
+   ============================================== */
+
+/* ---------- Badge Premium (mahkota) ---------- */
+.badge-premium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px; height: 18px;
+  margin-left: 5px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd700, #ff9500);
+  color: #fff;
+  font-size: 10px;
+  box-shadow: 0 0 8px rgba(255, 200, 0, 0.6);
+  vertical-align: middle;
+  animation: premium-glow 2s ease-in-out infinite;
+}
+@keyframes premium-glow {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 200, 0, 0.5); }
+  50% { box-shadow: 0 0 14px rgba(255, 200, 0, 0.9); }
+}
+
+/* Username Premium: emas + glow (dipakai di komentar & profil) */
+.nama-premium,
+.nama-pengguna-komentar.premium {
+  background: linear-gradient(90deg, #ffd700, #ff9500, #ffd700);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: premium-shine 3s linear infinite;
+  font-weight: 700;
+}
+@keyframes premium-shine {
+  to { background-position: 200% center; }
+}
+
+/* Badge premium di header profil */
+.profil-badge-premium {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: linear-gradient(135deg, #ffd700, #ff9500);
+  color: #4a2c00; font-weight: 700; font-size: 12px;
+  padding: 4px 10px; border-radius: 999px; margin-left: 8px;
+}
+
+/* ---------- Pemilih Tema di Profil ---------- */
+.pemilih-tema { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.tema-item {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 12px 14px; border-radius: 12px; cursor: pointer;
+  border: 2px solid #333; background: #1a1a1a; min-width: 84px;
+  transition: transform .15s, border-color .15s;
+}
+.tema-item:hover { transform: translateY(-2px); }
+.tema-item.aktif { border-color: #5D9C41; }
+.tema-item.kunci { opacity: .55; cursor: not-allowed; }
+.tema-item .tema-pratinjau {
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 2px solid rgba(255,255,255,.15);
+}
+.tema-item .tema-nama { font-size: 11px; color: #ccc; }
+.tema-item .tema-kunci { font-size: 10px; color: #ffd700; }
+
+/* ---------- Bebas Iklan untuk Premium ---------- */
+.is-premium .slot-iklan,
+.is-premium [class*="iklan"],
+.is-premium [id*="iklan"] { display: none !important; }
+
+/* ==============================================
+   TEMA — ubah variabel aksen utama
+   ============================================== */
+:root { --premium-accent: #5D9C41; }
+
+/* Tema: Ultra Gelap (gratis) */
+.tema-gelap { background: #000 !important; }
+.tema-gelap body, .tema-gelap { background-color: #000 !important; }
+.tema-gelap .kartu-addon, .tema-gelap .kartu-detail, .tema-gelap .login-card,
+.tema-gelap .owner-section-card, .tema-gelap .profil-card { background: #0d0d0d !important; border-color: #222 !important; }
+
+/* Tema: Nether (Premium) — oranye/merah api */
+.tema-nether { --premium-accent: #ff5a36; }
+.tema-nether body { background: radial-gradient(ellipse at top, #2a0a0a 0%, #0a0a0a 60%) !important; }
+.tema-nether .tombol-utama, .tema-nether .tombol-unduh, .tema-nether .tombol-like.sudah {
+  background: linear-gradient(135deg, #ff5a36, #c21807) !important; border-color: #ff5a36 !important;
+}
+.tema-nether a, .tema-nether .tombol-bagi-detail:hover { color: #ff7a50 !important; }
+.tema-nether .badge-role, .tema-nether .tipe-file { background: rgba(255,90,54,.15) !important; color: #ff8a66 !important; }
+
+/* Tema: The End (Premium) — ungu magis */
+.tema-end { --premium-accent: #a855f7; }
+.tema-end body { background: radial-gradient(ellipse at top, #1a0a2e 0%, #0a0a0f 60%) !important; }
+.tema-end .tombol-utama, .tema-end .tombol-unduh, .tema-end .tombol-like.sudah {
+  background: linear-gradient(135deg, #a855f7, #6d28d9) !important; border-color: #a855f7 !important;
+}
+.tema-end a, .tema-end .tombol-bagi-detail:hover { color: #c084fc !important; }
+.tema-end .badge-role, .tema-end .tipe-file { background: rgba(168,85,247,.15) !important; color: #c084fc !important; }
+
+/* Tema: Emerald (Premium) — hijau zamrud */
+.tema-emerald { --premium-accent: #10b981; }
+.tema-emerald body { background: radial-gradient(ellipse at top, #06231a 0%, #070a09 60%) !important; }
+.tema-emerald .tombol-utama, .tema-emerald .tombol-unduh, .tema-emerald .tombol-like.sudah {
+  background: linear-gradient(135deg, #10b981, #047857) !important; border-color: #10b981 !important;
+}
+.tema-emerald a, .tema-emerald .tombol-bagi-detail:hover { color: #34d399 !important; }
+.tema-emerald .badge-role, .tema-emerald .tipe-file { background: rgba(16,185,129,.15) !important; color: #34d399 !important; }
