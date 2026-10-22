@@ -3370,5 +3370,17 @@
     "ukuran": "395 KB",
     "tanggal unggah": "20 Oktober 2026",
     "description": "Aktifkan kemampuanmu untuk membekukan musuh dan lepaskan. Biarkan mereka tahu bahwa kamu dapat membekukan mereka hingga mati. Lemparkan gletser yang dahsyat. Bekukan musuh dan perlambat gerakan mereka."
+  },
+  "aria_girlfriend_companion": {
+    "slug": "aria_girlfriend_companion",
+    "nama file": "Aria Girlfriend Companion",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-22-36bc2027-fa62-4dfd-a9dc-9201b80d855a.jpg",
+    "link download": "https://www.mediafire.com/file/w02nmjw798xviyq/Aria_Girlfriend_Companion_v2.0.0.mcaddon/file",
+    "versi mc": "1.26+",
+    "ukuran": "500 KB",
+    "tanggal unggah": "22 Oktober 2026",
+    "description": "Hadirkan Aria, pendamping yang setia dan interaktif, ke dunia Minecraft Anda! Addon ini memperkenalkan entitas pacar kustom baru lengkap dengan perilaku dan tekstur khusus untuk menemani Anda dan membantu Anda dalam petualangan bertahan hidup."
   }
 }
