@@ -3382,5 +3382,17 @@
     "ukuran": "500 KB",
     "tanggal unggah": "22 Oktober 2026",
     "description": "Hadirkan Aria, pendamping yang setia dan interaktif, ke dunia Minecraft Anda! Addon ini memperkenalkan entitas pacar kustom baru lengkap dengan perilaku dan tekstur khusus untuk menemani Anda dan membantu Anda dalam petualangan bertahan hidup."
+  },
+  "better_on_bedrock": {
+    "slug": "better_on_bedrock",
+    "nama file": "Better on Bedrock v1.2.1",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-23-ca6550d6-6afd-4864-8f6d-fd19b810158f.png",
+    "link download": "https://files.catbox.moe/aruan3.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "76.48 MB",
+    "tanggal unggah": "23 Oktober 2026",
+    "description": "Better on Bedrock adalah proyek ekspansi komprehensif yang dirancang untuk meningkatkan dan memperluas pengalaman Minecraft: Bedrock Edition. Proyek ini berfokus pada penyediaan tambahan gameplay yang lebih baik, peningkatan progres, dan konten yang seimbang sambil tetap mempertahankan nuansa inti Minecraft."
   }
 }
