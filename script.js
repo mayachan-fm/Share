@@ -60,6 +60,30 @@ let batasPilihanAddon = 8;
 const jumlahTambahPilihanAddon = 8;
 let daftarTerfilter = null;        // null = tidak ada pencarian/kategori aktif
 let filterSebelumnyaAktif = false; // hindari render ulang "Semua Koleksi" tiap ketik
+// === PAGINASI SEMUA KOLEKSI ===
+const ITEM_PER_HALAMAN = 20;
+let halamanAktif = 1;
+let dataSaatIniUntukPaginasi = [];
+// ==============================================
+// SUNTIK CSS PAGINASI (sesuai tema: gelap + aksen merah)
+// ==============================================
+(function suntikCssPaginasi() {
+    if (document.getElementById('css-paginasi-addon')) return;
+    const css = `
+    .kontrol-paginasi { margin-top: 8px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 10px 0 20px; }
+    .info-paginasi { font-size: 12px; color: #b0b0b0; }
+    .baris-paginasi { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
+    .tombol-paginasi { min-width: 40px; padding: 9px 12px; border-radius: 8px; border: 2px solid #333; background: #1a1a1a; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; transition: all .2s ease; display: inline-flex; align-items: center; gap: 6px; }
+    .tombol-paginasi:hover:not(:disabled) { border-color: #ff3b30; color: #ff3b30; }
+    .tombol-paginasi.aktif { background: #ff3b30; border-color: #ff3b30; color: #fff; }
+    .tombol-paginasi:disabled { opacity: .35; cursor: not-allowed; }
+    .titik-paginasi { color: #b0b0b0; padding: 0 4px; font-size: 14px; }
+    `;
+    const style = document.createElement('style');
+    style.id = 'css-paginasi-addon';
+    style.textContent = css;
+    document.head.appendChild(style);
+})();
 function tampilkanAddonDisukaiDariUrl() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("disukai") !== "1") return false;
@@ -206,18 +230,24 @@ function aturTabTopAddon() {
     });
 }
 // ==============================================
-// TAMPILKAN DAFTAR UTAMA
+// TAMPILKAN DAFTAR UTAMA — DENGAN PAGINASI (20 per halaman)
 // ==============================================
-function tampilkanDaftar(dataYangDitampilkan) {
+function tampilkanDaftar(dataYangDitampilkan, resetHalaman = true) {
+    if (resetHalaman) halamanAktif = 1;
+    dataSaatIniUntukPaginasi = dataYangDitampilkan;
     const wadah = document.getElementById('wadah-addon');
     wadah.innerHTML = '';
     if (dataYangDitampilkan.length === 0) {
         wadah.innerHTML = `<div class="pesan-hilang"><i class="fa fa-search-minus"></i><p>Addon tidak ditemukan</p></div>`;
         return;
     }
+    const totalHalaman = Math.max(1, Math.ceil(dataYangDitampilkan.length / ITEM_PER_HALAMAN));
+    if (halamanAktif > totalHalaman) halamanAktif = totalHalaman;
+    const mulaiIdx = (halamanAktif - 1) * ITEM_PER_HALAMAN;
+    const iris = dataYangDitampilkan.slice(mulaiIdx, mulaiIdx + ITEM_PER_HALAMAN);
     const fragmen = document.createDocumentFragment();
     const daftarLike = ambilDaftarLikeLokal();
-    dataYangDitampilkan.forEach((item) => {
+    iris.forEach((item) => {
         const kartu = document.createElement('div');
         kartu.className = 'kartu-addon';
         kartu.dataset.kategori = item.kategori || 'lainnya';
@@ -281,6 +311,76 @@ function tampilkanDaftar(dataYangDitampilkan) {
         fragmen.appendChild(kartu);
     });
     wadah.appendChild(fragmen);
+    // Tampilkan kontrol paginasi hanya jika lebih dari 1 halaman.
+    if (totalHalaman > 1) {
+        wadah.appendChild(buatKontrolPaginasi(totalHalaman));
+    }
+}
+// ==============================================
+// KONTROL PAGINASI — Sebelumnya / Nomor / Berikutnya
+// ==============================================
+function buatKontrolPaginasi(totalHalaman) {
+    const nav = document.createElement('div');
+    nav.className = 'kontrol-paginasi';
+
+    const info = document.createElement('div');
+    info.className = 'info-paginasi';
+    info.textContent = `Halaman ${halamanAktif} dari ${totalHalaman}`;
+    nav.appendChild(info);
+
+    const baris = document.createElement('div');
+    baris.className = 'baris-paginasi';
+
+    const prev = document.createElement('button');
+    prev.type = 'button';
+    prev.className = 'tombol-paginasi';
+    prev.innerHTML = '<i class="fa fa-arrow-left"></i> Sebelumnya';
+    prev.disabled = halamanAktif === 1;
+    prev.addEventListener('click', () => pergiKeHalaman(halamanAktif - 1));
+    baris.appendChild(prev);
+
+    daftarNomorHalaman(totalHalaman, halamanAktif).forEach((n) => {
+        if (n === '...') {
+            const titik = document.createElement('span');
+            titik.className = 'titik-paginasi';
+            titik.textContent = '…';
+            baris.appendChild(titik);
+        } else {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'tombol-paginasi nomor' + (n === halamanAktif ? ' aktif' : '');
+            btn.textContent = n;
+            btn.addEventListener('click', () => pergiKeHalaman(n));
+            baris.appendChild(btn);
+        }
+    });
+
+    const next = document.createElement('button');
+    next.type = 'button';
+    next.className = 'tombol-paginasi';
+    next.innerHTML = 'Berikutnya <i class="fa fa-arrow-right"></i>';
+    next.disabled = halamanAktif === totalHalaman;
+    next.addEventListener('click', () => pergiKeHalaman(halamanAktif + 1));
+    baris.appendChild(next);
+
+    nav.appendChild(baris);
+    return nav;
+}
+function pergiKeHalaman(n) {
+    halamanAktif = n;
+    tampilkanDaftar(dataSaatIniUntukPaginasi, false);
+    document.querySelector('.daftar-addon')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function daftarNomorHalaman(total, saatIni) {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const hal = [1];
+    const mulai = Math.max(2, saatIni - 1);
+    const akhir = Math.min(total - 1, saatIni + 1);
+    if (mulai > 2) hal.push('...');
+    for (let i = mulai; i <= akhir; i++) hal.push(i);
+    if (akhir < total - 1) hal.push('...');
+    hal.push(total);
+    return hal;
 }
 // ==============================================
 // FUNGSI FILTER & CARI
@@ -330,7 +430,7 @@ function terapkanFilterDanCari() {
         return cocokKat && cocokKata;
     });
     // Pencarian + kategori sekarang mengubah bagian "Pilihan Addon" (atas).
-    // "Semua Koleksi" tetap menampilkan katalog lengkap.
+    // "Semua Koleksi" tetap menampilkan katalog lengkap (ter-paginasi).
     const adaFilter = kunci !== '' || filterAktif !== 'semua';
     daftarTerfilter = adaFilter ? hasil : null;
     batasPilihanAddon = 8;
