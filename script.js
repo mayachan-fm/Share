@@ -10,27 +10,21 @@ const firebaseConfig = {
   messagingSenderId: "769674524186",
   appId: "1:769674524186:web:05e8c5f4e34867980b03a3"
 };
-
 import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { auth, onAuthStateChanged } from "./auth.js";
 import { getDatabase, ref, get, set, increment } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
-
 const app = getApp();
 const db = getDatabase(app);
-
 let penggunaLogin = null;
 let authSiap = false;
-
 onAuthStateChanged(auth, (user) => {
     penggunaLogin = user;
     authSiap = true;
     if (Object.keys(semuaDataAddon).length) terapkanFilterDanCari();
 });
-
 function kunciLikePengguna() {
     return penggunaLogin ? `sudahLike_${penggunaLogin.uid}` : "sudahLike_tidak_login";
 }
-
 function ambilDaftarLikeLokal() {
     if (!penggunaLogin) return [];
     try {
@@ -39,26 +33,6 @@ function ambilDaftarLikeLokal() {
         return [];
     }
 }
-// ===== Premium: cache status premium untuk batas like (50 untuk gratis, unlimited premium) =====
-let _cachePremiumUid = null, _cachePremiumAktif = false;
-async function apakahPenggunaPremium(user) {
-    if (!user?.uid) return false;
-    if (_cachePremiumUid === user.uid) return _cachePremiumAktif;
-    try {
-        const snap = await get(ref(db, `premium/${user.uid}`));
-        let aktif = false;
-        if (snap.exists()) {
-            const d = snap.val();
-            const tipe = String(d.tipe || '').toLowerCase();
-            const berakhir = (d.berakhir === null || d.berakhir === undefined || d.berakhir === '') ? null : Number(d.berakhir);
-            const dicabut = d.dicabutPada ? true : false;
-            aktif = dicabut ? false : (tipe === 'permanen' || berakhir === null || (Number.isFinite(berakhir) && Date.now() < berakhir));
-        }
-        _cachePremiumUid = user.uid; _cachePremiumAktif = aktif;
-        return aktif;
-    } catch (e) { return false; }
-}
-
 function tampilkanKartuLogin() {
     if (document.getElementById("kartu-login-overlay")) return;
     const overlay = document.createElement("div");
@@ -76,7 +50,6 @@ function tampilkanKartuLogin() {
     overlay.querySelector(".login-tutup").addEventListener("click", () => overlay.remove());
     overlay.addEventListener("click", e => { if (e.target === overlay) overlay.remove(); });
 }
-
 let semuaDataAddon = {};
 let daftarAddon = [];
 let filterAktif = 'semua';
@@ -85,43 +58,22 @@ let urutanDaftar = 'terbaru';
 let versiAktif = 'semua';
 let batasPilihanAddon = 8;
 const jumlahTambahPilihanAddon = 8;
-
-// Ambil jumlah akun pengguna dari Firebase Authentication melalui API server.
-async function muatJumlahPengguna() {
-    const elemen = document.getElementById('jumlah-pengguna-total');
-    if (!elemen) return;
-
-    try {
-        const respon = await fetch('/api/public-stats', { cache: 'no-store' });
-        if (!respon.ok) throw new Error(`HTTP ${respon.status}`);
-        const data = await respon.json();
-        if (!data || data.ok !== true || !Number.isFinite(Number(data.totalPengguna))) {
-            throw new Error('Data jumlah pengguna tidak valid.');
-        }
-        elemen.textContent = Number(data.totalPengguna).toLocaleString('id-ID');
-    } catch (error) {
-        console.warn('⚠️ Jumlah pengguna tidak dapat dimuat:', error);
-        elemen.textContent = '—';
-    }
-}
-
+let daftarTerfilter = null;        // null = tidak ada pencarian/kategori aktif
+let filterSebelumnyaAktif = false; // hindari render ulang "Semua Koleksi" tiap ketik
 function tampilkanAddonDisukaiDariUrl() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("disukai") !== "1") return false;
-
     const wadah = document.getElementById("wadah-addon");
     if (!wadah) return false;
-
     const disukai = ambilDaftarLikeLokal();
     const hasil = penggunaLogin ? daftarAddon.filter(item => disukai.includes(item.slug)) : [];
-
     filterAktif = "semua";
+    daftarTerfilter = null;
+    filterSebelumnyaAktif = false;
     document.querySelectorAll(".btn-kategori").forEach(b => b.classList.remove("aktif"));
     document.querySelector('.btn-kategori[data-filter="semua"]')?.classList.add("aktif");
-
     const judul = document.querySelector(".daftar-addon .judul-bagian");
     if (judul) judul.innerHTML = "👍 Addon Disukai";
-
     if (!penggunaLogin) {
         wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-user"></i><p>Login diperlukan</p><span>Silakan login untuk melihat addon yang kamu sukai.</span><br><a href="profil.html" class="tombol-utama tombol-login-lanjut">Login / Daftar</a></div>`;
     } else {
@@ -130,46 +82,6 @@ function tampilkanAddonDisukaiDariUrl() {
     document.querySelector(".daftar-addon")?.scrollIntoView({ behavior: "smooth", block: "start" });
     return true;
 }
-
-// Form laporan addon — laporan disimpan melalui API server.
-function bukaFormLaporan(slug, nama) {
-    let modal = document.getElementById("modal-laporkan-addon");
-    if (!modal) {
-        modal = document.createElement("div");
-        modal.id = "modal-laporkan-addon";
-        modal.className = "login-overlay modal-laporan-overlay";
-        modal.innerHTML = `<form class="login-card form-laporan-addon" id="form-laporkan-addon"><button class="login-tutup" type="button" aria-label="Tutup">×</button><div class="profil-avatar"><i class="fa fa-flag"></i></div><h3>Laporkan Addon</h3><p id="nama-addon-laporan"></p><label>Alasan laporan<select id="alasan-laporan" required><option value="">Pilih alasan</option><option>Link download bermasalah</option><option>Gambar tidak sesuai</option><option>Informasi atau deskripsi salah</option><option>Addon bermasalah / tidak berfungsi</option><option>Konten tidak pantas atau berbahaya</option><option>Lainnya</option></select></label><label>Pesan laporan<textarea id="pesan-laporan" maxlength="800" rows="4" required placeholder="Jelaskan masalah yang kamu temukan (10–800 karakter)..."></textarea></label><small class="batas-laporan">Minimal 10 karakter. Laporan hanya dapat dikirim oleh pengguna yang sudah login.</small><div id="status-laporan-form" role="status"></div><button class="tombol-utama tombol-login-lanjut" type="submit">Kirim laporan</button></form>`;
-        document.body.appendChild(modal);
-        modal.querySelector(".login-tutup").addEventListener("click", () => modal.remove());
-        modal.addEventListener("click", e => { if (e.target === modal) modal.remove(); });
-        modal.querySelector("form").addEventListener("submit", async e => {
-            e.preventDefault();
-            const form=e.currentTarget, button=form.querySelector('button[type="submit"]'), status=document.getElementById("status-laporan-form");
-            const user=penggunaLogin;
-            if (!authSiap || !user) { status.textContent="Silakan login terlebih dahulu untuk mengirim laporan."; status.className="status-laporan-error"; return; }
-            const alasan=document.getElementById("alasan-laporan").value;
-            const pesan=document.getElementById("pesan-laporan").value.trim();
-            if (!alasan || pesan.length<10) { status.textContent="Pilih alasan dan tulis pesan minimal 10 karakter."; status.className="status-laporan-error"; return; }
-            button.disabled=true; button.textContent="Mengirim...";
-            try {
-                const token=await user.getIdToken();
-                const response=await fetch("/api/notifications?action=report",{method:"POST",headers:{"Content-Type":"application/json","Authorization":`Bearer ${token}`},body:JSON.stringify({slug:form.dataset.slug,reason:alasan,message:pesan})});
-                const result=await response.json();
-                if(!response.ok || !result.ok) throw new Error(result.error || "Laporan gagal dikirim.");
-                status.textContent="Laporan berhasil dikirim. Terima kasih sudah membantu!"; status.className="status-laporan-sukses"; form.reset();
-                setTimeout(()=>modal.remove(),1400);
-            } catch(error) { status.textContent=error.message; status.className="status-laporan-error"; }
-            finally { button.disabled=false; button.textContent="Kirim laporan"; }
-        });
-    }
-    modal.querySelector("#nama-addon-laporan").textContent=nama;
-    modal.querySelector("form").dataset.slug=slug;
-    modal.querySelector("#status-laporan-form").textContent="";
-    modal.querySelector("form").reset();
-    modal.style.display="flex";
-    if (!penggunaLogin) modal.querySelector("#status-laporan-form").textContent="Login diperlukan untuk mengirim laporan.";
-}
-
 // ==============================================
 // MUAT DATA AWAL
 // ==============================================
@@ -178,11 +90,10 @@ async function tampilkanAddon() {
     try {
         const respon = await fetch('/api/catalog', { cache: 'no-store' });
         if (!respon.ok) throw new Error(`File tidak ditemukan (Kode: ${respon.status})`);
-        
+
         semuaDataAddon = await respon.json();
         daftarAddon = Object.values(semuaDataAddon);
         console.log("✅ Data berhasil dimuat:", semuaDataAddon);
-
         // Ambil data unduhan & like dari Firebase
         try {
             const unduhRef = ref(db, 'jumlah_unduh');
@@ -190,7 +101,6 @@ async function tampilkanAddon() {
             const [snapUnduh, snapLike] = await Promise.all([get(unduhRef), get(likeRef)]);
             const dataUnduh = snapUnduh.exists() ? snapUnduh.val() : {};
             const dataLike = snapLike.exists() ? snapLike.val() : {};
-
             Object.entries(semuaDataAddon).forEach(([idAddon, item]) => {
                 item['jumlah unduh'] = dataUnduh[idAddon] || item['jumlah unduh'] || 0;
                 item['jumlah like'] = dataLike[idAddon] || item['jumlah like'] || 0;
@@ -198,13 +108,10 @@ async function tampilkanAddon() {
         } catch (firebaseErr) {
             console.warn("⚠️ Data Firebase tidak dimuat:", firebaseErr);
         }
-
         // Update statistik total
         document.getElementById('jumlah-total').textContent = daftarAddon.length;
         const totalUnduh = daftarAddon.reduce((jml, item) => jml + (item['jumlah unduh'] || 0), 0);
         document.getElementById('jumlah-unduh-total').textContent = totalUnduh;
-        muatJumlahPengguna();
-
         tampilkanTopAddon();
         wadah.innerHTML = '';
         tampilkanDaftar(daftarAddon);
@@ -216,22 +123,20 @@ async function tampilkanAddon() {
         wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-triangle"></i><p>Belum bisa memuat data</p><span>Pastikan katalog server tersedia & formatnya benar</span><br><small>Detail: ${error.message}</small></div>`;
     }
 }
-
 // ==============================================
 // TAMPILKAN TOP ADDON — DENGAN PILIHAN TAB
 // ==============================================
 function tampilkanTopAddon() {
     const wadah = document.getElementById('wadah-top');
     if (!wadah || daftarAddon.length === 0) return;
-
-    // Filter + urutan di sini KHUSUS untuk bagian “Pilihan Addon”.
-    // “Semua Koleksi” tidak ikut berubah saat Versi Minecraft / Urutkan diganti.
-    let sumber = [...daftarAddon];
-
+    // Sumber: hasil pencarian/kategori jika aktif, jika tidak pakai seluruh katalog.
+    const sumberAwal = daftarTerfilter !== null ? daftarTerfilter : daftarAddon;
+    const judulEl = document.querySelector('.bagian-top-addon .judul-bagian');
+    if (judulEl) judulEl.innerHTML = daftarTerfilter !== null ? '🔍 Hasil Pencarian' : '🔥 Pilihan Addon';
+    let sumber = [...sumberAwal];
     if (versiAktif !== 'semua') {
         sumber = sumber.filter(item => String(item['versi mc'] || '').trim() === versiAktif);
     }
-
     let terurut;
     if (urutanDaftar === 'terbanyak') {
         terurut = sumber.sort((a, b) => (b['jumlah unduh'] || 0) - (a['jumlah unduh'] || 0));
@@ -243,21 +148,17 @@ function tampilkanTopAddon() {
         // Posisi paling bawah di katalog dianggap paling baru.
         terurut = sumber.reverse();
     }
-
     const totalTersedia = terurut.length;
     terurut = terurut.slice(0, batasPilihanAddon);
-
     wadah.innerHTML = '';
     if (terurut.length === 0) {
         wadah.innerHTML = `<div class="pesan-hilang"><i class="fa fa-search-minus"></i><p>Addon tidak ditemukan</p></div>`;
         return;
     }
-
     terurut.forEach((item) => {
         const kartu = document.createElement('div');
         kartu.className = 'kartu-addon kartu-geser';
         kartu.dataset.kategori = item.kategori || 'lainnya';
-
         kartu.innerHTML = `
             <div class="gambar-wadah">
                 <img src="${item['link gambar']}" alt="${item['nama file']}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/300x160/ff3b30/ffffff?text=Gambar+Tidak+Ada'">
@@ -273,7 +174,6 @@ function tampilkanTopAddon() {
         kartu.addEventListener('click', () => window.location.href = `detail.html?slug=${item.slug}`);
         wadah.appendChild(kartu);
     });
-
     // Tombol panah di ujung Pilihan Addon untuk menampilkan batch berikutnya.
     if (batasPilihanAddon < totalTersedia) {
         const tombolLanjut = document.createElement('button');
@@ -292,7 +192,6 @@ function tampilkanTopAddon() {
         wadah.appendChild(tombolLanjut);
     }
 }
-
 // ==============================================
 // FUNGSI PILIHAN TAB — PALING BANYAK / BARU DIUNGGAH
 // ==============================================
@@ -306,7 +205,6 @@ function aturTabTopAddon() {
         });
     });
 }
-
 // ==============================================
 // TAMPILKAN DAFTAR UTAMA
 // ==============================================
@@ -317,20 +215,16 @@ function tampilkanDaftar(dataYangDitampilkan) {
         wadah.innerHTML = `<div class="pesan-hilang"><i class="fa fa-search-minus"></i><p>Addon tidak ditemukan</p></div>`;
         return;
     }
-
     const fragmen = document.createDocumentFragment();
     const daftarLike = ambilDaftarLikeLokal();
-
     dataYangDitampilkan.forEach((item) => {
         const kartu = document.createElement('div');
         kartu.className = 'kartu-addon';
         kartu.dataset.kategori = item.kategori || 'lainnya';
-
         const tipeFile = item['type file'] ? `<span class="tipe-file">${item['type file']}</span>` : '';
         const linkDetail = `detail.html?slug=${encodeURIComponent(item.slug)}`;
         const sudahDiLike = daftarLike.includes(item.slug);
         const jumlahLike = item['jumlah like'] || 0;
-
         kartu.innerHTML = `
             <div class="gambar-wadah">
                 ${tipeFile}
@@ -352,7 +246,6 @@ function tampilkanDaftar(dataYangDitampilkan) {
                 </div>
             </div>
         `;
-
         kartu.addEventListener('click', e => {
             if (!e.target.closest('.tombol-bagi') && !e.target.closest('.tombol-like')) window.location.href = linkDetail;
         });
@@ -372,10 +265,6 @@ function tampilkanDaftar(dataYangDitampilkan) {
             const kunci = kunciLikePengguna();
             const daftar = ambilDaftarLikeLokal();
             if (!daftar.includes(slug)) {
-                if (daftar.length >= 50 && !(await apakahPenggunaPremium(penggunaLogin))) {
-                    alert('Batas maksimal 50 addon disukai untuk akun gratis.\n\nUpgrade Premium untuk unlimited likes + tema eksklusif + bebas iklan! 👑');
-                    return;
-                }
                 daftar.push(slug);
                 localStorage.setItem(kunci, JSON.stringify(daftar));
                 const idAddon = Object.keys(semuaDataAddon).find(k => semuaDataAddon[k].slug === slug);
@@ -391,10 +280,8 @@ function tampilkanDaftar(dataYangDitampilkan) {
         });
         fragmen.appendChild(kartu);
     });
-
     wadah.appendChild(fragmen);
 }
-
 // ==============================================
 // FUNGSI FILTER & CARI
 // ==============================================
@@ -408,7 +295,6 @@ function aturFilterKategori() {
         });
     });
 }
-
 function isiPilihanVersi() {
     const select = document.getElementById('filter-versi');
     if (!select) return;
@@ -417,7 +303,6 @@ function isiPilihanVersi() {
     select.innerHTML = '<option value="semua">Semua versi</option>' + versi.map(v => `<option value="${encodeURIComponent(v)}">${v}</option>`).join('');
     select.value = versiAktif === 'semua' ? 'semua' : encodeURIComponent(versiAktif);
 }
-
 function terapkanUrutan(data) {
     const hasil = [...data];
     if (urutanDaftar === 'terbanyak') return hasil.sort((a, b) => (b['jumlah unduh'] || 0) - (a['jumlah unduh'] || 0));
@@ -425,13 +310,11 @@ function terapkanUrutan(data) {
     if (urutanDaftar === 'nama') return hasil.sort((a, b) => String(a['nama file'] || '').localeCompare(String(b['nama file'] || ''), undefined, { sensitivity: 'base' }));
     return hasil.reverse();
 }
-
 let timerPencarian = null;
 function jadwalkanPencarian() {
     clearTimeout(timerPencarian);
     timerPencarian = setTimeout(terapkanFilterDanCari, 180);
 }
-
 function terapkanFilterDanCari() {
     const el = document.getElementById('kotak-cari');
     if (!el) return;
@@ -446,12 +329,20 @@ function terapkanFilterDanCari() {
         const cocokKata = kunci === '' || nama.includes(kunci) || desc.includes(kunci) || tipe.includes(kunci) || versi.toLowerCase().includes(kunci) || kat.includes(kunci);
         return cocokKat && cocokKata;
     });
-
-    // Pencarian/kategori tetap memengaruhi “Semua Koleksi”.
-    // Versi Minecraft + Urutkan hanya untuk “Pilihan Addon”.
-    tampilkanDaftar(terapkanUrutan(hasil));
+    // Pencarian + kategori sekarang mengubah bagian "Pilihan Addon" (atas).
+    // "Semua Koleksi" tetap menampilkan katalog lengkap.
+    const adaFilter = kunci !== '' || filterAktif !== 'semua';
+    daftarTerfilter = adaFilter ? hasil : null;
+    batasPilihanAddon = 8;
+    tampilkanTopAddon();
+    // Sentuh Semua Koleksi hanya saat status filter berubah (bukan tiap ketik).
+    if (adaFilter !== filterSebelumnyaAktif) {
+        filterSebelumnyaAktif = adaFilter;
+        const judulKoleksi = document.querySelector('.daftar-addon .judul-bagian');
+        if (judulKoleksi) judulKoleksi.innerHTML = '📁 Semua Koleksi';
+        tampilkanDaftar(terapkanUrutan(daftarAddon));
+    }
 }
-
 function salinLink(link) {
     navigator.clipboard.writeText(link).then(() => {
         const notif = document.getElementById('notif-salin');
@@ -459,9 +350,6 @@ function salinLink(link) {
         setTimeout(() => notif.classList.remove('tampil'), 2500);
     });
 }
-
-
-
 // ==============================================
 // NAVIGASI BAWAH — BERANDA / CARI / DISUKAI / PROFIL
 // ==============================================
@@ -469,7 +357,6 @@ function aturNavigasiBawah() {
     document.querySelectorAll('.navigasi-bawah .nav-item').forEach(item => {
         item.addEventListener('click', (e) => {
             const nav = item.dataset.nav;
-
             if (nav === 'cari') {
                 e.preventDefault();
                 const input = document.getElementById('kotak-cari');
@@ -480,14 +367,17 @@ function aturNavigasiBawah() {
                     window.location.href = 'index.html#kotak-cari';
                 }
             }
-
             if (nav === 'disukai') {
                 e.preventDefault();
                 const disukai = ambilDaftarLikeLokal();
                 filterAktif = 'semua';
+                // Kembalikan Pilihan Addon ke tampilan normal saat buka menu Disukai.
+                daftarTerfilter = null;
+                filterSebelumnyaAktif = false;
+                batasPilihanAddon = 8;
+                tampilkanTopAddon();
                 document.querySelectorAll('.btn-kategori').forEach(b => b.classList.remove('aktif'));
                 document.querySelector('.btn-kategori[data-filter="semua"]')?.classList.add('aktif');
-
                 const hasil = daftarAddon.filter(item => disukai.includes(item.slug));
                 const judul = document.querySelector('.daftar-addon .judul-bagian');
                 if (judul) judul.innerHTML = '👍 Addon Disukai';
@@ -497,7 +387,6 @@ function aturNavigasiBawah() {
         });
     });
 }
-
 // ==============================================
 // MULAI SEMUA FUNGSI
 // ==============================================
