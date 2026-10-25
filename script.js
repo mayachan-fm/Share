@@ -84,6 +84,25 @@ let dataSaatIniUntukPaginasi = [];
     style.textContent = css;
     document.head.appendChild(style);
 })();
+// ==============================================
+// PARSING WAKTU UNTUK SORTING "TERBARU" (upload + edit)
+// ==============================================
+const BULAN_INDO = { januari:0, februari:1, feb:1, maret:2, mar:2, april:3, apr:3, mei:4, juni:5, jun:5, juli:6, jul:6, agustus:7, agu:7, september:8, sep:8, oktober:9, okt:9, november:10, nov:10, desember:11, des:11 };
+function parseTanggalIndo(str) {
+    const m = String(str || '').trim().toLowerCase().match(/(\d{1,2})\s+([a-z]+)\s+(\d{4})/);
+    if (!m) return NaN;
+    const bulan = BULAN_INDO[m[2]];
+    if (bulan === undefined) return NaN;
+    return new Date(Number(m[3]), bulan, Number(m[1])).getTime();
+}
+// Waktu terakhir diperbarui: utamakan "tanggal diperbarui" (hanya ada jika pernah diedit),
+// fallback ke "tanggal unggah".
+function waktuTerbaru(item) {
+    const tEdit = parseTanggalIndo(item && item['tanggal diperbarui']);
+    if (!isNaN(tEdit)) return tEdit;
+    const t = parseTanggalIndo(item && item['tanggal unggah']);
+    return isNaN(t) ? 0 : t;
+}
 function tampilkanAddonDisukaiDariUrl() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("disukai") !== "1") return false;
@@ -169,8 +188,8 @@ function tampilkanTopAddon() {
     } else if (urutanDaftar === 'nama') {
         terurut = sumber.sort((a, b) => String(a['nama file'] || '').localeCompare(String(b['nama file'] || ''), undefined, { sensitivity: 'base' }));
     } else {
-        // Posisi paling bawah di katalog dianggap paling baru.
-        terurut = sumber.reverse();
+        // Terbaru: urutkan berdasarkan waktu terakhir diperbarui (edit > upload).
+        terurut = sumber.sort((a, b) => waktuTerbaru(b) - waktuTerbaru(a));
     }
     const totalTersedia = terurut.length;
     terurut = terurut.slice(0, batasPilihanAddon);
@@ -408,7 +427,8 @@ function terapkanUrutan(data) {
     if (urutanDaftar === 'terbanyak') return hasil.sort((a, b) => (b['jumlah unduh'] || 0) - (a['jumlah unduh'] || 0));
     if (urutanDaftar === 'like') return hasil.sort((a, b) => (b['jumlah like'] || 0) - (a['jumlah like'] || 0));
     if (urutanDaftar === 'nama') return hasil.sort((a, b) => String(a['nama file'] || '').localeCompare(String(b['nama file'] || ''), undefined, { sensitivity: 'base' }));
-    return hasil.reverse();
+    // Terbaru: urutkan berdasarkan waktu terakhir diperbarui (edit > upload).
+    return hasil.sort((a, b) => waktuTerbaru(b) - waktuTerbaru(a));
 }
 let timerPencarian = null;
 function jadwalkanPencarian() {

@@ -10,27 +10,21 @@ const firebaseConfig = {
   messagingSenderId: "769674524186",
   appId: "1:769674524186:web:05e8c5f4e34867980b03a3"
 };
-
 import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { auth, onAuthStateChanged, ambilRole } from "./auth.js";
 import { cekAksesDownload } from "./download-access.js";
 import { ambilArtikelAcak } from "./articles.js";
-import { badgePremiumHtml, ambilSetPremiumUid, apakahUidPremiumSync } from "./premium-ui.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
-
 const app = getApp();
 const db = getDatabase(app);
-
 let usuarioActual = null;
 let authResuelta = false;
 let privilegedDownloadToken = null;
-
 onAuthStateChanged(auth, (user) => {
     usuarioActual = user;
     authResuelta = true;
     actualizarAksesKomentar();
 });
-
 function actualizarAksesKomentar() {
     const form = document.querySelector(".form-komentar");
     if (!form) return;
@@ -55,7 +49,6 @@ function actualizarAksesKomentar() {
             </div>`;
     }
 }
-
 function siapkanInputKomentar() {
     const input = document.getElementById("input-komentar");
     const jumlah = document.getElementById("jumlah-karakter");
@@ -63,30 +56,25 @@ function siapkanInputKomentar() {
     input.addEventListener("input", () => jumlah.textContent = `${input.value.length}/300`);
 }
 // ==============================================
-
 let idAddonSekarang = null;
-
 function bukaLaporanDetail(slug, nama) {
     let modal=document.getElementById('modal-laporkan-addon-detail');
     if(!modal){
       modal=document.createElement('div'); modal.id='modal-laporkan-addon-detail'; modal.className='login-overlay modal-laporan-overlay';
       modal.innerHTML=`<form class="login-card form-laporan-addon" id="form-laporkan-addon-detail"><button class="login-tutup" type="button" aria-label="Tutup">×</button><div class="profil-avatar"><i class="fa fa-flag"></i></div><h3>Laporkan Addon</h3><p id="nama-addon-laporan-detail"></p><label>Alasan laporan<select id="alasan-laporan-detail" required><option value="">Pilih alasan</option><option>Link download bermasalah</option><option>Gambar tidak sesuai</option><option>Informasi atau deskripsi salah</option><option>Addon bermasalah / tidak berfungsi</option><option>Konten tidak pantas atau berbahaya</option><option>Lainnya</option></select></label><label>Pesan laporan<textarea id="pesan-laporan-detail" maxlength="800" rows="4" required placeholder="Jelaskan masalah (10–800 karakter)..."></textarea></label><small class="batas-laporan">Login diperlukan. Maksimal satu laporan untuk addon yang sama setiap 10 menit.</small><div id="status-laporan-detail" role="status"></div><button class="tombol-utama tombol-login-lanjut" type="submit">Kirim laporan</button></form>`;
       document.body.appendChild(modal); modal.querySelector('.login-tutup').addEventListener('click',()=>modal.remove()); modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
-      modal.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,button=form.querySelector('button[type="submit"]'),status=document.getElementById('status-laporan-detail');if(!usuarioActual){status.textContent='Silakan login terlebih dahulu untuk mengirim laporan.';status.className='status-laporan-error';return;}const reason=document.getElementById('alasan-laporan-detail').value,message=document.getElementById('pesan-laporan-detail').value.trim();if(!reason||message.length<10){status.textContent='Pilih alasan dan tulis pesan minimal 10 karakter.';status.className='status-laporan-error';return;}button.disabled=true;button.textContent='Mengirim...';try{const token=await usuarioActual.getIdToken();const response=await fetch('/api/notifications?action=report',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({slug:form.dataset.slug,namaAddon:form.dataset.namaAddon||'',reason,message})});const teks=await response.text();let data;try{data=JSON.parse(teks);}catch(_){data={ok:false,error:'Server sibuk/timeout. Coba kirim lagi dalam beberapa detik.'};}if(!response.ok||!data.ok)throw new Error(data.error||'Laporan gagal dikirim.');status.textContent='Laporan berhasil dikirim. Terima kasih!';status.className='status-laporan-sukses';form.reset();setTimeout(()=>modal.remove(),1400);}catch(error){status.textContent=error.message;status.className='status-laporan-error';}finally{button.disabled=false;button.textContent='Kirim laporan';}});
+      modal.querySelector('form').addEventListener('submit',async e=>{e.preventDefault();const form=e.currentTarget,button=form.querySelector('button[type="submit"]'),status=document.getElementById('status-laporan-detail');if(!usuarioActual){status.textContent='Silakan login terlebih dahulu untuk mengirim laporan.';status.className='status-laporan-error';return;}const reason=document.getElementById('alasan-laporan-detail').value,message=document.getElementById('pesan-laporan-detail').value.trim();if(!reason||message.length<10){status.textContent='Pilih alasan dan tulis pesan minimal 10 karakter.';status.className='status-laporan-error';return;}button.disabled=true;button.textContent='Mengirim...';try{const token=await usuarioActual.getIdToken();const response=await fetch('/api/notifications?action=report',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({slug:form.dataset.slug,reason,message})});const data=await response.json();if(!response.ok||!data.ok)throw new Error(data.error||'Laporan gagal dikirim.');status.textContent='Laporan berhasil dikirim. Terima kasih!';status.className='status-laporan-sukses';form.reset();setTimeout(()=>modal.remove(),1400);}catch(error){status.textContent=error.message;status.className='status-laporan-error';}finally{button.disabled=false;button.textContent='Kirim laporan';}});
     }
-    modal.querySelector('#nama-addon-laporan-detail').textContent=nama;modal.querySelector('form').dataset.slug=slug;modal.querySelector('form').dataset.namaAddon=nama;modal.querySelector('#status-laporan-detail').textContent='';modal.querySelector('form').reset();modal.style.display='flex';
+    modal.querySelector('#nama-addon-laporan-detail').textContent=nama;modal.querySelector('form').dataset.slug=slug;modal.querySelector('#status-laporan-detail').textContent='';modal.querySelector('form').reset();modal.style.display='flex';
 }
-
 async function tampilkanDetail() {
     const wadah = document.getElementById('isi-detail');
     const urlParams = new URLSearchParams(window.location.search);
     const slug = urlParams.get('slug'); // Baca slug dari URL
-
     if (!slug) {
         wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-circle"></i><p>Addon tidak ditemukan</p></div>`;
         return;
     }
-
     try {
         const detailHeaders = {};
         if (usuarioActual) {
@@ -95,7 +83,6 @@ async function tampilkanDetail() {
                 if (token) detailHeaders.Authorization = `Bearer ${token}`;
             } catch (_) {}
         }
-
         // Detail hanya mengambil satu addon. Untuk Premium/Admin/Owner, API sekaligus
         // menyiapkan token download singkat sehingga klik Download tidak perlu
         // memanggil /api/download-gate lagi.
@@ -106,23 +93,19 @@ async function tampilkanDetail() {
         if (!respon.ok) throw new Error('Gagal memuat katalog');
         const payload = await respon.json();
         if (!payload.ok || !payload.item) throw new Error(payload.error || 'Addon tidak ditemukan');
-
         const idAddon = payload.idAddon || slug;
         const item = payload.item;
         privilegedDownloadToken = payload.downloadAccessToken || null;
-
         if (!item || !idAddon) {
             wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-circle"></i><p>Data tidak ditemukan</p></div>`;
             return;
         }
-
         idAddonSekarang = idAddon; // Simpan ID untuk Firebase
         const linkDetail = window.location.href;
-        
+
         // Ambil jumlah unduh dari Firebase, bukan dari JSON
         const snapUnduh = await get(ref(db, `jumlah_unduh/${idAddon}`));
         let jumlahUnduh = snapUnduh.exists() ? snapUnduh.val() : 0;
-
         wadah.innerHTML = `
             <div class="kartu-detail">
                 <img src="${item['link gambar']}" alt="${item['nama file']}" class="detail-gambar" onerror="this.src='https://via.placeholder.com/700x400/5D9C41/ffffff?text=${encodeURIComponent(item['nama file'])}'">
@@ -137,15 +120,13 @@ async function tampilkanDetail() {
                             <button type="button" class="tombol-laporkan-addon tombol-laporkan-detail" id="tombol-laporkan-detail"><i class="fa fa-flag"></i> Laporkan</button>
                         </div>
                     </div>
-
                     <div class="detail-info">
                         <div class="info-item"><span>Versi MC</span>${item['versi mc'] || 'Tidak diketahui'}</div>
                         <div class="info-item"><span>Ukuran</span>${item['ukuran'] || 'Tidak diketahui'}</div>
                         <div class="info-item"><span>Tanggal Unggah</span>${item['tanggal unggah'] || 'Tidak diketahui'}</div>
+                        ${item['tanggal diperbarui'] ? `<div class="info-item"><span>Diperbarui</span>${item['tanggal diperbarui']}</div>` : ''}
                     </div>
-
                     <div class="detail-deskripsi">${item.description || 'Tidak ada deskripsi.'}</div>
-
                     <div class="tombol-aksi">
                         <button type="button" class="tombol-unduh" id="tombol-download-gate" data-id="${idAddonSekarang}">
                             <i class="fa fa-download"></i> Unduh File
@@ -157,12 +138,9 @@ async function tampilkanDetail() {
                 </div>
             </div>
         `;
-
         document.getElementById('tombol-laporkan-detail')?.addEventListener('click', () => bukaLaporanDetail(idAddonSekarang, item['nama file'] || 'Addon'));
-
         // Download Gate Stage P9 — server-side gate/session.
         const tombolGate = document.getElementById('tombol-download-gate');
-
         // Browser dapat mengembalikan halaman detail dari back-forward cache (bfcache).
         // Jika itu terjadi setelah download, tombol bisa ikut kembali dalam keadaan
         // disabled/hidden dari klik sebelumnya. Selalu pulihkan state tombol saat
@@ -174,11 +152,9 @@ async function tampilkanDetail() {
             tombolGate.dataset.ready = '';
             tombolGate.innerHTML = '<i class="fa fa-download"></i> Unduh File';
         }
-
         window.addEventListener('pageshow', () => {
             resetTombolDownload();
         });
-
         async function tokenHeaderOptional() {
             if (!usuarioActual) return {};
             try {
@@ -188,7 +164,6 @@ async function tampilkanDetail() {
                 return {};
             }
         }
-
         async function mulaiSesiDownload() {
             const headers = { 'Content-Type': 'application/json', ...(await tokenHeaderOptional()) };
             const response = await fetch('/api/download-gate', {
@@ -202,11 +177,9 @@ async function tampilkanDetail() {
             }
             return data;
         }
-
         async function bukaEndpointDownload(gateToken) {
             const headers = { 'Content-Type': 'application/json' };
             const body = { gateToken };
-
             // Gunakan fetch agar Firebase ID token dan respons server tetap berada
             // dalam satu request. Jangan gunakan form submit karena browser tidak
             // dapat meneruskan Authorization header saat navigasi ke endpoint.
@@ -218,7 +191,6 @@ async function tampilkanDetail() {
                     throw new Error('Sesi login tidak dapat diverifikasi. Silakan login ulang.');
                 }
             }
-
             const response = await fetch('/api/download-file', {
                 method: 'POST',
                 headers,
@@ -226,27 +198,22 @@ async function tampilkanDetail() {
                 cache: 'no-store'
             });
             const data = await response.json().catch(() => ({}));
-
             if (!response.ok || !data.ok || !data.url) {
                 throw new Error(data.error || 'Download tidak dapat dibuka.');
             }
-
             // Server sudah memvalidasi gate dan mengonsumsi token.
             window.location.assign(data.url);
         }
-
         function escapeHtml(value) {
             return String(value ?? '')
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
+                .replace( />/g, '&gt;')
                 .replace(/"/g, '&quot;')
                 .replace(/'/g, '&#039;');
         }
-
         async function siapkanDownloadGate() {
             if (!tombolGate) return;
-
             // P8 remains useful for UI hints, but P9 makes the server the final authority.
             tombolGate.addEventListener('click', async () => {
                 tombolGate.disabled = true;
@@ -271,7 +238,6 @@ async function tampilkanDetail() {
                 }
             });
         }
-
         async function mulaiDownloadGate(sesiAwal = null) {
             let sesi = sesiAwal;
             try {
@@ -280,10 +246,8 @@ async function tampilkanDetail() {
                 const gambarArtikel = item['link gambar'] || '';
                 const durasiDetik = Number(sesi.waitSeconds) || 10;
                 let sisa = durasiDetik;
-
                 const overlayLama = document.getElementById('artikel-download-overlay');
                 if (overlayLama) overlayLama.remove();
-
                 const overlay = document.createElement('div');
                 overlay.id = 'artikel-download-overlay';
                 overlay.className = 'artikel-download-overlay';
@@ -313,18 +277,15 @@ async function tampilkanDetail() {
                         </div>
                     </section>
                 `;
-
                 document.body.appendChild(overlay);
                 document.body.classList.add('download-gate-terbuka');
                 tombolGate.hidden = true;
-
                 const modal = overlay.querySelector('.artikel-download-modal');
                 const tombolTutup = overlay.querySelector('.artikel-download-close');
                 const tombolLanjut = overlay.querySelector('#artikel-download-lanjut');
                 const teksSisa = overlay.querySelector('#artikel-download-sisa');
                 const progressBar = overlay.querySelector('#artikel-download-progress-bar');
                 const backdrop = overlay.querySelector('.artikel-download-backdrop');
-
                 let interval = null;
                 const tutupGate = () => {
                     if (interval) clearInterval(interval);
@@ -332,11 +293,9 @@ async function tampilkanDetail() {
                     document.body.classList.remove('download-gate-terbuka');
                     resetTombolDownload();
                 };
-
                 tombolTutup?.addEventListener('click', tutupGate);
                 backdrop?.addEventListener('click', tutupGate);
                 modal?.addEventListener('click', (event) => event.stopPropagation());
-
                 interval = setInterval(() => {
                     sisa--;
                     if (teksSisa) teksSisa.textContent = `${Math.max(sisa, 0)} detik`;
@@ -355,7 +314,6 @@ async function tampilkanDetail() {
                         tombolLanjut.classList.add('siap');
                     }
                 }, 1000);
-
                 tombolLanjut?.addEventListener('click', async () => {
                     if (tombolLanjut.disabled) return;
                     try {
@@ -375,39 +333,30 @@ async function tampilkanDetail() {
                 resetTombolDownload();
             }
         }
-
         siapkanDownloadGate();
-
         // === FUNGSI KOMENTAR ===
         siapkanKomentar();
-
     } catch (error) {
         console.error('Error memuat detail:', error);
         wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-triangle"></i><p>Gagal memuat data</p></div>`;
     }
 }
-
 function siapkanKomentar() {
     const form = document.querySelector(".form-komentar");
     if (!form) return;
     actualizarAksesKomentarFallback();
     mulaiPantauKomentar();
 }
-
 function mulaiPantauKomentar() {
     if (!idAddonSekarang) return;
     const daftar = document.getElementById('daftar-komentar');
     if (!daftar) return;
-
     const komentarRef = ref(db, `komentar/${idAddonSekarang}`);
-
-    onValue(komentarRef, async (snapshot) => {
-        await ambilSetPremiumUid();
+    onValue(komentarRef, (snapshot) => {
         if (!snapshot.exists()) {
             daftar.innerHTML = `<div class="pesan-kosong-komentar">Belum ada komentar, jadilah yang pertama!</div>`;
             return;
         }
-
         const semua = [];
         snapshot.forEach((child) => {
             const data = child.val() || {};
@@ -421,7 +370,6 @@ function mulaiPantauKomentar() {
                 replyTo: data.replyTo || null
             });
         });
-
         semua.sort((a, b) => b.waktu - a.waktu);
         renderKomentar(daftar, semua);
     }, (error) => {
@@ -429,36 +377,29 @@ function mulaiPantauKomentar() {
         daftar.innerHTML = `<div class="pesan-kosong-komentar">Komentar tidak dapat dimuat.</div>`;
     });
 }
-
 function renderKomentar(daftar, semua) {
     const map = new Map(semua.map(k => [k.id, k]));
     const anak = new Map();
-
     semua.forEach((komen) => {
         const parent = komen.parentId && map.has(komen.parentId) ? komen.parentId : null;
         if (!anak.has(parent)) anak.set(parent, []);
         anak.get(parent).push(komen);
     });
-
     anak.forEach((list) => list.sort((a, b) => b.waktu - a.waktu));
-
     const roots = anak.get(null) || [];
     if (!roots.length && semua.length) {
         daftar.innerHTML = semua.map(k => buatKomentarHtml(k, 0, anak, map)).join('');
     } else {
         daftar.innerHTML = roots.map(k => buatKomentarHtml(k, 0, anak, map)).join('');
     }
-
     pasangTombolKomentar(anak, map);
 }
-
 function warnaNamaKomentar(username) {
     const warna = ['#ff6b6b','#4dabf7','#51cf66','#fcc419','#cc5de8','#20c997','#ff922b','#748ffc'];
     let hash = 0; const teks = String(username || 'Pengguna');
     for (let i = 0; i < teks.length; i++) { hash = ((hash << 5) - hash) + teks.charCodeAt(i); hash |= 0; }
     return warna[Math.abs(hash) % warna.length];
 }
-
 function buatKomentarHtml(komen, level, anak, map) {
     const namaMentah = komen.username || 'Pengguna';
     const nama = escapeHtml(namaMentah);
@@ -469,12 +410,11 @@ function buatKomentarHtml(komen, level, anak, map) {
     const jumlahBalasan = hitungSemuaBalasan(komen.id, anak);
     const margin = Math.min(level, 6) * 22;
     const replyInfo = komen.replyTo ? `<span class="komentar-membalas">membalas @${escapeHtml(komen.replyTo)}</span>` : '';
-
     return `
         <div class="item-komentar item-komentar-level-${Math.min(level, 6)}" data-id="${escapeHtml(komen.id)}" style="--indent:${margin}px">
             <div class="komentar-kepala">
                 <div class="komentar-pengguna">
-                    <strong class="nama-pengguna-komentar${apakahUidPremiumSync(komen.uid)?' premium':''}" style="--warna-nama:${warnaNama}">@${nama}</strong>${apakahUidPremiumSync(komen.uid)?badgePremiumHtml():''}${replyInfo}
+                    <strong class="nama-pengguna-komentar" style="--warna-nama:${warnaNama}">@${nama}</strong>${replyInfo}
                 </div>
                 <span>${waktu}</span>
             </div>
@@ -494,14 +434,12 @@ function buatKomentarHtml(komen, level, anak, map) {
             </div>
         </div>`;
 }
-
 function hitungSemuaBalasan(parentId, anak) {
     const list = anak.get(parentId) || [];
     let total = list.length;
     list.forEach(k => total += hitungSemuaBalasan(k.id, anak));
     return total;
 }
-
 function pasangTombolKomentar(anak, map) {
     document.querySelectorAll('.tombol-lihat-balasan').forEach((tombol) => {
         tombol.addEventListener('click', () => {
@@ -516,7 +454,6 @@ function pasangTombolKomentar(anak, map) {
                 : `<i class="fa fa-comments"></i> Lihat ${jumlah} balasan`;
         });
     });
-
     document.querySelectorAll('.tombol-reply').forEach((tombol) => {
         tombol.addEventListener('click', () => {
             if (!usuarioActual) {
@@ -527,12 +464,10 @@ function pasangTombolKomentar(anak, map) {
             const nama = tombol.dataset.replyName || 'Pengguna';
             const form = document.getElementById(`form-reply-${id}`);
             if (!form) return;
-
             if (form.innerHTML.trim()) {
                 form.innerHTML = '';
                 return;
             }
-
             form.innerHTML = `
                 <div class="kotak-reply">
                     <div class="reply-ke">Membalas @${escapeHtml(nama)}</div>
@@ -545,7 +480,6 @@ function pasangTombolKomentar(anak, map) {
                         </div>
                     </div>
                 </div>`;
-
             const input = form.querySelector('.input-reply');
             const jumlah = form.querySelector('.jumlah-reply');
             input.addEventListener('input', () => jumlah.textContent = `${input.value.length}/300`);
@@ -555,11 +489,9 @@ function pasangTombolKomentar(anak, map) {
         });
     });
 }
-
 async function kirimBalasan(parentId, parentUsername, input, form) {
     const isi = input.value.trim();
     if (!isi || isi.length > 300 || !usuarioActual || !idAddonSekarang) return;
-
     try {
         await push(ref(db, `komentar/${idAddonSekarang}`), {
             isi,
@@ -576,7 +508,6 @@ async function kirimBalasan(parentId, parentUsername, input, form) {
         alert('Gagal mengirim balasan, coba lagi nanti!');
     }
 }
-
 function tampilkanKartuLoginKomentar() {
     const form = document.querySelector('.form-komentar');
     if (!form) return;
@@ -588,41 +519,31 @@ function tampilkanKartuLoginKomentar() {
             <a href="profil.html" class="tombol-utama">Login / Daftar</a>
         </div>`;
 }
-
 function formatWaktuKomentar(timestamp) {
     if (!timestamp) return 'baru saja';
-
     const selisih = Math.max(0, Date.now() - timestamp);
     const detik = Math.floor(selisih / 1000);
-
     if (detik < 60) return 'baru saja';
-
     const menit = Math.floor(detik / 60);
     if (menit < 60) return `${menit} menit lalu`;
-
     const jam = Math.floor(menit / 60);
     if (jam < 24) return `${jam} jam lalu`;
-
     const hari = Math.floor(jam / 24);
     if (hari < 30) return `${hari} hari lalu`;
-
     return new Date(timestamp).toLocaleDateString('id-ID', {
         day: 'numeric',
         month: 'short',
         year: 'numeric'
     });
 }
-
 function actualizarAksesKomentarFallback() {
     if (!authResuelta) return;
     actualizarAksesKomentar();
     if (!usuarioActual) return;
-
     const tombolKirim = document.getElementById('tombol-kirim');
     const inputKomen = document.getElementById('input-komentar');
     const jumlahKarakter = document.getElementById('jumlah-karakter');
     if (!inputKomen || !tombolKirim || !jumlahKarakter) return;
-
     tombolKirim.addEventListener('click', async () => {
         const isi = inputKomen.value.trim();
         if (!isi || isi.length > 300) return;
@@ -644,25 +565,21 @@ function actualizarAksesKomentarFallback() {
         }
     });
 }
-
 // Cegah XSS — bersihkan teks komentar
 function escapeHtml(teks) {
     const div = document.createElement('div');
     div.textContent = teks;
     return div.innerHTML;
 }
-
 function tampilkanNotif(id) {
     const notif = document.getElementById(id);
     if (!notif) return;
     notif.classList.add('tampil');
     setTimeout(() => notif.classList.remove('tampil'), 2500);
 }
-
 window.salinLink = function(link) {
     navigator.clipboard.writeText(link)
         .then(() => tampilkanNotif('notif-salin'))
         .catch(() => alert('Gagal menyalin link!'));
 };
-
 document.addEventListener('DOMContentLoaded', tampilkanDetail);
