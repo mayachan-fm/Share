@@ -3394,5 +3394,17 @@
     "ukuran": "76.48 MB",
     "tanggal unggah": "23 Oktober 2026",
     "description": "Better on Bedrock adalah proyek ekspansi komprehensif yang dirancang untuk meningkatkan dan memperluas pengalaman Minecraft: Bedrock Edition. Proyek ini berfokus pada penyediaan tambahan gameplay yang lebih baik, peningkatan progres, dan konten yang seimbang sambil tetap mempertahankan nuansa inti Minecraft."
+  },
+  "offhand_freedom": {
+    "slug": "offhand_freedom",
+    "nama file": "Offhand Freedom",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-25-438293f2-fc46-4356-9560-f4cc9d3f4947.png",
+    "link download": "https://files.catbox.moe/uvwq5p.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "115 KB",
+    "tanggal unggah": "25 Oktober 2026",
+    "description": "Offhand Freedom menambahkan gameplay fungsional ala Java dengan menggunakan item standar, kontrol cepat, penempatan blok, ember, proyektil, dan pencahayaan dinamis."
   }
 }
