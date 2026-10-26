@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    {
+      "source": "/detail.html",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "facebookexternalhit|WhatsApp|Twitterbot|TelegramBot|LinkedInBot|Slackbot|Discordbot|redditbot|Googlebot|BingPreview|Applebot"
+        }
+      ],
+      "destination": "/api/detail-page"
+    }
+  ]
+}
