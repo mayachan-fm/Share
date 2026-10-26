@@ -103,6 +103,32 @@ function waktuTerbaru(item) {
     const t = parseTanggalIndo(item && item['tanggal unggah']);
     return isNaN(t) ? 0 : t;
 }
+// ==============================================
+// TOTAL PENGGUNA — ambil dari /api/public-stats (publik, cache 60 detik)
+// ==============================================
+async function muatTotalPengguna() {
+    try {
+        const respon = await fetch('/api/public-stats', { cache: 'no-store' });
+        if (!respon.ok) return;
+        const data = await respon.json();
+        if (!data || !data.ok || typeof data.totalPengguna !== 'number') return;
+        // Cari elemen angka Total Pengguna: coba id umum, lalu cari via teks <p>.
+        let el = document.getElementById('jumlah-pengguna')
+              || document.getElementById('jumlah-user')
+              || document.getElementById('total-pengguna');
+        if (!el) {
+            document.querySelectorAll('.kotak-info p').forEach((p) => {
+                if (!el && /total\s*pengguna/i.test(p.textContent || '')) {
+                    const span = (p.parentElement && p.parentElement.querySelector('span')) || p.closest('.kotak-info')?.querySelector('span');
+                    if (span) el = span;
+                }
+            });
+        }
+        if (el) el.textContent = data.totalPengguna;
+    } catch (_) {
+        // Gagal ambil? biarkan tetap 0 / apa adanya, tidak ganggu yang lain.
+    }
+}
 function tampilkanAddonDisukaiDariUrl() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("disukai") !== "1") return false;
@@ -155,6 +181,7 @@ async function tampilkanAddon() {
         document.getElementById('jumlah-total').textContent = daftarAddon.length;
         const totalUnduh = daftarAddon.reduce((jml, item) => jml + (item['jumlah unduh'] || 0), 0);
         document.getElementById('jumlah-unduh-total').textContent = totalUnduh;
+        muatTotalPengguna(); // Total Pengguna dari /api/public-stats
         tampilkanTopAddon();
         wadah.innerHTML = '';
         tampilkanDaftar(daftarAddon);
