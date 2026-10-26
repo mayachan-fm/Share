@@ -9,7 +9,7 @@
           "value": "facebookexternalhit|WhatsApp|Twitterbot|TelegramBot|LinkedInBot|Slackbot|Discordbot|redditbot|Googlebot|BingPreview|Applebot"
         }
       ],
-      "destination": "/api/detail-page"
+      "destination": "/api/catalog?mode=og"
     }
   ]
 }
