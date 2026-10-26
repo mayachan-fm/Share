@@ -78,6 +78,7 @@ let dataSaatIniUntukPaginasi = [];
     .tombol-paginasi.aktif { background: #ff3b30; border-color: #ff3b30; color: #fff; }
     .tombol-paginasi:disabled { opacity: .35; cursor: not-allowed; }
     .titik-paginasi { color: #b0b0b0; padding: 0 4px; font-size: 14px; }
+    .badge-diperbarui { position: absolute; top: 12px; right: 12px; z-index: 2; background: #34c759; color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,.45); }
     `;
     const style = document.createElement('style');
     style.id = 'css-paginasi-addon';
@@ -102,6 +103,13 @@ function waktuTerbaru(item) {
     if (!isNaN(tEdit)) return tEdit;
     const t = parseTanggalIndo(item && item['tanggal unggah']);
     return isNaN(t) ? 0 : t;
+}
+// Badge "Diperbarui": hanya tampil jika addon diedit dalam N hari terakhir.
+const HARI_BARU_DIperbarui = 14;
+function baruDiperbarui(item) {
+    const t = parseTanggalIndo(item && item['tanggal diperbarui']);
+    if (isNaN(t)) return false;
+    return (Date.now() - t) <= HARI_BARU_DIperbarui * 24 * 60 * 60 * 1000;
 }
 // ==============================================
 // TOTAL PENGGUNA — ambil dari /api/public-stats (publik, cache 60 detik)
@@ -231,6 +239,7 @@ function tampilkanTopAddon() {
         kartu.dataset.kategori = item.kategori || 'lainnya';
         kartu.innerHTML = `
             <div class="gambar-wadah">
+                ${baruDiperbarui(item) ? '<span class="badge-diperbarui"><i class="fa fa-refresh"></i> Diperbarui</span>' : ''}
                 <img src="${item['link gambar']}" alt="${item['nama file']}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/300x160/ff3b30/ffffff?text=Gambar+Tidak+Ada'">
             </div>
             <div class="kartu-isi">
@@ -304,6 +313,7 @@ function tampilkanDaftar(dataYangDitampilkan, resetHalaman = true) {
         kartu.innerHTML = `
             <div class="gambar-wadah">
                 ${tipeFile}
+                ${baruDiperbarui(item) ? '<span class="badge-diperbarui"><i class="fa fa-refresh"></i> Diperbarui</span>' : ''}
                 <img src="${item['link gambar']}" alt="${item['nama file']}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/400x180/ff3b30/ffffff?text=Gambar+Tidak+Ada'">
             </div>
             <div class="kartu-isi">

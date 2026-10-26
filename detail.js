@@ -67,6 +67,50 @@ function bukaLaporanDetail(slug, nama) {
     }
     modal.querySelector('#nama-addon-laporan-detail').textContent=nama;modal.querySelector('form').dataset.slug=slug;modal.querySelector('#status-laporan-detail').textContent='';modal.querySelector('form').reset();modal.style.display='flex';
 }
+// ==============================================
+// ADDON TERKAIT — tampilkan addon sekategori di halaman detail
+// ==============================================
+async function tampilkanAddonTerkait(item) {
+    const wadah = document.getElementById('isi-detail');
+    if (!wadah || !item) return;
+    try {
+        const respon = await fetch('/api/catalog', { cache: 'no-store' });
+        if (!respon.ok) return;
+        const katalog = await respon.json();
+        const katIni = String(item.kategori || '').toLowerCase();
+        const kandidat = Object.values(katalog).filter(a =>
+            a && a.slug !== item.slug && String(a.kategori || '').toLowerCase() === katIni
+        );
+        if (!kandidat.length) return;
+        // Acak agar tidak selalu addon yang sama, ambil maksimal 4.
+        kandidat.sort(() => Math.random() - 0.5);
+        const pilihan = kandidat.slice(0, 4);
+        const section = document.createElement('section');
+        section.style.marginTop = '24px';
+        section.innerHTML = `
+            <h3 class="judul-bagian"><i class="fa fa-thumbs-up"></i> Addon Terkait</h3>
+            <div class="wadah-geser">
+                ${pilihan.map(a => `
+                    <div class="kartu-addon kartu-geser" data-slug="${a.slug}" role="button" tabindex="0">
+                        <div class="gambar-wadah">
+                            ${a['type file'] ? `<span class="tipe-file">${a['type file']}</span>` : ''}
+                            <img src="${a['link gambar']}" alt="${a['nama file']}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/300x160/ff3b30/ffffff?text=Gambar+Tidak+Ada'">
+                        </div>
+                        <div class="kartu-isi">
+                            <h4>${a['nama file']}</h4>
+                        </div>
+                    </div>`).join('')}
+            </div>`;
+        section.querySelectorAll('.kartu-geser').forEach(kartu => {
+            const buka = () => { window.location.href = `detail.html?slug=${encodeURIComponent(kartu.dataset.slug)}`; };
+            kartu.addEventListener('click', buka);
+            kartu.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); buka(); } });
+        });
+        wadah.appendChild(section);
+    } catch (_) {
+        // Gagal? tidak apa-apa, bagian terkait tidak ditampilkan.
+    }
+}
 async function tampilkanDetail() {
     const wadah = document.getElementById('isi-detail');
     const urlParams = new URLSearchParams(window.location.search);
@@ -139,6 +183,7 @@ async function tampilkanDetail() {
             </div>
         `;
         document.getElementById('tombol-laporkan-detail')?.addEventListener('click', () => bukaLaporanDetail(idAddonSekarang, item['nama file'] || 'Addon'));
+        tampilkanAddonTerkait(item); // Addon Terkait (sekategori)
         // Download Gate Stage P9 — server-side gate/session.
         const tombolGate = document.getElementById('tombol-download-gate');
         // Browser dapat mengembalikan halaman detail dari back-forward cache (bfcache).
