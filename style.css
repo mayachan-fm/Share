@@ -2960,3 +2960,11 @@ body {
 @media(max-width:520px){.tombol-laporkan-addon{padding:6px 7px;font-size:10px}.laporan-owner-actions>*{flex:1}.laporan-owner-actions select{min-width:130px}}
 .detail-header-aksi{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}.tombol-laporkan-detail{padding:7px 10px}
 @media(max-width:520px){.detail-header-aksi{gap:6px}.tombol-laporkan-detail{font-size:10px}}
+
+/* ==============================================
+   PERBAIKAN DESKRIPSI ADDON — tampilkan ENTER sebagai ganti baris
+   (data.json sudah menyimpan \n; HTML secara default mengabaikannya)
+   ============================================== */
+.detail-deskripsi {
+    white-space: pre-line;
+}
