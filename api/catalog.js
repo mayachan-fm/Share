@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 const crypto = require('crypto');
-
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
 const PATH = 'data.json';
@@ -8,12 +7,60 @@ const BRANCH = 'main';
 const GITHUB_API = 'https://api.github.com';
 const CATALOG_CACHE_TTL = 60 * 1000;
 const PRIVILEGED_TOKEN_TTL = 5 * 60 * 1000;
-
 let catalogCache = null;
 let catalogCacheAt = 0;
-
 function send(res, status, body) { res.status(status).json(body); }
-
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+function potongTeks(value, maks) {
+  const t = String(value || '').replace(/\s+/g, ' ').trim();
+  return t.length > maks ? t.slice(0, maks - 1).trimEnd() + '…' : t;
+}
+// Halaman HTML dengan meta tag OG dinamis — khusus crawler (WA/FB/Telegram).
+// Dipanggil lewat /api/catalog?mode=og&slug=xxx (lihat vercel.json rewrite).
+function renderOgHtml(req, data) {
+  const slug = String(req.query?.slug || '').trim();
+  const host = req.headers.host || 'mc-share.vercel.app';
+  const urlDetail = `https://${host}/detail.html?slug=${encodeURIComponent(slug)}`;
+  const item = slug && data && typeof data === 'object' ? data[slug] : null;
+  const nama = item ? String(item['nama file'] || 'Addon') : 'Kumpulan Addon Minecraft';
+  const deskripsi = item
+    ? potongTeks(item.description || 'Koleksi Addon & Mod Minecraft Bedrock terlengkap.', 160)
+    : 'Koleksi Addon & Mod Minecraft Bedrock terlengkap. Temukan, bagikan, dan unduh berbagai addon dengan mudah.';
+  const gambar = item && item['link gambar'] ? item['link gambar'] : `https://${host}/situs-logo.png`;
+  const judul = item ? `${escapeHtml(nama)} | MC Addon Share` : 'Detail Addon | MC Addon Share';
+  return `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${judul}</title>
+<link rel="canonical" href="${escapeHtml(urlDetail)}">
+<meta http-equiv="refresh" content="0;url=${escapeHtml(urlDetail)}">
+<meta property="og:site_name" content="MC Addon Share">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${escapeHtml(urlDetail)}">
+<meta property="og:title" content="${escapeHtml(nama)}">
+<meta property="og:description" content="${escapeHtml(deskripsi)}">
+<meta property="og:image" content="${escapeHtml(gambar)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(nama)}">
+<meta name="twitter:description" content="${escapeHtml(deskripsi)}">
+<meta name="twitter:image" content="${escapeHtml(gambar)}">
+</head>
+<body>
+<p>Addon: <strong>${escapeHtml(nama)}</strong>. <a href="${escapeHtml(urlDetail)}">Buka halaman detail</a></p>
+</body>
+</html>`;
+}
 function getFirebaseAdmin() {
   if (admin.apps.length) return admin.app();
   const privateKey = String(process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
@@ -29,7 +76,6 @@ function getFirebaseAdmin() {
     databaseURL: process.env.FIREBASE_DATABASE_URL
   });
 }
-
 async function github(path) {
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error('GITHUB_TOKEN belum disetel di Vercel.');
@@ -42,8 +88,6 @@ async function github(path) {
   if (!response.ok) { const e = new Error(body.message || `GitHub API error ${response.status}`); e.status = response.status; throw e; }
   return body;
 }
-
-
 async function readCatalogCached() {
   const now = Date.now();
   if (catalogCache && now - catalogCacheAt < CATALOG_CACHE_TTL) return catalogCache;
@@ -57,26 +101,22 @@ async function readCatalogCached() {
   catalogCacheAt = now;
   return data;
 }
-
 function signingSecret() {
   const source = process.env.DOWNLOAD_GATE_SECRET || process.env.FIREBASE_PRIVATE_KEY || process.env.GITHUB_TOKEN || process.env.TOKEN_GITHUB;
   if (!source) throw new Error('Secret Download Gate belum tersedia di server.');
   return crypto.createHash('sha256').update(String(source)).digest();
 }
-
 function signAccessToken(payload) {
   const encoded = Buffer.from(JSON.stringify(payload)).toString('base64url');
   const signature = crypto.createHmac('sha256', signingSecret()).update(encoded).digest('base64url');
   return `${encoded}.${signature}`;
 }
-
 function premiumAktif(data, now) {
   if (!data || typeof data !== 'object' || data.dicabutPada) return false;
   const tipe = String(data.tipe || '').toLowerCase();
   const berakhir = data.berakhir === null || data.berakhir === undefined || data.berakhir === '' ? null : Number(data.berakhir);
   return tipe === 'permanen' || berakhir === null || (Number.isFinite(berakhir) && now < berakhir);
 }
-
 async function getPrivilegedAccess(req) {
   const header = req.headers.authorization || '';
   if (!header.startsWith('Bearer ')) return null;
@@ -90,34 +130,35 @@ async function getPrivilegedAccess(req) {
   if (premiumAktif(premiumSnap.val(), Date.now())) return { uid, role: 'premium' };
   return null;
 }
-
 async function verifyManageUser(req) {
   const access = await getPrivilegedAccess(req);
   if (!access || !['admin', 'owner'].includes(access.role)) return null;
   return access;
 }
-
 module.exports = async (req, res) => {
   if (req.method !== 'GET') return send(res, 405, { ok: false, error: 'Method tidak diizinkan.' });
   try {
     const data = await readCatalogCached();
     const mode = String(req.query?.mode || '').toLowerCase();
     const slug = String(req.query?.slug || '').trim();
-
+    // Mode OG: kembalikan HTML dengan meta tag dinamis untuk crawler (tidak menambah function baru).
+    if (mode === 'og') {
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60');
+      return res.status(200).send(renderOgHtml(req, data));
+    }
     if (mode === 'manage') {
       const access = await verifyManageUser(req);
       if (!access) return send(res, 403, { ok: false, error: 'Akses panel pengelolaan ditolak.' });
       res.setHeader('Cache-Control', 'no-store');
       return send(res, 200, data);
     }
-
     // Detail hanya membutuhkan satu addon. Link download tetap disembunyikan dari guest/user biasa.
     if (slug) {
       const item = data[slug];
       if (!item || typeof item !== 'object') return send(res, 404, { ok: false, error: 'Addon tidak ditemukan.' });
       const safe = { ...item };
       delete safe['link download'];
-
       let downloadAccessToken = null;
       try {
         const access = await getPrivilegedAccess(req);
@@ -137,11 +178,9 @@ module.exports = async (req, res) => {
       } catch (error) {
         console.warn('Privileged detail access unavailable:', error.message || error);
       }
-
       res.setHeader('Cache-Control', 'no-store');
       return send(res, 200, { ok: true, idAddon: slug, item: safe, downloadAccessToken });
     }
-
     const publicData = {};
     for (const [key, item] of Object.entries(data)) {
       if (!item || typeof item !== 'object') continue;
