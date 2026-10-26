@@ -178,12 +178,20 @@ async function tampilkanDetail() {
                         <button class="tombol-bagi-detail" onclick="salinLink('${linkDetail}')" title="Salin Link">
                             <i class="fa fa-link"></i>
                         </button>
+                        <button type="button" class="tombol-bagi-detail" id="tombol-share-wa" title="Bagikan ke WhatsApp" style="background:#25D366;color:#fff;">
+                            <i class="fa fa-whatsapp"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         `;
         document.getElementById('tombol-laporkan-detail')?.addEventListener('click', () => bukaLaporanDetail(idAddonSekarang, item['nama file'] || 'Addon'));
         tampilkanAddonTerkait(item); // Addon Terkait (sekategori)
+        // Tombol share WhatsApp — buka WA dengan pesan berisi nama addon + link.
+        document.getElementById('tombol-share-wa')?.addEventListener('click', () => {
+            const pesan = `Cek addon Minecraft ini: ${item['nama file']}\n${linkDetail}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(pesan)}`, '_blank');
+        });
         // Download Gate Stage P9 — server-side gate/session.
         const tombolGate = document.getElementById('tombol-download-gate');
         // Browser dapat mengembalikan halaman detail dari back-forward cache (bfcache).
