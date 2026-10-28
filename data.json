@@ -3418,5 +3418,17 @@
     "ukuran": "14.86 MB",
     "tanggal unggah": "26 Oktober 2026",
     "description": "Hiasi dunia Minecraft Anda dengan Add-On BUILDING BLOCKS!\n\n- 1500+ blok BARU [BUKAN ENTITAS]!\n- Paket tekstur kompatibel!\n- Dapat digunakan untuk; bangunan, dekorasi dan furnitur!\n- KERAJINAN Kustom!"
+  },
+  "invent_aeronautics": {
+    "slug": "invent_aeronautics",
+    "nama file": "Invent: Aeronautics",
+    "type file": "addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-28-6c352806-7997-49c8-926c-cbda4580808c.jpg",
+    "link download": "https://files.catbox.moe/vscyyd.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "7.2 mb",
+    "tanggal unggah": "28 Oktober 2026",
+    "description": "Bangun pesawat, helikopter, kapal udara, mobil, perahu, dan mesin yang berfungsi dari balok, lalu kendalikan. Semua yang Anda rekatkan bergerak sebagai satu kesatuan dengan fisika nyata, jadi kerangka ringan dengan baling-baling besar akan naik dengan cepat dan yang berat membutuhkan lebih banyak tenaga. Ini menghadirkan alat-alat ala mod Create dan aeronautika ke Minecraft Bedrock."
   }
 }
