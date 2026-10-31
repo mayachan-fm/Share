@@ -3430,5 +3430,17 @@
     "ukuran": "7.2 mb",
     "tanggal unggah": "28 Oktober 2026",
     "description": "Bangun pesawat, helikopter, kapal udara, mobil, perahu, dan mesin yang berfungsi dari balok, lalu kendalikan. Semua yang Anda rekatkan bergerak sebagai satu kesatuan dengan fisika nyata, jadi kerangka ringan dengan baling-baling besar akan naik dengan cepat dan yang berat membutuhkan lebih banyak tenaga. Ini menghadirkan alat-alat ala mod Create dan aeronautika ke Minecraft Bedrock."
+  },
+  "smooth_craft": {
+    "slug": "smooth_craft",
+    "nama file": "Smooth craft",
+    "type file": "Add-on",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-10-31-fa3bd71a-f5aa-4896-b3b5-9ec228cbe6dc.jpg",
+    "link download": "https://files.catbox.moe/b8rusk.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "766kb",
+    "tanggal unggah": "31 Oktober 2026",
+    "description": "Looking for a smoother crafting experience? This is the utility Add-On for you!\nFeatures:\n+ Animated tree destruction.\n+ Elevator blocks.\n+ Item magnets that attract loot with ease.\n+ Never lose your gear with gravestones.\n+ Auto-build the Beacon pyramid like a pro.\n+ Easy harvesting.\n+ Dynamic lights.\nCan be used for any world, and configured to your liking!"
   }
 }
