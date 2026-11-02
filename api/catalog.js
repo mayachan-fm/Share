@@ -61,6 +61,24 @@ function renderOgHtml(req, data) {
 </body>
 </html>`;
 }
+// Sitemap XML dinamis — daftar semua halaman detail addon untuk Google.
+// Dipanggil lewat /api/catalog?mode=sitemap (lihat vercel.json rewrite /sitemap.xml).
+function renderSitemapXml(req, data) {
+  const host = req.headers.host || 'mc-share.vercel.app';
+  const base = `https://${host}`;
+  const urls = [`${base}/`];
+  if (data && typeof data === 'object') {
+    for (const slug of Object.keys(data)) {
+      if (!slug) continue;
+      urls.push(`${base}/detail.html?slug=${encodeURIComponent(slug)}`);
+    }
+  }
+  const body = urls.map(u => `  <url><loc>${escapeHtml(u)}</loc></url>`).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${body}
+</urlset>`;
+}
 function getFirebaseAdmin() {
   if (admin.apps.length) return admin.app();
   const privateKey = String(process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
@@ -146,6 +164,11 @@ module.exports = async (req, res) => {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60');
       return res.status(200).send(renderOgHtml(req, data));
+    }
+    if (mode === 'sitemap') {
+      res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+      res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+      return res.status(200).send(renderSitemapXml(req, data));
     }
     if (mode === 'manage') {
       const access = await verifyManageUser(req);
