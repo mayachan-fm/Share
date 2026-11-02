@@ -10,6 +10,10 @@
         }
       ],
       "destination": "/api/catalog?mode=og"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/catalog?mode=sitemap"
     }
   ]
 }
