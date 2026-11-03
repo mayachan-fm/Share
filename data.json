@@ -3478,5 +3478,17 @@
     "ukuran": "28.77 MB",
     "tanggal unggah": "3 November 2026",
     "description": "Masuklah ke UTARA kuno dan jelajahi negeri tempat lahirnya legenda. Perjalanan melintasi FROZEN FJORDS, HUTAN PINUS DALAM, GUNUNG yang dibentuk oleh nafas para dewa, dan kuil yang disegel dengan rune KUNO.\n\n+ 4 BIOME BARU\n+ BANYAK BLOK\n+ 20+ ENTITAS BARU\n+ PULUHAN ITEM baru seperti ARMOR & SENJATA\n+ Dilisensikan oleh Arcanium Creations dan diterbitkan oleh BLOCKLAB Studios"
+  },
+  "lightspeed_logistics": {
+    "slug": "lightspeed_logistics",
+    "nama file": "Lightspeed Logistics",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-03-eef13bdf-3173-4cbd-8c76-ce12032910c9.jpg",
+    "link download": "https://gofile.io/d/iTCqUXwP",
+    "versi mc": "1.26+",
+    "ukuran": "3.52 MB",
+    "tanggal unggah": "3 November 2026",
+    "description": "Pancaran cahaya mengalir di antara peti, menyortir, menyaring, dan mengisi ulang wadah secara otomatis, tidak memerlukan redstone atau hopper. Pindai blok ke dalam penyimpanan dalam jangkauan dan masukkan kembali ke jaringan Anda.\n- Perutean nirkabel, filter & prioritas\n- Pemindaian laser ke penyimpanan digital"
   }
 }
