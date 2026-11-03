@@ -3442,5 +3442,17 @@
     "ukuran": "766kb",
     "tanggal unggah": "31 Oktober 2026",
     "description": "Looking for a smoother crafting experience? This is the utility Add-On for you!\nFeatures:\n+ Animated tree destruction.\n+ Elevator blocks.\n+ Item magnets that attract loot with ease.\n+ Never lose your gear with gravestones.\n+ Auto-build the Beacon pyramid like a pro.\n+ Easy harvesting.\n+ Dynamic lights.\nCan be used for any world, and configured to your liking!"
+  },
+  "blockedit_universal": {
+    "slug": "blockedit_universal",
+    "nama file": "BlockEdit Universal",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-03-16b488a6-4dc7-43c9-b991-ac5c17ce4555.jpg",
+    "link download": "https://gofile.io/d/mMafB6jt",
+    "versi mc": "1.26+",
+    "ukuran": "497.07 KBBlockEdit Universal",
+    "tanggal unggah": "3 November 2026",
+    "description": "BlockEdit Universal memberi Anda perangkat pembuat saat Anda muncul. Tujuh staf sederhana yang mengubah jam kerja blok demi blok menjadi beberapa klik.\n\n- Pilih suatu wilayah dan isi, dindingi, kosongkan, atau kosongkan secara instan\n- Salin seluruh bangunan, (50 ribu blok) tempel atau simpan ke perpustakaan\n- Putar dan cermin\n- Alat kuas untuk lanskap\n- Batalkan semuanya"
   }
 }
