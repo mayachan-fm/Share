@@ -3538,5 +3538,17 @@
     "ukuran": "5.39 MB",
     "tanggal unggah": "3 November 2026",
     "description": "The Goatman adalah penghuni horor paling menakutkan yang pernah memasuki dunia Anda.\n- AI horor tingkat lanjut\n- Beberapa fase\n- Kejutan\n- Bereaksi terhadap pilihan Anda\n- Tantangan bertahan hidup\n\nAdd-On membuat dunia Anda menyenangkan!"
+  },
+  "dance_mod": {
+    "slug": "dance_mod",
+    "nama file": "Dance Mod",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-03-8746f1b0-f25b-4518-b0cd-feac5fc7d574.webp",
+    "link download": "https://gofile.io/d/c02b1d59-2f6d-4775-b7e9-86e8440e3061",
+    "versi mc": "1.26+",
+    "ukuran": "3 MB",
+    "tanggal unggah": "4 November 2026",
+    "description": "Mod Tari menambahkan lebih banyak gerakan dan humor ke dunia game. Alih-alih hanya berjalan, mengendap-endap, melompat, dan berkelahi, pemain dapat memicu animasi lucu yang membuat karakter terlihat lebih ekspresif.\n\nAddon ini juga berguna untuk mode multipemain. Teman-teman dapat bertemu di satu tempat, mengaktifkan tarian, dan mengubah dunia bertahan hidup biasa menjadi flashmob kecil atau adegan bermain peran.\n\nPemain Minecraft Bedrock Edition juga dapat menemukan versi di mana hewan atau penduduk desa menjadi bagian dari tema tarian. Beberapa fitur sederhana dan lucu, sementara yang lain menambahkan peristiwa desa yang aneh dengan bahaya nyata."
   }
 }
