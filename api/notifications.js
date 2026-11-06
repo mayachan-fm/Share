@@ -1,7 +1,5 @@
 const admin = require('firebase-admin');
-
 function send(res, status, body) { res.status(status).json(body); }
-
 function getFirebaseAdmin() {
   if (admin.apps.length) return admin.app();
   const privateKey = String(process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
@@ -17,7 +15,6 @@ function getFirebaseAdmin() {
     databaseURL: process.env.FIREBASE_DATABASE_URL
   });
 }
-
 async function verifyUser(req) {
   const authHeader = req.headers.authorization || '';
   if (!authHeader.startsWith('Bearer ')) {
@@ -25,21 +22,17 @@ async function verifyUser(req) {
   }
   return admin.auth().verifyIdToken(authHeader.slice(7).trim());
 }
-
 module.exports = async (req, res) => {
   try {
     getFirebaseAdmin();
     const user = await verifyUser(req);
-
     const db = admin.database();
     const action = String(req.body?.action || req.query?.action || 'list').trim();
-
     // Report actions share this function to stay within the Vercel Hobby function limit.
     if (action === 'report') {
       const userSnap = await db.ref(`roles/${user.uid}`).once('value');
       const role = String(userSnap.val() || 'user').toLowerCase();
       const clean = (v, max) => String(v ?? '').trim().slice(0, max);
-
       if (req.method === 'POST') {
         const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
         const slug = clean(body.slug, 120);
@@ -48,11 +41,9 @@ module.exports = async (req, res) => {
         if (!slug || !reason || message.length < 10) {
           return send(res, 400, { ok: false, error: 'Pilih alasan dan tulis pesan minimal 10 karakter (maksimal 800).' });
         }
-
         // Nama addon dikirim dari client (detail.js) agar tidak perlu self-fetch ke /api/catalog
         // yang memicu cold-start bertingkat dan sering timeout di Vercel Hobby (batas 10 detik).
         const namaAddon = clean(body.namaAddon || slug, 180);
-
         const rateRef = db.ref(`batas_laporan/${user.uid}/${slug}`);
         const now = Date.now();
         const rate = await rateRef.once('value');
@@ -75,9 +66,7 @@ module.exports = async (req, res) => {
         await rateRef.set(now);
         return send(res, 201, { ok: true, message: 'Laporan berhasil dikirim.' });
       }
-
       if (role !== 'owner') return send(res, 403, { ok: false, error: 'Hanya Owner yang dapat mengelola laporan.' });
-
       if (req.method === 'GET') {
         const snap = await db.ref('laporan').orderByChild('waktu').limitToLast(300).once('value');
         const reports = Object.entries(snap.val() || {}).map(([id, item]) => ({ id, ...item }))
@@ -85,7 +74,6 @@ module.exports = async (req, res) => {
         res.setHeader('Cache-Control', 'no-store');
         return send(res, 200, { ok: true, reports });
       }
-
       const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
       const id = clean(body.id, 180);
       if (!id || id.includes('/')) return send(res, 400, { ok: false, error: 'ID laporan tidak valid.' });
@@ -106,9 +94,7 @@ module.exports = async (req, res) => {
       }
       return send(res, 405, { ok: false, error: 'Method tidak diizinkan.' });
     }
-
     const base = db.ref(`notifikasi/${user.uid}`);
-
     if (req.method === 'GET' || action === 'list') {
       const snap = await base.once('value');
       const raw = snap.val();
@@ -118,14 +104,13 @@ module.exports = async (req, res) => {
         tipe: item?.tipe || 'info',
         judul: item?.judul || 'Notifikasi',
         pesan: item?.pesan || '',
+        link: item?.link || '',
         waktu: Number(item?.waktu) || 0,
         dibaca: item?.dibaca === true
       })).sort((a,b) => b.waktu - a.waktu).slice(0, 50);
       return send(res, 200, {ok:true, notifications});
     }
-
     if (req.method !== 'POST') return send(res, 405, {ok:false,error:'Method tidak diizinkan.'});
-
     if (action === 'readAll') {
       const snap = await base.once('value');
       const raw = snap.val();
@@ -141,7 +126,6 @@ module.exports = async (req, res) => {
       if (updated) await base.update(updates);
       return send(res, 200, {ok:true, updated});
     }
-
     return send(res, 400, {ok:false,error:'Aksi notifikasi tidak dikenal.'});
   } catch (error) {
     console.error('notifications error:', error);
