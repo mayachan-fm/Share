@@ -15,6 +15,7 @@ import { auth, onAuthStateChanged, ambilRole } from "./auth.js";
 import { cekAksesDownload } from "./download-access.js";
 import { ambilArtikelAcak } from "./articles.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+let namaAddonSekarang = '';
 const app = getApp();
 const db = getDatabase(app);
 let usuarioActual = null;
@@ -139,6 +140,7 @@ async function tampilkanDetail() {
         if (!payload.ok || !payload.item) throw new Error(payload.error || 'Addon tidak ditemukan');
         const idAddon = payload.idAddon || slug;
         const item = payload.item;
+        namaAddonSekarang = item['nama file'] || '';
         privilegedDownloadToken = payload.downloadAccessToken || null;
         if (!item || !idAddon) {
             wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-circle"></i><p>Data tidak ditemukan</p></div>`;
@@ -554,6 +556,23 @@ async function kirimBalasan(parentId, parentUsername, input, form) {
             parentId,
             replyTo: parentUsername
         });
+        // Kirim notifikasi ke penulis komentar induk (jika bukan diri sendiri).
+        try {
+            const parentSnap = await get(ref(db, `komentar/${idAddonSekarang}/${parentId}`));
+            const parentUid = parentSnap.val()?.uid;
+            if (parentUid && parentUid !== usuarioActual.uid) {
+                const namaPengirim = usuarioActual.email ? usuarioActual.email.split('@')[0] : 'Pengguna';
+                const cuplikan = isi.length > 80 ? isi.slice(0, 80) + '…' : isi;
+                await push(ref(db, `notifikasi/${parentUid}`), {
+                    tipe: 'balasan_komentar',
+                    judul: 'Balasan Komentar',
+                    pesan: `${namaPengirim} membalas komentarmu${namaAddonSekarang ? ` di addon “${namaAddonSekarang}”` : ''}: “${cuplikan}”`,
+                    link: `detail.html?slug=${encodeURIComponent(idAddonSekarang)}`,
+                    waktu: Date.now(),
+                    dibaca: false
+                });
+            }
+        } catch (e) { console.warn('Gagal kirim notifikasi balasan:', e); }
         form.innerHTML = '';
         tampilkanNotif('notif-komen');
     } catch (err) {

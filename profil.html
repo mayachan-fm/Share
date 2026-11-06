@@ -92,6 +92,11 @@ import { ambilDataPremium, statusPremium } from "./premium.js";
 import { ambilNotifikasi, tandaiSemuaNotifikasiDibaca, jumlahNotifikasiBelumDibaca } from "./notifikasi.js";
 
 const appEl = document.getElementById("profil-app");
+// Klik notifikasi dengan link → buka halaman addon terkait.
+appEl.addEventListener("click", (e) => {
+  const item = e.target.closest(".profil-notifikasi-item[data-link]");
+  if (item && item.dataset.link) window.location.href = item.dataset.link;
+});
 let mode = "login";
 let jenisLogin = "user";
 
@@ -283,15 +288,16 @@ async function tampilProfil(user, role) {
     ? new Date(Number(ms)).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" })
     : "Waktu tidak diketahui";
   const ikonNotifikasi = (tipe) => {
+    if (tipe === "balasan_komentar") return "fa-comment";
     if (tipe === "premium_grant") return "fa-diamond";
     if (tipe === "premium_renewal") return "fa-refresh";
     if (tipe === "premium_revoke") return "fa-ban";
     return "fa-bell";
   };
-  const kelasNotifikasi = (tipe) => tipe === "premium_revoke" ? "notifikasi-danger" : tipe === "premium_renewal" ? "notifikasi-renewal" : "notifikasi-premium";
+  const kelasNotifikasi = (tipe) => tipe === "balasan_komentar" ? "notifikasi-renewal" : tipe === "premium_revoke" ? "notifikasi-danger" : tipe === "premium_renewal" ? "notifikasi-renewal" : "notifikasi-premium";
   const htmlNotifikasi = daftarNotifikasi.length
     ? daftarNotifikasi.map(item => `
-      <div class="profil-notifikasi-item ${item.dibaca ? "sudah-dibaca" : "belum-dibaca"}">
+      <div class="profil-notifikasi-item ${item.dibaca ? "sudah-dibaca" : "belum-dibaca"}"${item.link ? ` data-link="${escapeHtml(item.link)}" style="cursor:pointer"` : ""}>
         <div class="profil-notifikasi-icon ${kelasNotifikasi(item.tipe)}"><i class="fa ${ikonNotifikasi(item.tipe)}"></i></div>
         <div class="profil-notifikasi-main">
           <strong>${escapeHtml(item.judul)}</strong>
