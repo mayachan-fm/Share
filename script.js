@@ -79,6 +79,11 @@ let dataSaatIniUntukPaginasi = [];
     .tombol-paginasi:disabled { opacity: .35; cursor: not-allowed; }
     .titik-paginasi { color: #b0b0b0; padding: 0 4px; font-size: 14px; }
     .badge-diperbarui { position: absolute; top: 12px; right: 12px; z-index: 2; background: #34c759; color: #fff; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 8px rgba(0,0,0,.45); }
+    .skeleton-card { pointer-events:none; cursor:default; }
+    .skeleton-card:hover { transform:none !important; box-shadow:none !important; }
+    .skeleton-img { width:100%; height:140px; background:linear-gradient(90deg,#1a1a1a 25%,#2a2a2a 37%,#1a1a1a 63%); background-size:400% 100%; animation:skeletonShimmer 1.4s ease infinite; }
+    .skeleton-line { height:12px; border-radius:6px; background:linear-gradient(90deg,#1a1a1a 25%,#2a2a2a 37%,#1a1a1a 63%); background-size:400% 100%; animation:skeletonShimmer 1.4s ease infinite; }
+    @keyframes skeletonShimmer { 0%{background-position:100% 50%} 100%{background-position:0 50%} }
     `;
     const style = document.createElement('style');
     style.id = 'css-paginasi-addon';
@@ -110,6 +115,21 @@ function baruDiperbarui(item) {
     const t = parseTanggalIndo(item && item['tanggal diperbarui']);
     if (isNaN(t)) return false;
     return (Date.now() - t) <= HARI_BARU_DIperbarui * 24 * 60 * 60 * 1000;
+}
+// Skeleton loading — kerangka kartu berkedip saat data dimuat (hanya jika wadah masih kosong).
+function tampilkanSkeleton() {
+    const top = document.getElementById('wadah-top');
+    const grid = document.getElementById('wadah-addon');
+    const kartuSkeleton = (untukGrid) => `
+        <div class="kartu-addon ${untukGrid ? '' : 'kartu-geser'} skeleton-card" aria-hidden="true">
+            <div class="gambar-wadah"><div class="skeleton-img"></div></div>
+            <div class="kartu-isi">
+                <div class="skeleton-line" style="width:82%"></div>
+                <div class="skeleton-line" style="width:52%;margin-top:10px"></div>
+            </div>
+        </div>`;
+    if (top && !top.children.length) top.innerHTML = Array(3).fill(kartuSkeleton(false)).join('');
+    if (grid && !grid.children.length) grid.innerHTML = Array(6).fill(kartuSkeleton(true)).join('');
 }
 // ==============================================
 // TOTAL PENGGUNA — ambil dari /api/public-stats (publik, cache 60 detik)
@@ -165,6 +185,7 @@ function tampilkanAddonDisukaiDariUrl() {
 async function tampilkanAddon() {
     const wadah = document.getElementById('wadah-addon');
     try {
+        tampilkanSkeleton(); // kerangka loading saat data dimuat
         const respon = await fetch('/api/catalog', { cache: 'no-store' });
         if (!respon.ok) throw new Error(`File tidak ditemukan (Kode: ${respon.status})`);
 
