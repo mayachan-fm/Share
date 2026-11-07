@@ -28,11 +28,53 @@ module.exports = async (req, res) => {
     const user = await verifyUser(req);
     const db = admin.database();
     const action = String(req.body?.action || req.query?.action || 'list').trim();
+    const clean = (v, max) => String(v ?? '').trim().slice(0, max);
+
+    // ============================================================
+    // action=create — buat notifikasi untuk user lain (mis. balasan komentar).
+    // Server-side agar tidak terblokir aturan keamanan RTDB (notifikasi/{uid}
+    // hanya boleh ditulis pemiliknya). Dipanggil dari detail.js saat membalas.
+    // ============================================================
+    if (action === 'create') {
+      if (req.method !== 'POST') return send(res, 405, { ok: false, error: 'Method tidak diizinkan.' });
+      const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+      const targetUid = clean(body.targetUid, 180);
+      const tipe = clean(body.tipe || 'info', 40) || 'info';
+      const judul = clean(body.judul, 120);
+      const pesan = clean(body.pesan, 300);
+      const link = clean(body.link, 200);
+      if (!targetUid || !judul || !pesan) {
+        return send(res, 400, { ok: false, error: 'Data notifikasi tidak lengkap.' });
+      }
+      if (targetUid === user.uid) {
+        return send(res, 200, { ok: true, skipped: true, alasan: 'Tidak perlu notifikasi ke diri sendiri.' });
+      }
+      // Rate limit sederhana: max 1 notifikasi per 5 detik per pengirim (anti-spam).
+      const rateRef = db.ref(`batas_notif/${user.uid}`);
+      const now = Date.now();
+      const rate = await rateRef.once('value');
+      const terakhir = Number(rate.val()) || 0;
+      if (now - terakhir < 5000) {
+        return send(res, 429, { ok: false, error: 'Terlalu cepat. Tunggu beberapa detik lagi.' });
+      }
+      const notifRef = db.ref(`notifikasi/${targetUid}`).push();
+      await notifRef.set({
+        id: notifRef.key,
+        tipe,
+        judul,
+        pesan,
+        link,
+        waktu: now,
+        dibaca: false
+      });
+      await rateRef.set(now);
+      return send(res, 201, { ok: true, id: notifRef.key });
+    }
+
     // Report actions share this function to stay within the Vercel Hobby function limit.
     if (action === 'report') {
       const userSnap = await db.ref(`roles/${user.uid}`).once('value');
       const role = String(userSnap.val() || 'user').toLowerCase();
-      const clean = (v, max) => String(v ?? '').trim().slice(0, max);
       if (req.method === 'POST') {
         const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
         const slug = clean(body.slug, 120);
