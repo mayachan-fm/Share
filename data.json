@@ -3670,5 +3670,17 @@
     "ukuran": "10.64 MB",
     "tanggal unggah": "7 November 2026",
     "description": "Bersiaplah dan bersiaplah! Turun lebih dalam dan lebih dalam ke dimensi brankas yang ditambahkan ke dunia Anda! Apakah Anda akan mencapai dasar atau kehilangan segalanya?\n\n- Tema dan tata letak acak\n- 4 set baju besi dengan bonus set\n- 4 senjata dengan kemampuan khusus\n- Jaringan perjalanan Waystone\n- XP Bank untuk melindungi level Anda\n- Gudang tak berujung di setiap dunia\n- Dibuat oleh KiwiStars"
+  },
+  "hyper_vehicle": {
+    "slug": "hyper_vehicle",
+    "nama file": "Hyper Vehicle",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-07-303b3495-adb3-4f6b-9261-73d5339e02be.jpg",
+    "link download": "https://files.catbox.moe/8u5o4g.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "1.16 MB",
+    "tanggal unggah": "7 November 2026",
+    "description": "Satu kendaraan, 5+ mode. Bangun, ubah & taklukkan setiap sudut dunia Anda bersama teman-teman seperti seorang pengembara.\n- Mobil: Berlomba melintasi daratan\n- Bor: Menerobos pegunungan\n- Kapal Selam: Jelajahi kedalaman\n- Pesawat: Kuasai langit\n- Rumah: Detektor mineral & simpan markas Anda"
   }
 }
