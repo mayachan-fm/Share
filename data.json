@@ -3706,5 +3706,17 @@
     "ukuran": "13.92 MB",
     "tanggal unggah": "7 November 2026",
     "description": "Setiap 7 hari dalam game, Penghakiman dimulai.\nAnda dipanggil... Entitas mengawasi.\n\nTindakan Anda menentukan nasib Anda: imbalan, hukuman, atau sesuatu yang lebih buruk.\nIkuti cahaya atau rangkul kehampaan.\n\nAdd-On akan mengingat jalur apa yang Anda pilih."
+  },
+  "the_arcade": {
+    "slug": "the_arcade",
+    "nama file": "The Arcade",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-07-4f215a86-5cb6-4d8a-bd9d-c313fb519633.jpg",
+    "link download": "https://files.catbox.moe/bwlpew.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "6.2 MB",
+    "tanggal unggah": "7 November 2026",
+    "description": "Bangun lemari arcade yang berfungsi dan mainkan secara nyata.\n\n+ Delapan lemari yang bisa dibangun: bowling, hoki udara, permainan ritme, dan banyak lagi!\n+ Kumpulkan tiket, tangkap boneka mewah dan balok dekoratif di Claw Machine.\n+ Termasuk Arkade yang sudah dibuat sebelumnya dalam dimensinya sendiri, cukup masuk, mainkan game, dan bersantai bersama teman-teman Anda.\n+ Papan peringkat per game untuk didaki.\n\nOleh Gunung Berapi"
   }
 }
