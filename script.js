@@ -566,12 +566,209 @@ function aturNavigasiBawah() {
     });
 }
 // ==============================================
+// LONCENG NOTIFIKASI — badge merah + panel dropdown di header
+// ==============================================
+(function suntikCssNotifikasi() {
+    if (document.getElementById('css-notifikasi-header')) return;
+    const css = `
+    .wadah-lonceng { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+    .badge-notif-header { position: absolute; top: -6px; right: -8px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px; background: #ff3b30; color: #fff; font-size: 11px; font-weight: 700; display: none; align-items: center; justify-content: center; line-height: 1; box-shadow: 0 0 0 2px #0d0d0d; z-index: 5; }
+    .badge-notif-header.aktif { display: inline-flex; }
+    .panel-notifikasi { position: fixed; z-index: 9999; width: min(360px, calc(100vw - 24px)); max-height: 70vh; background: #161616; border: 1px solid #2a2a2a; border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,.6); display: none; flex-direction: column; overflow: hidden; }
+    .panel-notifikasi.terbuka { display: flex; }
+    .panel-notifikasi-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #2a2a2a; }
+    .panel-notifikasi-header strong { font-size: 14px; color: #fff; }
+    .panel-notifikasi-header .panel-notifikasi-count { font-size: 12px; color: #ff3b30; font-weight: 700; }
+    .panel-notifikasi-list { overflow-y: auto; flex: 1; }
+    .panel-notifikasi-item { display: flex; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #222; cursor: pointer; transition: background .15s; }
+    .panel-notifikasi-item:hover { background: #1f1f1f; }
+    .panel-notifikasi-item.belum-dibaca { background: rgba(255,59,48,.06); }
+    .panel-notifikasi-ikon { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; color: #ff3b30; font-size: 14px; }
+    .panel-notifikasi-isi { flex: 1; min-width: 0; }
+    .panel-notifikasi-isi strong { display: block; font-size: 13px; color: #fff; margin-bottom: 2px; }
+    .panel-notifikasi-isi p { margin: 0; font-size: 12px; color: #aaa; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .panel-notifikasi-waktu { font-size: 11px; color: #777; margin-top: 4px; }
+    .panel-notifikasi-kosong { padding: 28px 16px; text-align: center; color: #888; font-size: 13px; }
+    .panel-notifikasi-footer { padding: 10px 16px; border-top: 1px solid #2a2a2a; text-align: center; }
+    .panel-notifikasi-footer a { color: #ff3b30; font-size: 13px; text-decoration: none; font-weight: 600; }
+    `;
+    const style = document.createElement('style');
+    style.id = 'css-notifikasi-header';
+    style.textContent = css;
+    document.head.appendChild(style);
+})();
+let daftarNotifikasiHeader = [];
+let panelNotifikasiEl = null;
+let loncengEl = null;
+let badgeNotifEl = null;
+let timerPollNotifikasi = null;
+function cariLonceng() {
+    // Cari ikon lonceng (fa-bell) lalu ambil elemen klikabel induknya (button/a/div).
+    const ikon = document.querySelector('i.fa-bell, i.fa-bell-o, [class*="fa-bell"]');
+    if (!ikon) return null;
+    let el = ikon;
+    for (let i = 0; i < 4 && el.parentElement; i++) {
+        el = el.parentElement;
+        const tag = el.tagName;
+        if (tag === 'BUTTON' || tag === 'A' || el.classList.contains('ikon-atas') || el.classList.contains('tombol-atas')) break;
+    }
+    return el;
+}
+function formatWaktuNotifikasi(ts) {
+    if (!ts) return '';
+    const detik = Math.floor((Date.now() - ts) / 1000);
+    if (detik < 60) return 'baru saja';
+    const menit = Math.floor(detik / 60);
+    if (menit < 60) return `${menit} menit lalu`;
+    const jam = Math.floor(menit / 60);
+    if (jam < 24) return `${jam} jam lalu`;
+    const hari = Math.floor(jam / 24);
+    if (hari < 7) return `${hari} hari lalu`;
+    return new Date(ts).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+function ikonUntukTipe(tipe) {
+    if (tipe === 'balasan_komentar') return 'fa-reply';
+    if (tipe === 'premium_renewal') return 'fa-refresh';
+    if (tipe === 'premium_revoke') return 'fa-ban';
+    return 'fa-bell';
+}
+async function muatNotifikasiHeader() {
+    if (!penggunaLogin) { if (badgeNotifEl) { badgeNotifEl.classList.remove('aktif'); badgeNotifEl.textContent = ''; } return; }
+    try {
+        const token = await penggunaLogin.getIdToken();
+        const respon = await fetch('/api/notifications?action=list', {
+            headers: { Authorization: `Bearer ${token}` },
+            cache: 'no-store'
+        });
+        if (!respon.ok) return;
+        const data = await respon.json();
+        if (!data || !data.ok) return;
+        daftarNotifikasiHeader = data.notifications || [];
+        const belumDibaca = daftarNotifikasiHeader.filter(n => !n.dibaca).length;
+        if (badgeNotifEl) {
+            if (belumDibaca > 0) {
+                badgeNotifEl.textContent = belumDibaca > 9 ? '9+' : String(belumDibaca);
+                badgeNotifEl.classList.add('aktif');
+            } else {
+                badgeNotifEl.classList.remove('aktif');
+                badgeNotifEl.textContent = '';
+            }
+        }
+    } catch (_) { /* gagal? abaikan, tidak ganggu halaman */ }
+}
+function buatPanelNotifikasi() {
+    panelNotifikasiEl = document.createElement('div');
+    panelNotifikasiEl.className = 'panel-notifikasi';
+    panelNotifikasiEl.innerHTML = `
+        <div class="panel-notifikasi-header">
+            <strong><i class="fa fa-bell"></i> Notifikasi</strong>
+            <span class="panel-notifikasi-count"></span>
+        </div>
+        <div class="panel-notifikasi-list"></div>
+        <div class="panel-notifikasi-footer"><a href="profil.html">Lihat semua di Profil</a></div>`;
+    document.body.appendChild(panelNotifikasiEl);
+    // Tutup saat klik di luar panel / lonceng.
+    document.addEventListener('click', (e) => {
+        if (!panelNotifikasiEl.classList.contains('terbuka')) return;
+        if (panelNotifikasiEl.contains(e.target) || (loncengEl && loncengEl.contains(e.target))) return;
+        tutupPanelNotifikasi();
+    });
+}
+function posisikanPanel() {
+    if (!panelNotifikasiEl || !loncengEl) return;
+    const rect = loncengEl.getBoundingClientRect();
+    const lebarPanel = panelNotifikasiEl.offsetWidth || 340;
+    let kiri = rect.left + rect.width / 2 - lebarPanel / 2;
+    kiri = Math.max(12, Math.min(kiri, window.innerWidth - lebarPanel - 12));
+    const atas = Math.min(rect.bottom + 8, window.innerHeight - 100);
+    panelNotifikasiEl.style.left = `${kiri}px`;
+    panelNotifikasiEl.style.top = `${atas}px`;
+}
+function renderIsiPanel() {
+    if (!panelNotifikasiEl) return;
+    const list = panelNotifikasiEl.querySelector('.panel-notifikasi-list');
+    const countEl = panelNotifikasiEl.querySelector('.panel-notifikasi-count');
+    const belumDibaca = daftarNotifikasiHeader.filter(n => !n.dibaca).length;
+    countEl.textContent = belumDibaca ? `${belumDibaca} baru` : 'Terbaru';
+    if (!daftarNotifikasiHeader.length) {
+        list.innerHTML = `<div class="panel-notifikasi-kosong"><i class="fa fa-bell-slash"></i><br>Belum ada notifikasi.</div>`;
+        return;
+    }
+    list.innerHTML = daftarNotifikasiHeader.slice(0, 8).map(n => `
+        <div class="panel-notifikasi-item ${n.dibaca ? '' : 'belum-dibaca'}" data-link="${n.link ? encodeURIComponent(n.link) : ''}">
+            <div class="panel-notifikasi-ikon"><i class="fa ${ikonUntukTipe(n.tipe)}"></i></div>
+            <div class="panel-notifikasi-isi">
+                <strong>${n.judul}</strong>
+                <p>${n.pesan}</p>
+                <div class="panel-notifikasi-waktu">${formatWaktuNotifikasi(n.waktu)}</div>
+            </div>
+        </div>`).join('');
+    list.querySelectorAll('.panel-notifikasi-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const link = item.dataset.link;
+            tutupPanelNotifikasi();
+            if (link) window.location.href = decodeURIComponent(link);
+        });
+    });
+}
+async function bukaPanelNotifikasi() {
+    if (!panelNotifikasiEl) buatPanelNotifikasi();
+    renderIsiPanel();
+    posisikanPanel();
+    panelNotifikasiEl.classList.add('terbuka');
+    // Tandai semua sudah dibaca saat panel dibuka, lalu refresh badge.
+    if (penggunaLogin && daftarNotifikasiHeader.some(n => !n.dibaca)) {
+        try {
+            const token = await penggunaLogin.getIdToken();
+            await fetch('/api/notifications?action=readAll', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ action: 'readAll' })
+            });
+            daftarNotifikasiHeader.forEach(n => { n.dibaca = true; });
+            if (badgeNotifEl) { badgeNotifEl.classList.remove('aktif'); badgeNotifEl.textContent = ''; }
+            const countEl = panelNotifikasiEl?.querySelector('.panel-notifikasi-count');
+            if (countEl) countEl.textContent = 'Terbaru';
+        } catch (_) {}
+    }
+}
+function tutupPanelNotifikasi() {
+    panelNotifikasiEl?.classList.remove('terbuka');
+}
+function initLoncengNotifikasi() {
+    loncengEl = cariLonceng();
+    if (!loncengEl) return; // halaman tanpa lonceng (mis. profil) — lewati
+    // Bungkus lonceng dengan wadah relatif untuk badge.
+    const wadah = document.createElement('span');
+    wadah.className = 'wadah-lonceng';
+    badgeNotifEl = document.createElement('span');
+    badgeNotifEl.className = 'badge-notif-header';
+    loncengEl.parentNode.insertBefore(wadah, loncengEl);
+    wadah.appendChild(loncengEl);
+    wadah.appendChild(badgeNotifEl);
+    loncengEl.addEventListener('click', (e) => {
+        if (!penggunaLogin) return; // belum login → biarkan navigasi default (ke profil/login)
+        e.preventDefault();
+        e.stopPropagation();
+        if (panelNotifikasiEl && panelNotifikasiEl.classList.contains('terbuka')) {
+            tutupPanelNotifikasi();
+        } else {
+            muatNotifikasiHeader().then(bukaPanelNotifikasi);
+        }
+    });
+    window.addEventListener('resize', () => { if (panelNotifikasiEl?.classList.contains('terbuka')) posisikanPanel(); });
+    muatNotifikasiHeader();
+    if (timerPollNotifikasi) clearInterval(timerPollNotifikasi);
+    timerPollNotifikasi = setInterval(muatNotifikasiHeader, 60000); // refresh tiap 60 detik
+}
+// ==============================================
 // MULAI SEMUA FUNGSI
 // ==============================================
 document.addEventListener('DOMContentLoaded', () => {
     tampilkanAddon();
     aturTabTopAddon();
     aturNavigasiBawah();
+    initLoncengNotifikasi();
     document.getElementById('tombol-cari')?.addEventListener('click', terapkanFilterDanCari);
     document.getElementById('kotak-cari')?.addEventListener('input', jadwalkanPencarian);
     document.getElementById('kotak-cari')?.addEventListener('keydown', e => { if(e.key==='Enter') { clearTimeout(timerPencarian); terapkanFilterDanCari(); } });

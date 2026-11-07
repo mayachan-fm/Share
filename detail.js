@@ -16,6 +16,7 @@ import { cekAksesDownload } from "./download-access.js";
 import { ambilArtikelAcak } from "./articles.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 let namaAddonSekarang = '';
+let slugSekarang = null;
 const app = getApp();
 const db = getDatabase(app);
 let usuarioActual = null;
@@ -116,6 +117,7 @@ async function tampilkanDetail() {
     const wadah = document.getElementById('isi-detail');
     const urlParams = new URLSearchParams(window.location.search);
     const slug = urlParams.get('slug'); // Baca slug dari URL
+    slugSekarang = slug;
     if (!slug) {
         wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-circle"></i><p>Addon tidak ditemukan</p></div>`;
         return;
@@ -557,19 +559,26 @@ async function kirimBalasan(parentId, parentUsername, input, form) {
             replyTo: parentUsername
         });
         // Kirim notifikasi ke penulis komentar induk (jika bukan diri sendiri).
+        // Lewat server (action=create) agar tidak terblokir aturan keamanan RTDB.
         try {
             const parentSnap = await get(ref(db, `komentar/${idAddonSekarang}/${parentId}`));
             const parentUid = parentSnap.val()?.uid;
             if (parentUid && parentUid !== usuarioActual.uid) {
-                const namaPengirim = usuarioActual.email ? usuarioActual.email.split('@')[0] : 'Pengguna';
+                const namaPengirim = usuarioActual.displayName
+                    || (usuarioActual.email ? usuarioActual.email.split('@')[0] : 'Pengguna');
                 const cuplikan = isi.length > 80 ? isi.slice(0, 80) + '…' : isi;
-                await push(ref(db, `notifikasi/${parentUid}`), {
-                    tipe: 'balasan_komentar',
-                    judul: 'Balasan Komentar',
-                    pesan: `${namaPengirim} membalas komentarmu${namaAddonSekarang ? ` di addon “${namaAddonSekarang}”` : ''}: “${cuplikan}”`,
-                    link: `detail.html?slug=${encodeURIComponent(idAddonSekarang)}`,
-                    waktu: Date.now(),
-                    dibaca: false
+                const token = await usuarioActual.getIdToken();
+                await fetch('/api/notifications?action=create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                    body: JSON.stringify({
+                        action: 'create',
+                        targetUid: parentUid,
+                        tipe: 'balasan_komentar',
+                        judul: 'Balasan Komentar',
+                        pesan: `${namaPengirim} membalas komentarmu${namaAddonSekarang ? ` di addon “${namaAddonSekarang}”` : ''}: “${cuplikan}”`,
+                        link: `detail.html?slug=${encodeURIComponent(slugSekarang || idAddonSekarang)}`
+                    })
                 });
             }
         } catch (e) { console.warn('Gagal kirim notifikasi balasan:', e); }
