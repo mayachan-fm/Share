@@ -7,6 +7,8 @@ const BRANCH = 'main';
 const GITHUB_API = 'https://api.github.com';
 const CATALOG_CACHE_TTL = 60 * 1000;
 const PRIVILEGED_TOKEN_TTL = 5 * 60 * 1000;
+// UA crawler yang perlu dapat HTML OG — HARUS sama dengan list di vercel.json rewrite.
+const UA_CRAWLER = /facebookexternalhit|WhatsApp|Twitterbot|TelegramBot|LinkedInBot|Slackbot|Discordbot|redditbot|Googlebot|BingPreview|Applebot/i;
 let catalogCache = null;
 let catalogCacheAt = 0;
 function send(res, status, body) { res.status(status).json(body); }
@@ -160,7 +162,10 @@ module.exports = async (req, res) => {
     const mode = String(req.query?.mode || '').toLowerCase();
     const slug = String(req.query?.slug || '').trim();
     // Mode OG: kembalikan HTML dengan meta tag dinamis untuk crawler (tidak menambah function baru).
-    if (mode === 'og') {
+    // CATATAN: vercel.json rewrite mengirim crawler dari /detail.html ke /api/catalog TANPA ?mode=og
+    // (agar query ?slug=... asli tetap diteruskan ke endpoint). Jadi crawler UA tanpa mode = OG juga.
+    const uaCrawler = UA_CRAWLER.test(String(req.headers['user-agent'] || ''));
+    if (mode === 'og' || (!mode && uaCrawler)) {
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60');
       return res.status(200).send(renderOgHtml(req, data));
