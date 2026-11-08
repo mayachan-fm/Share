@@ -13,6 +13,19 @@ const firebaseConfig = {
 import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { auth, onAuthStateChanged } from "./auth.js";
 import { getDatabase, ref, get, set, increment } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+// ==============================================
+// TEMA TAMPILAN GLOBAL — terapkan tema tersimpan dari localStorage
+// (dipilih di halaman Profil, key 'tema-mcaddon'). Dijalankan secepat
+// mungkin agar tema langsung aktif tanpa kedip yang berarti.
+// ==============================================
+(function terapkanTemaGlobal() {
+    try {
+        const id = localStorage.getItem('tema-mcaddon') || 'default';
+        const html = document.documentElement;
+        ['tema-default','tema-gelap','tema-nether','tema-end','tema-emerald'].forEach(c => html.classList.remove(c));
+        if (id && id !== 'default') html.classList.add('tema-' + id);
+    } catch (_) {}
+})();
 const app = getApp();
 const db = getDatabase(app);
 let penggunaLogin = null;

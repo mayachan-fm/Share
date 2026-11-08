@@ -450,6 +450,8 @@ onAuthStateChanged(auth, async (user) => {
     });
   }
   render();
+  // Terapkan tema tersimpan segera saat halaman profil dibuka.
+  terapkan(localStorage.getItem('tema-mcaddon') || 'default');
 })();
 </script>
 </body>

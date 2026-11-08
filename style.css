@@ -2968,3 +2968,43 @@ body {
 .detail-deskripsi {
     white-space: pre-line;
 }
+
+/* ==============================================
+   TEMA TAMPILAN GLOBAL (dipilih di halaman Profil)
+   Override variabel CSS :root per tema.
+   Class diterapkan di <html> oleh script.js / detail.js / profil.html.
+   ============================================== */
+html.tema-gelap { /* Ultra Gelap */
+    --gelapPekat: #000000;
+    --gelapSedang: #0a0a0a;
+    --gelapKartu: #111111;
+    --batasGelap: #1f1f1f;
+}
+html.tema-nether { /* Nether (Premium) */
+    --merahUtama: #ff5a36;
+    --merahMuda: #ff8a5c;
+    --gelapPekat: #140a08;
+    --gelapSedang: #1f100c;
+    --gelapKartu: #2a1610;
+    --batasGelap: #4a2418;
+}
+html.tema-end { /* The End (Premium) */
+    --merahUtama: #a855f7;
+    --merahMuda: #c084fc;
+    --gelapPekat: #0f0a18;
+    --gelapSedang: #1a1226;
+    --gelapKartu: #241a33;
+    --batasGelap: #3a2a52;
+}
+html.tema-emerald { /* Emerald (Premium) */
+    --merahUtama: #10b981;
+    --merahMuda: #34d399;
+    --gelapPekat: #08130f;
+    --gelapSedang: #0f1f18;
+    --gelapKartu: #162a20;
+    --batasGelap: #1f4a36;
+}
+/* Transisi halus saat ganti tema */
+body, .header-tetap, .navigasi-bawah, .kartu-addon, .kartu-detail, .tombol-utama, .tombol-unduh {
+    transition: background-color .3s ease, border-color .3s ease, color .3s ease;
+}

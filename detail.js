@@ -15,6 +15,18 @@ import { auth, onAuthStateChanged, ambilRole } from "./auth.js";
 import { cekAksesDownload } from "./download-access.js";
 import { ambilArtikelAcak } from "./articles.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+// ==============================================
+// TEMA TAMPILAN GLOBAL — terapkan tema tersimpan dari localStorage
+// (dipilih di halaman Profil, key 'tema-mcaddon').
+// ==============================================
+(function terapkanTemaGlobal() {
+    try {
+        const id = localStorage.getItem('tema-mcaddon') || 'default';
+        const html = document.documentElement;
+        ['tema-default','tema-gelap','tema-nether','tema-end','tema-emerald'].forEach(c => html.classList.remove(c));
+        if (id && id !== 'default') html.classList.add('tema-' + id);
+    } catch (_) {}
+})();
 let namaAddonSekarang = '';
 let slugSekarang = null;
 const app = getApp();
