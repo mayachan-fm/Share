@@ -15,6 +15,59 @@
 .profil-role-label{color:#aaa;font-size:13px;margin:2px 0 8px}
 .profil-disukai-link{box-sizing:border-box;text-decoration:none;border:1px solid #333!important}
 @media(max-width:420px){.profil-statistik{gap:7px}.profil-stat-item{padding:12px 5px}.profil-stat-item strong{font-size:16px}}
+
+/* ================= PROFIL V3 — tema tombol + tampilan dipercantik ================= */
+.profil-halaman{padding-top:26px!important}
+.profil-kepala{display:flex;flex-direction:column;align-items:center;gap:9px;margin-bottom:6px}
+.profil-avatar-besar{position:relative;width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ff3b30,#ff8a5c);padding:3px;box-shadow:0 10px 26px rgba(255,59,48,.32);flex-shrink:0}
+.profil-avatar-besar.premium-ring{background:linear-gradient(135deg,#f5c542,#ff9d5c,#e7c66b);box-shadow:0 10px 26px rgba(245,197,66,.35)}
+.profil-avatar-besar.role-owner{background:linear-gradient(135deg,#f5c542,#ff7b3c)}
+.profil-avatar-besar.role-admin{background:linear-gradient(135deg,#62b7ff,#a855f7)}
+.profil-avatar-dalam{width:100%;height:100%;border-radius:50%;background:#161616;display:grid;place-items:center;color:#fff;font-size:38px}
+.profil-online-dot{position:absolute;bottom:4px;right:4px;width:18px;height:18px;border-radius:50%;background:#34c759;border:3px solid #161616;box-sizing:content-box}
+.profil-nama-besar{font-size:21px;font-weight:700;margin:2px 0 0;display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:center}
+.profil-mahkota{color:#f5c542;font-size:18px}
+.profil-badge-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;margin-top:2px}
+.profil-status-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#34c759;background:rgba(52,199,89,.12);border:1px solid rgba(52,199,89,.3);padding:4px 12px;border-radius:999px}
+.profil-role-label{margin:0!important;font-size:12px;color:#999}
+.profil-statistik{margin-top:18px}
+.profil-stat-item{position:relative;overflow:hidden}
+.profil-stat-item .stat-ikon{font-size:15px;color:var(--merahUtama,#ff3b30);opacity:.9;display:block;margin-bottom:2px}
+.profil-premium{margin-top:18px;border-radius:16px;padding:16px;border:1px solid rgba(255,255,255,.1);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));box-sizing:border-box}
+.profil-premium.premium-aktif{border-color:rgba(245,197,66,.45);background:linear-gradient(180deg,rgba(245,197,66,.10),rgba(245,197,66,.02));box-shadow:inset 0 0 0 1px rgba(245,197,66,.12)}
+.profil-premium.premium-dicabut,.profil-premium.premium-kadaluarsa{border-color:rgba(255,107,91,.35)}
+.profil-premium-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+.profil-premium-header strong{display:flex;align-items:center;gap:8px;font-size:16px}
+.profil-premium-header strong i{color:#f5c542}
+.profil-premium-header span{font-size:12px;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);white-space:nowrap}
+.profil-premium.premium-aktif .profil-premium-header span{background:rgba(245,197,66,.15);border-color:rgba(245,197,66,.4);color:#f5c542}
+.profil-premium-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.profil-premium-grid>div{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:10px 6px;text-align:center;min-width:0}
+.profil-premium-grid small{display:block;color:#999;font-size:11px;margin-bottom:4px}
+.profil-premium-grid strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profil-premium-warning{margin:10px 0 0;font-size:12px;color:#ffb347;background:rgba(255,179,71,.1);border:1px solid rgba(255,179,71,.3);padding:8px 12px;border-radius:10px;line-height:1.4}
+.profil-tema-box{margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.08)}
+.profil-tema-box>strong{display:flex;align-items:center;gap:8px;font-size:16px}
+.profil-tema-box>strong i{color:var(--merahUtama,#ff3b30)}
+.profil-tema-desc{margin:6px 0 14px!important;font-size:12.5px;color:#aaa;line-height:1.55}
+.pemilih-tema{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px}
+.tema-item{position:relative;appearance:none;-webkit-appearance:none;cursor:pointer;border:1.5px solid rgba(255,255,255,.12);border-radius:14px;padding:0;background:#141414;overflow:hidden;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,opacity .18s ease;display:flex;flex-direction:column;align-items:stretch;text-align:center;font-family:inherit;color:#fff;-webkit-tap-highlight-color:transparent}
+.tema-item:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3)}
+.tema-item:focus-visible{outline:2px solid var(--merahUtama,#ff3b30);outline-offset:2px}
+.tema-pratinjau{height:52px;position:relative;display:block;overflow:hidden}
+.tema-pratinjau::before{content:"";position:absolute;inset:0;background:var(--tema-bg,#1a1a1a)}
+.tema-pratinjau::after{content:"";position:absolute;top:9px;left:9px;width:34px;height:5px;border-radius:3px;background:var(--tema-aksen,#ff3b30);box-shadow:0 9px 0 rgba(255,255,255,.2),0 18px 0 rgba(255,255,255,.13)}
+.tema-pratinjau .tema-titik{position:absolute;bottom:9px;left:9px;z-index:1;width:8px;height:8px;border-radius:50%;background:var(--tema-aksen,#ff3b30);box-shadow:12px 0 0 rgba(255,255,255,.28),24px 0 0 rgba(255,255,255,.16)}
+.tema-label{padding:9px 6px 10px;font-size:12.5px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:5px;background:rgba(0,0,0,.28);min-height:20px}
+.tema-kunci-badge{font-size:10px;color:#f5c542;display:inline-flex;align-items:center;gap:3px}
+.tema-item.kunci{opacity:.6}
+.tema-item.kunci:hover{opacity:.9}
+.tema-item.aktif{border-color:var(--tema-aksen,#ff3b30);box-shadow:0 0 0 2px var(--tema-aksen,#ff3b30),0 8px 20px rgba(0,0,0,.45);transform:translateY(-2px)}
+.tema-ceklis{position:absolute;top:6px;right:6px;z-index:2;width:20px;height:20px;border-radius:50%;background:var(--tema-aksen,#ff3b30);color:#fff;display:grid;place-items:center;font-size:11px;opacity:0;transform:scale(.5);transition:opacity .2s ease,transform .2s ease;box-shadow:0 2px 6px rgba(0,0,0,.45)}
+.tema-item.aktif .tema-ceklis{opacity:1;transform:scale(1)}
+.tombol-logout{margin-top:18px;width:100%;padding:13px;border-radius:12px;border:1px solid rgba(255,59,48,.4);background:rgba(255,59,48,.08);color:#ff6b5b;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all .18s ease;font-family:inherit}
+.tombol-logout:hover{background:rgba(255,59,48,.18);border-color:#ff3b30;color:#fff}
+@media(max-width:420px){.profil-avatar-besar{width:80px;height:80px}.profil-avatar-dalam{font-size:32px}.pemilih-tema{grid-template-columns:repeat(2,1fr)}.profil-nama-besar{font-size:19px}}
 </style>
 </head>
 <body>
@@ -309,22 +362,22 @@ async function tampilProfil(user, role) {
     : `<div class="profil-notifikasi-kosong"><i class="fa fa-bell-slash"></i><span>Belum ada notifikasi.</span></div>`;
 
   appEl.innerHTML = `
-    <div class="profil-avatar"><i class="fa ${isStaff ? "fa-shield" : "fa-user"}"></i></div>
-    <h2>Profil</h2>
-    <div class="profil-akun-login">
-      <div class="profil-nama">${isStaff ? escapeHtml(nama) : "@" + escapeHtml(nama)}</div>
-      <div class="profil-status"><i class="fa fa-check-circle"></i> Akun aktif</div>
+    <div class="profil-kepala">
+      <div class="profil-avatar-besar ${premiumStatus.aktif ? "premium-ring" : "role-" + role}">
+        <div class="profil-avatar-dalam"><i class="fa ${isStaff ? "fa-shield" : "fa-user"} fa-fw"></i></div>
+        <span class="profil-online-dot" title="Akun aktif"></span>
+      </div>
+      <h2 class="profil-nama-besar">${isStaff ? escapeHtml(nama) : "@" + escapeHtml(nama)}${premiumStatus.aktif ? ' <i class="fa fa-crown profil-mahkota" title="Premium"></i>' : ""}</h2>
+      <div class="profil-badge-row">
+        <span class="profil-status-pill"><i class="fa fa-check-circle"></i> Akun aktif</span>
+        ${badgeRole(role)}
+      </div>
       <div class="profil-role-label">${escapeHtml(labelAkun)}</div>
-      ${badgeRole(role)}
     </div>
     <div class="profil-statistik">
-      <div class="profil-stat-item"><strong>${jumlahDisukai}</strong><span>Disukai</span></div>
-      <div class="profil-stat-item"><strong>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</strong><span>Role</span></div>
-      <div class="profil-stat-item"><strong>Aktif</strong><span>Status</span></div>
-    </div>
-    <div class="detail-info">
-      <div class="info-item"><span>Username / akun</span>${isStaff ? escapeHtml(nama) : "@" + escapeHtml(nama)}</div>
-      <div class="info-item"><span>Jenis akun</span>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</div>
+      <div class="profil-stat-item"><span class="stat-ikon"><i class="fa fa-heart"></i></span><strong>${jumlahDisukai}</strong><span>Disukai</span></div>
+      <div class="profil-stat-item"><span class="stat-ikon"><i class="fa ${role === "owner" ? "fa-star" : role === "admin" ? "fa-shield" : "fa-user"}"></i></span><strong>${role === "owner" ? "Owner" : role === "admin" ? "Admin" : "User"}</strong><span>Role</span></div>
+      <div class="profil-stat-item"><span class="stat-ikon"><i class="fa fa-bolt"></i></span><strong>Aktif</strong><span>Status</span></div>
     </div>
     <div class="profil-premium ${premiumClass}">
       <div class="profil-premium-header"><strong><i class="fa fa-diamond"></i> Premium</strong><span>${premiumLabel}</span></div>
@@ -334,11 +387,11 @@ async function tampilProfil(user, role) {
         <div><small>Sisa waktu</small><strong>${premiumStatus.permanen ? "Permanen" : formatSisa(premiumStatus.sisaMs)}</strong></div>
       </div>
       ${premiumStatus.aktif && !premiumStatus.permanen && premiumStatus.sisaMs <= 3 * 24 * 60 * 60 * 1000 ? `<p class="profil-premium-warning"><i class="fa fa-exclamation-triangle"></i> Premium akan segera berakhir.</p>` : ""}
-      <div class="profil-tema-box">
-        <strong><i class="fa fa-paint-brush"></i> Tema Tampilan</strong>
-        <p class="profil-tema-desc">${premiumStatus.aktif ? 'Semua tema terbuka untukmu! 👑' : 'Tema bertanda 🔒 khusus Premium. Upgrade untuk membuka!'}</p>
-        <div class="pemilih-tema" id="pemilih-tema-profil"></div>
-      </div>
+    </div>
+    <div class="profil-tema-box">
+      <strong><i class="fa fa-paint-brush"></i> Tema Tampilan</strong>
+      <p class="profil-tema-desc">${premiumStatus.aktif ? 'Semua tema terbuka untukmu! Pilih tema favoritmu di bawah.' : 'Tema bertanda kunci khusus Premium. Chat admin untuk upgrade!'}</p>
+      <div class="pemilih-tema" id="pemilih-tema-profil"></div>
     </div>
     <div class="profil-notifikasi-box">
       <div class="profil-notifikasi-header">
@@ -410,11 +463,11 @@ onAuthStateChanged(auth, async (user) => {
 <script>
 (function(){
   var TEMAS=[
-    {id:'default',nama:'Default',premium:false,warna:'#5D9C41'},
-    {id:'gelap',nama:'Ultra Gelap',premium:false,warna:'#111111'},
-    {id:'nether',nama:'Nether',premium:true,warna:'#ff5a36'},
-    {id:'end',nama:'The End',premium:true,warna:'#a855f7'},
-    {id:'emerald',nama:'Emerald',premium:true,warna:'#10b981'}
+    {id:'default',nama:'Default',premium:false,bg:'#1a1a1a',aksen:'#ff3b30'},
+    {id:'gelap',nama:'Ultra Gelap',premium:false,bg:'#000000',aksen:'#ff3b30'},
+    {id:'nether',nama:'Nether',premium:true,bg:'#2a1610',aksen:'#ff5a36'},
+    {id:'end',nama:'The End',premium:true,bg:'#241a33',aksen:'#a855f7'},
+    {id:'emerald',nama:'Emerald',premium:true,bg:'#162a20',aksen:'#10b981'}
   ];
   function simpan(id){try{localStorage.setItem('tema-mcaddon',id||'default');}catch(e){}}
   function terapkan(id){
@@ -429,11 +482,11 @@ onAuthStateChanged(auth, async (user) => {
     var aktif=localStorage.getItem('tema-mcaddon')||'default';
     box.innerHTML=TEMAS.map(function(t){
       var kunci=t.premium && !window.__premiumAktif;
-      return '<div class="tema-item '+(aktif===t.id?'aktif':'')+(kunci?' kunci':'')+'" data-id="'+t.id+'">'+
-        '<span class="tema-pratinjau" style="background:'+t.warna+'"></span>'+
-        '<span class="tema-nama">'+t.nama+'</span>'+
-        (kunci?'<span class="tema-kunci"><i class="fa fa-lock"></i> Premium</span>':'')+
-        '</div>';
+      return '<button type="button" class="tema-item '+(aktif===t.id?'aktif':'')+(kunci?' kunci':'')+'" data-id="'+t.id+'" style="--tema-bg:'+t.bg+';--tema-aksen:'+t.aksen+'">'+
+        '<span class="tema-ceklis"><i class="fa fa-check"></i></span>'+
+        '<span class="tema-pratinjau"><span class="tema-titik"></span></span>'+
+        '<span class="tema-label">'+t.nama+(kunci?' <span class="tema-kunci-badge"><i class="fa fa-lock"></i></span>':'')+'</span>'+
+        '</button>';
     }).join('');
     box.querySelectorAll('.tema-item').forEach(function(el){
       el.addEventListener('click',function(){
