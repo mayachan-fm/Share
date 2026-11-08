@@ -8,8 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MC Addon Share</title>
-    <meta name="theme-color" content="#101916">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="logo.png" type="image/png">
     <meta property="og:image" content="situs-logo.png">
@@ -26,6 +25,14 @@
     <meta property="og:image:height" content="630" />
     <meta property="og:type" content="website" />
     
+    <!-- === PWA (Progressive Web App) === -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#101916">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MC Addon">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
 </head>
 <body>
 <header class="header-tetap">
@@ -189,5 +196,14 @@
 
 <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script type="module" src="script.js"></script>
+    <!-- === Daftarkan Service Worker PWA === -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/service-worker.js').catch(function () {});
+        });
+    }
+    </script>
+
 </body>
 </html>

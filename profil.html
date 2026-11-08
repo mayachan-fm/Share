@@ -69,6 +69,14 @@
 .tombol-logout:hover{background:rgba(255,59,48,.18);border-color:#ff3b30;color:#fff}
 @media(max-width:420px){.profil-avatar-besar{width:80px;height:80px}.profil-avatar-dalam{font-size:32px}.pemilih-tema{grid-template-columns:repeat(2,1fr)}.profil-nama-besar{font-size:19px}}
 </style>
+    <!-- === PWA (Progressive Web App) === -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#101916">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MC Addon">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
 </head>
 <body>
 <header class="header-tetap">
@@ -507,5 +515,14 @@ onAuthStateChanged(auth, async (user) => {
   terapkan(localStorage.getItem('tema-mcaddon') || 'default');
 })();
 </script>
+    <!-- === Daftarkan Service Worker PWA === -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/service-worker.js').catch(function () {});
+        });
+    }
+    </script>
+
 </body>
 </html>
