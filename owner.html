@@ -405,9 +405,14 @@ async function muatRiwayatPengumuman() {
   const count = document.getElementById("count-pengumuman");
   if (!box || !count) return;
   try {
-    const snap = await get(ref(db, "pengumuman"));
-    const raw = snap.exists() ? snap.val() : {};
-    const list = Object.values(raw || {}).sort((a, b) => (Number(b.waktu) || 0) - (Number(a.waktu) || 0)).slice(0, 10);
+    // Riwayat diambil dari server (action=history) karena node `pengumuman`
+    // tidak bisa dibaca langsung dari client (RTDB: Permission denied).
+    const headers = await tokenHeader();
+    const resp = await fetch("/api/notifications?action=history", { headers });
+    let data = {};
+    try { data = await resp.json(); } catch (_) { data = {}; }
+    if (!resp.ok || !data.ok) throw new Error(data.error || `Gagal memuat riwayat (${resp.status}).`);
+    const list = (data.history || []).slice(0, 10);
     count.textContent = `${list.length} pengumuman`;
     if (!list.length) { box.innerHTML = `<div class="admin-list-empty">Belum pernah mengirim pengumuman.</div>`; return; }
     box.innerHTML = list.map(item => `
