@@ -1,12 +1,10 @@
 const admin = require('firebase-admin');
 const { catatAktivitas } = require('../lib/activity');
-
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
 const PATH = 'data.json';
 const BRANCH = 'main';
 const GITHUB_API = 'https://api.github.com';
-
 function getFirebaseAdmin() {
   if (admin.apps.length) return admin.app();
   const privateKey = String(process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
@@ -16,10 +14,20 @@ function getFirebaseAdmin() {
 function send(res,status,body){res.status(status).json(body);}
 function cleanUrl(value){let url=String(value||'').trim();const markdown=url.match(/^\[.*?\]\((https?:\/\/[^\s)]+)\)$/i);if(markdown)url=markdown[1];if(url.startsWith('<')&&url.endsWith('>'))url=url.slice(1,-1).trim();return url;}
 function validUrl(value){try{const u=new URL(cleanUrl(value));return ['http:','https:'].includes(u.protocol);}catch(_){return false;}}
+// Format tanggal hari ini dalam bahasa Indonesia, mis. "25 Oktober 2026".
+function formatTanggalIndoSekarang() {
+  try {
+    return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+  } catch (_) {
+    const bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const d = new Date();
+    return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+  }
+}
 function normalizeAddon(key,data){
   if(!/^[a-z0-9_-]{1,80}$/i.test(String(key||''))) throw new Error('Slug/ID addon tidak valid.');
   if(!data||typeof data!=='object') throw new Error('Data addon tidak valid.');
-  const result={slug:String(key).trim(),'nama file':String(data['nama file']||'').trim(),'type file':String(data['type file']||'').trim(),kategori:String(data.kategori||'').trim(),'link gambar':cleanUrl(data['link gambar']),'link download':cleanUrl(data['link download']),'versi mc':String(data['versi mc']||'').trim(),ukuran:String(data.ukuran||'').trim(),'tanggal unggah':String(data['tanggal unggah']||'').trim(),description:String(data.description||'').trim()};
+  const result={slug:String(key).trim(),'nama file':String(data['nama file']||'').trim(),'type file':String(data['type file']||'').trim(),kategori:String(data.kategori||'').trim(),'link gambar':cleanUrl(data['link gambar']),'link download':cleanUrl(data['link download']),'versi mc':String(data['versi mc']||'').trim(),ukuran:String(data.ukuran||'').trim(),'tanggal unggah':String(data['tanggal unggah']||'').trim(),description:String(data.description||'').trim(),'tanggal diperbarui':formatTanggalIndoSekarang()};
   if(!result['nama file']||result['nama file'].length>120||!result['type file']||result['type file'].length>40||!['addon','resource','peta','lainnya','apk'].includes(result.kategori.toLowerCase())||!result.description||result.description.length>1000) throw new Error(`Data addon "${key}" belum lengkap atau tidak valid.`);
   if(!validUrl(result['link gambar'])) throw new Error(`Link gambar untuk "${key}" tidak valid.`);
   if(!validUrl(result['link download'])) throw new Error(`Link download untuk "${key}" tidak valid.`);if(result['versi mc'].length>60||result.ukuran.length>30||result['tanggal unggah'].length>40) throw new Error(`Data addon "${key}" melebihi batas karakter.`);
