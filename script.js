@@ -125,7 +125,13 @@ function waktuTerbaru(item) {
 // Badge "Diperbarui": hanya tampil jika addon diedit dalam N hari terakhir.
 const HARI_BARU_DIperbarui = 14;
 function baruDiperbarui(item) {
-    const t = parseTanggalIndo(item && item['tanggal diperbarui']);
+    if (!item) return false;
+    // Pengaman backfill: jika "tanggal diperbarui" sama dengan "tanggal unggah",
+    // artinya addon belum pernah diedit (hanya di-backfill) -> badge tidak tampil.
+    const tEdit = String(item['tanggal diperbarui'] || '').trim().toLowerCase();
+    const tUnggah = String(item['tanggal unggah'] || '').trim().toLowerCase();
+    if (tEdit && tEdit === tUnggah) return false;
+    const t = parseTanggalIndo(item['tanggal diperbarui']);
     if (isNaN(t)) return false;
     return (Date.now() - t) <= HARI_BARU_DIperbarui * 24 * 60 * 60 * 1000;
 }

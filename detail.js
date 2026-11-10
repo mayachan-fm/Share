@@ -184,7 +184,7 @@ async function tampilkanDetail() {
                         <div class="info-item"><span>Versi MC</span>${item['versi mc'] || 'Tidak diketahui'}</div>
                         <div class="info-item"><span>Ukuran</span>${item['ukuran'] || 'Tidak diketahui'}</div>
                         <div class="info-item"><span>Tanggal Unggah</span>${item['tanggal unggah'] || 'Tidak diketahui'}</div>
-                        ${item['tanggal diperbarui'] ? `<div class="info-item"><span>Diperbarui</span>${item['tanggal diperbarui']}</div>` : ''}
+                        ${(item['tanggal diperbarui'] && String(item['tanggal diperbarui']).trim().toLowerCase() !== String(item['tanggal unggah'] || '').trim().toLowerCase()) ? `<div class="info-item"><span>Diperbarui</span>${item['tanggal diperbarui']}</div>` : ''}
                     </div>
                     <div class="detail-deskripsi">${item.description || 'Tidak ada deskripsi.'}</div>
                     <div class="tombol-aksi">
