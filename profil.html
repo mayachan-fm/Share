@@ -69,14 +69,12 @@
 .tombol-logout:hover{background:rgba(255,59,48,.18);border-color:#ff3b30;color:#fff}
 @media(max-width:420px){.profil-avatar-besar{width:80px;height:80px}.profil-avatar-dalam{font-size:32px}.pemilih-tema{grid-template-columns:repeat(2,1fr)}.profil-nama-besar{font-size:19px}}
 </style>
-    <!-- === PWA (Progressive Web App) === -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#101916">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="MC Addon">
-    <link rel="apple-touch-icon" href="icon-192.png">
-
+<style>
+.profil-notifikasi-item{position:relative}
+.tombol-hapus-notif{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:12px;padding:0;transition:background .15s,color .15s,border-color .15s;z-index:2}
+.tombol-hapus-notif:hover{background:#ff3b30;color:#fff;border-color:#ff3b30}
+.tombol-hapus-notif:disabled{cursor:default}
+</style>
 </head>
 <body>
 <header class="header-tetap">
@@ -150,11 +148,32 @@ import {
   ambilRole
 } from "./auth.js";
 import { ambilDataPremium, statusPremium } from "./premium.js";
-import { ambilNotifikasi, tandaiSemuaNotifikasiDibaca, jumlahNotifikasiBelumDibaca } from "./notifikasi.js";
+import { ambilNotifikasi, tandaiSemuaNotifikasiDibaca, jumlahNotifikasiBelumDibaca, hapusNotifikasi } from "./notifikasi.js";
 
 const appEl = document.getElementById("profil-app");
 // Klik notifikasi dengan link → buka halaman addon terkait.
+async function hapusNotifikasiKlik(id, btn) {
+  if (!id) return;
+  if (!confirm("Hapus notifikasi ini?")) return;
+  const user = auth.currentUser;
+  if (!user) { alert("Login diperlukan."); return; }
+  const itemEl = btn.closest(".profil-notifikasi-item");
+  btn.disabled = true; btn.style.opacity = ".45";
+  try {
+    await hapusNotifikasi(user, id);
+    const list = itemEl ? itemEl.parentElement : null;
+    if (itemEl) itemEl.remove();
+    if (list && !list.querySelector(".profil-notifikasi-item")) {
+      list.innerHTML = '<div class="profil-notifikasi-kosong"><i class="fa fa-bell-slash"></i><span>Belum ada notifikasi.</span></div>';
+    }
+  } catch (err) {
+    alert("Gagal menghapus notifikasi: " + err.message);
+    btn.disabled = false; btn.style.opacity = "";
+  }
+}
 appEl.addEventListener("click", (e) => {
+  const btnHapus = e.target.closest(".tombol-hapus-notif");
+  if (btnHapus) { e.stopPropagation(); e.preventDefault(); hapusNotifikasiKlik(btnHapus.dataset.id, btnHapus); return; }
   const item = e.target.closest(".profil-notifikasi-item[data-link]");
   if (item && item.dataset.link) window.location.href = item.dataset.link;
 });
@@ -358,13 +377,14 @@ async function tampilProfil(user, role) {
   const kelasNotifikasi = (tipe) => tipe === "balasan_komentar" ? "notifikasi-renewal" : tipe === "premium_revoke" ? "notifikasi-danger" : tipe === "premium_renewal" ? "notifikasi-renewal" : "notifikasi-premium";
   const htmlNotifikasi = daftarNotifikasi.length
     ? daftarNotifikasi.map(item => `
-      <div class="profil-notifikasi-item ${item.dibaca ? "sudah-dibaca" : "belum-dibaca"}"${item.link ? ` data-link="${escapeHtml(item.link)}" style="cursor:pointer"` : ""}>
+      <div class="profil-notifikasi-item ${item.dibaca ? "sudah-dibaca" : "belum-dibaca"}" data-id="${escapeHtml(item.id)}"${item.link ? ` data-link="${escapeHtml(item.link)}" style="cursor:pointer"` : ""}>
         <div class="profil-notifikasi-icon ${kelasNotifikasi(item.tipe)}"><i class="fa ${ikonNotifikasi(item.tipe)}"></i></div>
         <div class="profil-notifikasi-main">
           <strong>${escapeHtml(item.judul)}</strong>
           <p>${escapeHtml(item.pesan)}</p>
           <small>${escapeHtml(formatWaktuNotifikasi(item.waktu))}</small>
         </div>
+        ${item.dibaca ? `<button type="button" class="tombol-hapus-notif" data-id="${escapeHtml(item.id)}" title="Hapus notifikasi ini" aria-label="Hapus notifikasi ini"><i class="fa fa-times"></i></button>` : ""}
       </div>
     `).join("")
     : `<div class="profil-notifikasi-kosong"><i class="fa fa-bell-slash"></i><span>Belum ada notifikasi.</span></div>`;
@@ -515,14 +535,5 @@ onAuthStateChanged(auth, async (user) => {
   terapkan(localStorage.getItem('tema-mcaddon') || 'default');
 })();
 </script>
-    <!-- === Daftarkan Service Worker PWA === -->
-    <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function () {
-            navigator.serviceWorker.register('/service-worker.js').catch(function () {});
-        });
-    }
-    </script>
-
 </body>
 </html>
