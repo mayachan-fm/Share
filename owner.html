@@ -387,6 +387,42 @@ async function muatLaporanOwner(){
   }catch(error){list.innerHTML=`<div class="statistik-error">${esc(error.message)}</div>`;}
 }
 
+// === PENGUMUMAN / SIARAN OWNER ===
+async function kirimPengumuman(pesan) {
+  const headers = await tokenHeader();
+  const response = await fetch("/api/notifications", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ action: "broadcast", pesan })
+  });
+  let body;
+  try { body = await response.json(); } catch (_) { body = {}; }
+  if (!response.ok || !body.ok) throw new Error(body.error || `Gagal mengirim (${response.status}).`);
+  return body;
+}
+async function muatRiwayatPengumuman() {
+  const box = document.getElementById("riwayat-pengumuman");
+  const count = document.getElementById("count-pengumuman");
+  if (!box || !count) return;
+  try {
+    const snap = await get(ref(db, "pengumuman"));
+    const raw = snap.exists() ? snap.val() : {};
+    const list = Object.values(raw || {}).sort((a, b) => (Number(b.waktu) || 0) - (Number(a.waktu) || 0)).slice(0, 10);
+    count.textContent = `${list.length} pengumuman`;
+    if (!list.length) { box.innerHTML = `<div class="admin-list-empty">Belum pernah mengirim pengumuman.</div>`; return; }
+    box.innerHTML = list.map(item => `
+      <div class="owner-staff-item">
+        <div class="owner-staff-icon"><i class="fa fa-bullhorn"></i></div>
+        <div class="owner-staff-main">
+          <strong>${esc(item.judul || "Pengumuman")}</strong>
+          <small style="white-space:pre-wrap;overflow-wrap:anywhere;">${esc(item.pesan || "")}</small>
+          <small>${esc(waktu(item.waktu))} · terkirim ke ${Number(item.terkirim || 0)} pengguna</small>
+        </div>
+      </div>`).join("");
+  } catch (error) {
+    box.innerHTML = `<div class="admin-list-empty">Gagal memuat riwayat: ${esc(error.message)}</div>`;
+  }
+}
 onAuthStateChanged(auth, async user => {
   if (!user) { location.href = "profil.html"; return; }
 
@@ -401,6 +437,27 @@ onAuthStateChanged(auth, async user => {
       <div class="profil-avatar"><i class="fa fa-star"></i></div>
       <h2>Panel Owner</h2>
       <p class="detail-deskripsi">Kontrol Owner aktif. Owner adalah role tertinggi dan tidak dapat dikelola oleh Admin.</p>
+    </section>
+
+    <section class="owner-section-card owner-pengumuman-card">
+      <div class="owner-section-title">
+        <div><h3><i class="fa fa-bullhorn"></i> Pengumuman / Siaran</h3><p>Kirim pesan yang akan muncul sebagai notifikasi untuk <b>semua pengguna</b> (muncul di lonceng notifikasi mereka).</p></div>
+      </div>
+      <form id="form-pengumuman" class="owner-add-form" autocomplete="off">
+        <label>Isi pengumuman
+          <textarea id="isi-pengumuman" required maxlength="500" rows="3" placeholder="Tulis pengumuman untuk semua pengguna... (maks 500 karakter)" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid rgba(255,255,255,.11);border-radius:10px;outline:none;background:rgba(0,0,0,.22);color:#fff;font:inherit;resize:vertical;min-height:84px;margin-top:6px;"></textarea>
+        </label>
+        <div class="batas-form-admin"><span id="hitung-pengumuman">0/500</span></div>
+        <button type="submit" class="tombol-utama"><i class="fa fa-paper-plane"></i> Kirim ke Semua Pengguna</button>
+      </form>
+      <div id="pengumuman-status" class="owner-pesan info" role="alert" style="display:none;margin-top:10px;"></div>
+      <div class="owner-manage-subsection" style="margin-top:18px;">
+        <div class="admin-json-header">
+          <div><h3><i class="fa fa-history"></i> Riwayat Pengumuman</h3><p>Pengumuman yang pernah dikirim (terbaru di atas).</p></div>
+          <span class="admin-data-count" id="count-pengumuman">Memuat...</span>
+        </div>
+        <div id="riwayat-pengumuman" class="owner-daftar-staf"><div class="admin-list-empty">Memuat...</div></div>
+      </div>
     </section>
 
     <section id="dashboard-statistik-owner" class="statistik-box owner-section-card"><div class="statistik-kosong">Memuat statistik...</div></section>
@@ -530,6 +587,40 @@ onAuthStateChanged(auth, async user => {
     }
   });
 
+  // Pengumuman: penghitung karakter + handler kirim
+  const isiPengumuman = document.getElementById("isi-pengumuman");
+  const hitungPengumuman = document.getElementById("hitung-pengumuman");
+  if (isiPengumuman && hitungPengumuman) {
+    isiPengumuman.addEventListener("input", () => {
+      hitungPengumuman.textContent = `${isiPengumuman.value.length}/500`;
+    });
+  }
+  document.getElementById("form-pengumuman").addEventListener("submit", async event => {
+    event.preventDefault();
+    const textarea = document.getElementById("isi-pengumuman");
+    const button = event.currentTarget.querySelector("button[type=submit]");
+    const status = document.getElementById("pengumuman-status");
+    const pesan = textarea.value.trim();
+    if (pesan.length < 5) {
+      if (status) { status.style.display = "block"; status.className = "owner-pesan error"; status.textContent = "Pesan minimal 5 karakter."; }
+      return;
+    }
+    button.disabled = true;
+    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Mengirim...';
+    try {
+      const result = await kirimPengumuman(pesan);
+      if (status) { status.style.display = "block"; status.className = "owner-pesan sukses"; status.textContent = result.message || "Pengumuman terkirim."; }
+      textarea.value = "";
+      if (hitungPengumuman) hitungPengumuman.textContent = "0/500";
+      await muatRiwayatPengumuman();
+    } catch (error) {
+      if (status) { status.style.display = "block"; status.className = "owner-pesan error"; status.textContent = error.message; }
+    } finally {
+      button.disabled = false;
+      button.innerHTML = '<i class="fa fa-paper-plane"></i> Kirim ke Semua Pengguna';
+    }
+  });
+
   await muatStaff();
   await muatPremium();
   mulaiPemantauanPremiumOwner();
@@ -539,6 +630,7 @@ onAuthStateChanged(auth, async user => {
   document.getElementById("filter-status-laporan")?.addEventListener("change", muatLaporanOwner);
   await muatAktivitasOwner();
   document.getElementById('muat-aktivitas-owner')?.addEventListener('click', muatAktivitasOwner);
+  await muatRiwayatPengumuman();
   document.getElementById('muat-riwayat-premium')?.addEventListener('click', () => muatPremium());
 });
 </script>
