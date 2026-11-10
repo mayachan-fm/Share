@@ -136,6 +136,63 @@ module.exports = async (req, res) => {
       }
       return send(res, 405, { ok: false, error: 'Method tidak diizinkan.' });
     }
+    // ============================================================
+    // action=broadcast — Owner mengirim pengumuman ke SEMUA pengguna.
+    // Server menulis notifikasi ke node notifikasi/{uid} setiap akun
+    // (fan-out) agar sistem notifikasi existing (polling + panel)
+    // menampilkannya tanpa perubahan frontend. Tidak menambah file API
+    // baru (batas Vercel Hobby sudah penuh).
+    // ============================================================
+    if (action === 'broadcast') {
+      if (req.method !== 'POST') return send(res, 405, { ok: false, error: 'Method tidak diizinkan.' });
+      const roleSnap = await db.ref(`roles/${user.uid}`).once('value');
+      if (String(roleSnap.val() || 'user').toLowerCase() !== 'owner') {
+        return send(res, 403, { ok: false, error: 'Hanya Owner yang dapat mengirim pengumuman.' });
+      }
+      const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+      const pesan = clean(body.pesan, 500);
+      if (pesan.length < 5) {
+        return send(res, 400, { ok: false, error: 'Pesan pengumuman minimal 5 karakter (maksimal 500).' });
+      }
+      const judul = clean(body.judul || 'Pengumuman dari Owner', 120) || 'Pengumuman dari Owner';
+      // Rate limit: maksimal 1 pengumuman per 60 detik (anti double-kirim).
+      const rateRef = db.ref(`batas_pengumuman/${user.uid}`);
+      const now = Date.now();
+      const rate = Number((await rateRef.once('value')).val()) || 0;
+      if (now - rate < 60 * 1000) {
+        return send(res, 429, { ok: false, error: 'Baru saja mengirim pengumuman. Tunggu 60 detik lagi.' });
+      }
+      // Ambil semua UID akun Firebase Auth (paginate, aman sampai ribuan akun).
+      const uids = [];
+      let pageToken;
+      do {
+        const listResult = await admin.auth().listUsers(1000, pageToken);
+        listResult.users.forEach(u => uids.push(u.uid));
+        pageToken = listResult.pageToken;
+      } while (pageToken);
+      if (!uids.length) return send(res, 200, { ok: true, message: 'Tidak ada pengguna terdaftar.', terkirim: 0 });
+      // Fan-out: satu multi-path update untuk semua pengguna (cepat, 1 request).
+      const notif = { tipe: 'pengumuman', judul, pesan, waktu: now, dibaca: false };
+      const updates = {};
+      uids.forEach(uid => {
+        const key = db.ref().push().key;
+        updates[`notifikasi/${uid}/${key}`] = notif;
+      });
+      await db.ref().update(updates);
+      await rateRef.set(now);
+      // Arsip pengumuman (dibaca owner panel sebagai riwayat).
+      const arcRef = db.ref('pengumuman').push();
+      await arcRef.set({
+        id: arcRef.key,
+        judul,
+        pesan,
+        waktu: now,
+        oleh: user.uid,
+        olehEmail: clean(user.email || '', 160),
+        terkirim: uids.length
+      });
+      return send(res, 200, { ok: true, message: `Pengumuman terkirim ke ${uids.length} pengguna.`, terkirim: uids.length });
+    }
     const base = db.ref(`notifikasi/${user.uid}`);
     if (req.method === 'GET' || action === 'list') {
       const snap = await base.once('value');
