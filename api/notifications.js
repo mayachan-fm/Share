@@ -245,6 +245,18 @@ module.exports = async (req, res) => {
       if (updated) await base.update(updates);
       return send(res, 200, {ok:true, updated});
     }
+    // action=delete — user menghapus satu notifikasi miliknya sendiri
+    // (mis. pengumuman yang sudah dibaca). Dipanggil dari profil.html.
+    if (action === 'delete') {
+      const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+      const id = clean(body.id, 180);
+      if (!id || /[\/.#$\[\]]/.test(id)) return send(res, 400, { ok: false, error: 'ID notifikasi tidak valid.' });
+      const refNotif = db.ref(`notifikasi/${user.uid}/${id}`);
+      const snap = await refNotif.once('value');
+      if (!snap.exists()) return send(res, 404, { ok: false, error: 'Notifikasi tidak ditemukan.' });
+      await refNotif.remove();
+      return send(res, 200, { ok: true });
+    }
     return send(res, 400, {ok:false,error:'Aksi notifikasi tidak dikenal.'});
   } catch (error) {
     console.error('notifications error:', error);
