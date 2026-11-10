@@ -193,6 +193,26 @@ module.exports = async (req, res) => {
       });
       return send(res, 200, { ok: true, message: `Pengumuman terkirim ke ${uids.length} pengguna.`, terkirim: uids.length });
     }
+    // ============================================================
+    // action=history — Owner melihat arsip pengumuman (riwayat).
+    // Dibaca server-side karena node `pengumuman` tidak boleh dibaca
+    // langsung dari client (aturan RTDB menolak → "Permission denied"
+    // di Panel Owner). Tidak menambah file API baru (batas Vercel Hobby
+    // sudah penuh) — digabung di notifications.js yang sama.
+    // ============================================================
+    if (action === 'history') {
+      if (req.method !== 'GET') return send(res, 405, { ok: false, error: 'Method tidak diizinkan.' });
+      const roleSnap = await db.ref(`roles/${user.uid}`).once('value');
+      if (String(roleSnap.val() || 'user').toLowerCase() !== 'owner') {
+        return send(res, 403, { ok: false, error: 'Hanya Owner yang dapat melihat riwayat pengumuman.' });
+      }
+      const snap = await db.ref('pengumuman').once('value');
+      const raw = snap.val();
+      const history = !raw || typeof raw !== 'object' ? [] :
+        Object.values(raw).sort((a, b) => (Number(b.waktu) || 0) - (Number(a.waktu) || 0)).slice(0, 50);
+      res.setHeader('Cache-Control', 'no-store');
+      return send(res, 200, { ok: true, history });
+    }
     const base = db.ref(`notifikasi/${user.uid}`);
     if (req.method === 'GET' || action === 'list') {
       const snap = await base.once('value');
