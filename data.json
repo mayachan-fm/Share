@@ -4080,5 +4080,17 @@
     "tanggal unggah": "9 November 2026",
     "tanggal diperbarui": "9 November 2026",
     "description": "Mulailah perjalanan mengasyikkan dengan DLC Avatar!\nMenjadi Na'vi dari Klan Omatikaya. Kuasai keterampilan bertahan hidup dan lakukan ritual peralihan tradisional. Bersatu dengan banshee, daki Pegunungan Hallelujah, dan jelajahi hutan hujan bercahaya! Temui makhluk-makhluk menakjubkan dan tanaman kehidupan di sepanjang jalan.\nTermasuk skin populer!"
+  },
+  "nightmare_dimension": {
+    "slug": "nightmare_dimension",
+    "nama file": "Nightmare Dimension",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-11-e8dba27d-643e-4b89-90f6-1b9e8d8f3be9.jpg",
+    "link download": "https://gofile.io/d/9fCQOrz8",
+    "versi mc": "1.26+",
+    "ukuran": "6.22 MB",
+    "tanggal unggah": "11 November 2026",
+    "description": "DIMENSI BARU MENUNGGU ANDA! Jelajahi dimensi baru yang menakutkan, hadapi makhluk unik, temukan struktur yang terlupakan, dan gunakan alat yang belum pernah ada sebelumnya untuk bertahan hidup di dunia di mana lingkungannya sendiri yang melawan Anda.\n\n+ 16 MOB KUSTOM;\n+ STRUKTUR BARU;\n+ BLOK BARU, ITEM, SENJATA, DAN BANYAK LAGI!"
   }
 }
