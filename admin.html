@@ -26,6 +26,80 @@
     <meta name="apple-mobile-web-app-title" content="MC Addon">
     <link rel="apple-touch-icon" href="icon-192.png">
 
+    <style id="css-panel-card">
+    /* ===== KARTU PANEL ADMIN / OWNER (setiap bagian jadi kartu terpisah) ===== */
+    .panel-card {
+      position: relative;
+      margin: 18px 0;
+      padding: 18px 16px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      border-top: 4px solid var(--pc-accent, #ff3b30);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012));
+      box-shadow: 0 8px 24px rgba(0,0,0,.30);
+      overflow: hidden;
+    }
+    .panel-card-tambah  { --pc-accent: #ff3b30; }
+    .panel-card-kelola  { --pc-accent: #0a84ff; }
+    .panel-card-antrian { --pc-accent: #ff9500; }
+    .panel-card-json    { --pc-accent: #34c759; }
+    .panel-card .admin-generator-header h3 i,
+    .panel-card .admin-json-header h3 i {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 9px; margin-right: 8px;
+      background: rgba(255,255,255,.09); color: var(--pc-accent, #ff3b30);
+      font-size: 14px; vertical-align: middle;
+    }
+    .owner-section-card,
+    .aktivitas-box,
+    .statistik-box {
+      position: relative;
+      margin: 18px 0 !important;
+      padding: 18px 16px 16px !important;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10) !important;
+      border-top: 4px solid var(--pc-accent, #ff3b30) !important;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.012));
+      box-shadow: 0 8px 24px rgba(0,0,0,.30);
+      overflow: hidden;
+    }
+    .owner-intro-card      { --pc-accent: #ff3b30; }
+    .owner-pengumuman-card { --pc-accent: #ff9500; }
+    #bagian-laporan-owner  { --pc-accent: #ff2d55; }
+    .owner-admin-card      { --pc-accent: #0a84ff; }
+    .owner-premium-section { --pc-accent: #ffcc00; }
+    .aktivitas-box         { --pc-accent: #8e8e93; }
+    .statistik-box         { --pc-accent: #34c759; }
+    .owner-section-title h3 i,
+    .aktivitas-header h3 i,
+    .statistik-header h3 i {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 30px; height: 30px; border-radius: 9px; margin-right: 8px;
+      background: rgba(255,255,255,.09); color: var(--pc-accent, #ff3b30);
+      font-size: 14px; vertical-align: middle;
+    }
+    .owner-manage-subsection {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.07);
+    }
+    .admin-manage-box,
+    .admin-json-area,
+    .daftar-admin-addon {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+    }
+    .admin-manage-box .admin-json-header { margin-bottom: 12px; }
+    .admin-manage-search { margin-top: 4px; }
+    @media (max-width: 480px) {
+      .panel-card, .owner-section-card, .aktivitas-box, .statistik-box {
+        padding: 15px 13px 13px; border-radius: 14px; margin: 14px 0;
+      }
+    }
+    </style>
 </head>
 <body>
 <header class="header-tetap"><div class="container header-dalam">
@@ -171,6 +245,7 @@ onAuthStateChanged(auth, async user => {
     <section id="dashboard-statistik-admin" class="statistik-box"><div class="statistik-kosong">Memuat statistik...</div></section>
 
     <div class="admin-generator">
+      <section class="panel-card panel-card-tambah">
       <div class="admin-generator-header">
         <div>
           <h3 id="judul-form-addon"><i class="fa fa-plus-circle"></i> Tambah Addon</h3>
@@ -178,14 +253,6 @@ onAuthStateChanged(auth, async user => {
         </div>
         <div class="admin-data-count" id="admin-data-count">Memuat katalog...</div>
       </div>
-
-      <div class="admin-manage-box">
-        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di katalog server, lalu edit addon yang dipilih. Penghapusan addon hanya dapat dilakukan oleh Owner di Panel Owner.</p></div></div>
-        <div class="admin-manage-search"><input id="cari-addon-lama" type="search" placeholder="Cari nama addon atau slug..." autocomplete="off"><span id="hasil-cari-addon">Memuat...</span></div>
-        <div id="daftar-addon-lama" class="daftar-addon-lama"></div>
-      </div>
-
-      <div id="mode-edit-addon" class="mode-edit-addon" hidden><div class="mode-edit-header"><div><h3><i class="fa fa-pencil"></i> Edit Addon</h3><p id="edit-addon-target"></p></div><button type="button" class="tombol-sekunder" id="batal-edit-addon">Batal Edit</button></div></div>
 
       <form id="form-addon" autocomplete="off">
         <div class="form-grid-admin">
@@ -214,10 +281,30 @@ onAuthStateChanged(auth, async user => {
         </div>
       </form>
 
+      </section>
+      <section class="panel-card panel-card-kelola">
+      <div class="admin-manage-box">
+        <div class="admin-json-header"><div><h3><i class="fa fa-pencil-square-o"></i> Kelola Addon</h3><p>Cari addon yang sudah ada di katalog server, lalu edit addon yang dipilih. Penghapusan addon hanya dapat dilakukan oleh Owner di Panel Owner.</p></div></div>
+        <div class="admin-manage-search"><input id="cari-addon-lama" type="search" placeholder="Cari nama addon atau slug..." autocomplete="off"><span id="hasil-cari-addon">Memuat...</span></div>
+        <div id="daftar-addon-lama" class="daftar-addon-lama"></div>
+      </div>
+
+      <div id="mode-edit-addon" class="mode-edit-addon" hidden><div class="mode-edit-header"><div><h3><i class="fa fa-pencil"></i> Edit Addon</h3><p id="edit-addon-target"></p></div><button type="button" class="tombol-sekunder" id="batal-edit-addon">Batal Edit</button></div></div>
+
+      </section>
+      <section class="panel-card panel-card-antrian">
+      <div class="admin-json-header" style="margin-bottom:12px;">
+        <div>
+          <h3><i class="fa fa-list-ul"></i> Antrian Tambah (Sesi Ini)</h3>
+          <p>Addon yang sudah kamu masukkan ke daftar, tapi belum disimpan ke katalog server.</p>
+        </div>
+      </div>
       <div class="daftar-admin-addon" id="daftar-admin-addon">
         <div class="admin-list-empty">Belum ada addon baru. Isi formulir di atas.</div>
       </div>
 
+      </section>
+      <section class="panel-card panel-card-json">
       <div class="admin-json-area">
         <div class="admin-json-header">
           <div>
@@ -234,6 +321,7 @@ onAuthStateChanged(auth, async user => {
         </div>
         <p class="catatan-staf"><i class="fa fa-shield"></i> Tombol GitHub akan meminta konfirmasi sebelum mengubah <code>data.json</code>. Token GitHub tidak disimpan di browser.</p>
       </div>
+      </section>
     </div>
 
     <a class="tombol-sekunder tombol-kembali-admin" href="profil.html"><i class="fa fa-arrow-left"></i> Kembali ke Profil</a>
