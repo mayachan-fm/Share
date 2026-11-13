@@ -1,6 +1,73 @@
 const admin = require('firebase-admin');
 const { catatAktivitas } = require('../lib/activity');
 
+// === Konfigurasi GitHub untuk iklan.json (TIDAK menambah function API baru) ===
+const OWNER = 'mayachan-fm';
+const REPO = 'Share';
+const IKLAN_PATH = 'iklan.json';
+const BRANCH = 'main';
+const GITHUB_API = 'https://api.github.com';
+const MAKS_IKLAN = 20;
+async function githubIklan(path, options = {}) {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) { const e = new Error('GITHUB_TOKEN belum disetel di Vercel.'); e.status = 500; throw e; }
+  const response = await fetch(`${GITHUB_API}/repos/${OWNER}/${REPO}/${path}`, { ...options, headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28', ...(options.headers || {}) } });
+  const text = await response.text();
+  let body; try { body = JSON.parse(text); } catch (_) { body = { message: text }; }
+  if (!response.ok) { const e = new Error(body.message || `GitHub API error ${response.status}`); e.status = response.status; throw e; }
+  return body;
+}
+// Turunkan ikon, warna, dan label otomatis dari jenis link (WA/YouTube/TikTok/dll).
+function derivasiTampilanIklan(link) {
+  const u = String(link || '').toLowerCase();
+  if (u.includes('wa.me') || u.includes('whatsapp.com')) return { label: 'Channel WhatsApp', ikon: 'fa-whatsapp', warna: '#25D366' };
+  if (u.includes('tiktok.com')) return { label: 'Akun TikTok', ikon: 'fa-music', warna: '#fe2c55' };
+  if (u.includes('youtube.com') || u.includes('youtu.be')) return { label: 'Channel YouTube', ikon: 'fa-youtube-play', warna: '#ff0000' };
+  if (u.includes('discord.gg') || u.includes('discord.com')) return { label: 'Grup Discord', ikon: 'fa-users', warna: '#5865F2' };
+  if (u.includes('t.me') || u.includes('telegram')) return { label: 'Channel Telegram', ikon: 'fa-paper-plane', warna: '#229ED9' };
+  if (u.includes('instagram.com')) return { label: 'Akun Instagram', ikon: 'fa-instagram', warna: '#E1306C' };
+  if (u.includes('facebook.com') || u.includes('fb.com')) return { label: 'Halaman Facebook', ikon: 'fa-facebook', warna: '#1877F2' };
+  return { label: 'Channel / Promo', ikon: 'fa-bullhorn', warna: '#ff3b30' };
+}
+function idIklan() { return 'ik_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+// Id deterministik untuk item lama yang belum punya id (berdasarkan nama + link, agar tidak pernah duplikat).
+function idIklanLama(nama, link) { return 'ik_' + Buffer.from(String(nama || '') + '|' + String(link || '')).toString('base64url').slice(0, 12); }
+// Baca iklan.json dari GitHub, normalisasi jadi array + pastikan tiap item punya id (item lama tanpa id diberi id otomatis).
+async function bacaIklanNormal() {
+  let current;
+  try {
+    current = await githubIklan(`contents/${IKLAN_PATH}?ref=${encodeURIComponent(BRANCH)}`);
+  } catch (e) {
+    if (Number(e.status) === 404) return { list: [], sha: null };
+    throw e;
+  }
+  if (!current.content || current.encoding !== 'base64') throw new Error('GitHub tidak mengembalikan isi iklan.json yang bisa dibaca.');
+  const jsonText = Buffer.from(current.content.replace(/\n/g, ''), 'base64').toString('utf8').trim() || '[]';
+  let parsed;
+  try { parsed = JSON.parse(jsonText); } catch (_) { throw new Error('iklan.json di GitHub bukan JSON yang valid.'); }
+  const arr = Array.isArray(parsed) ? parsed : (Array.isArray(parsed && parsed.iklan) ? parsed.iklan : []);
+  const list = arr.map(item => {
+    const it = (item && typeof item === 'object') ? item : {};
+    const turunan = derivasiTampilanIklan(it.link);
+    return {
+      id: String(it.id || idIklanLama(it.nama, it.link)),
+      nama: String(it.nama || '').trim(),
+      deskripsi: String(it.deskripsi || '').trim(),
+      link: String(it.link || '').trim(),
+      label: String(it.label || turunan.label),
+      ikon: String(it.ikon || turunan.ikon),
+      warna: String(it.warna || turunan.warna)
+    };
+  }).filter(it => it.nama && it.link);
+  return { list, sha: current.sha };
+}
+async function tulisIklan(list, sha, pesanCommit) {
+  const encoded = Buffer.from(JSON.stringify(list, null, 2) + '\n', 'utf8').toString('base64');
+  const payload = { message: pesanCommit.slice(0, 200), content: encoded, branch: BRANCH };
+  if (sha) payload.sha = sha;
+  return githubIklan(`contents/${IKLAN_PATH}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
 function send(res, status, body) { res.status(status).json(body); }
 
 function getFirebaseAdmin() {
@@ -236,6 +303,41 @@ module.exports = async (req, res) => {
       });
       await catatAktivitas({decoded:owner, role:'owner', aksi:'premium_cabut', targetId:uid, targetName:targetEmail, detail:'Mencabut akses Premium'});
       return send(res, 200, {ok:true,message:`Premium ${targetEmail} berhasil dicabut.`});
+    }
+
+    // === Kelola Iklan / Promosi — disimpan di iklan.json (dibaca frontend langsung sebagai file static). ===
+    if (action === 'iklan_list') {
+      const { list } = await bacaIklanNormal();
+      return send(res, 200, { ok: true, iklan: list });
+    }
+    if (action === 'iklan_tambah') {
+      const nama = String(req.body?.nama || '').trim();
+      const deskripsi = String(req.body?.deskripsi || '').trim();
+      const link = String(req.body?.link || '').trim();
+      if (!nama || nama.length > 80) return send(res, 400, { ok: false, error: 'Nama channel wajib diisi (maks. 80 karakter).' });
+      if (!deskripsi || deskripsi.length > 300) return send(res, 400, { ok: false, error: 'Deskripsi wajib diisi (maks. 300 karakter).' });
+      let linkBersih = link;
+      try { const u = new URL(link); if (!['http:', 'https:'].includes(u.protocol)) throw new Error(); linkBersih = u.href; } catch (_) { return send(res, 400, { ok: false, error: 'Link harus diawali https:// yang valid.' }); }
+      const { list, sha } = await bacaIklanNormal();
+      if (list.length >= MAKS_IKLAN) return send(res, 400, { ok: false, error: `Maksimal ${MAKS_IKLAN} iklan. Hapus salah satu dulu.` });
+      const turunan = derivasiTampilanIklan(linkBersih);
+      const item = { id: idIklan(), nama, deskripsi, link: linkBersih, label: turunan.label, ikon: turunan.ikon, warna: turunan.warna, ditambahkan: Date.now() };
+      list.push(item);
+      await tulisIklan(list, sha, `Tambah iklan: ${nama}`);
+      await catatAktivitas({ decoded: owner, role: 'owner', aksi: 'iklan_tambah', targetId: item.id, targetName: nama, detail: 'Menambahkan iklan/promosi ke iklan.json' });
+      return send(res, 200, { ok: true, message: `Iklan "${nama}" berhasil ditambahkan.`, iklan: list });
+    }
+    if (action === 'iklan_hapus') {
+      const id = String(req.body?.id || '').trim();
+      if (!id) return send(res, 400, { ok: false, error: 'ID iklan tidak diberikan.' });
+      const { list, sha } = await bacaIklanNormal();
+      const indeks = list.findIndex(it => it.id === id);
+      if (indeks === -1) return send(res, 404, { ok: false, error: 'Iklan tidak ditemukan.' });
+      const terhapus = list[indeks];
+      list.splice(indeks, 1);
+      await tulisIklan(list, sha, `Hapus iklan: ${terhapus.nama}`);
+      await catatAktivitas({ decoded: owner, role: 'owner', aksi: 'iklan_hapus', targetId: id, targetName: terhapus.nama, detail: 'Menghapus iklan/promosi dari iklan.json' });
+      return send(res, 200, { ok: true, message: `Iklan "${terhapus.nama}" berhasil dihapus.`, iklan: list });
     }
 
     return send(res, 400, {ok:false,error:'Aksi tidak dikenal.'});
