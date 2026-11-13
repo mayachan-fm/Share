@@ -13,7 +13,7 @@ const firebaseConfig = {
 import { getApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { auth, onAuthStateChanged, ambilRole } from "./auth.js";
 import { cekAksesDownload } from "./download-access.js";
-import { ambilArtikelAcak } from "./articles.js";
+import { ambilArtikelAcak, ambilIklanAcak } from "./articles.js";
 import { getDatabase, ref, get, increment, set, push, onValue } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 // ==============================================
 // TEMA TAMPILAN GLOBAL — terapkan tema tersimpan dari localStorage
@@ -312,9 +312,53 @@ async function tampilkanDetail() {
             try {
                 if (!sesi) sesi = await mulaiSesiDownload();
                 const artikel = ambilArtikelAcak();
+                let iklan = null;
+                try { iklan = await ambilIklanAcak(); } catch (_) { iklan = null; }
                 const gambarArtikel = item['link gambar'] || '';
-                const durasiDetik = Number(sesi.waitSeconds) || 10;
+                // Durasi tunggu acak 10–20 detik (tidak boleh kurang dari waitSeconds server).
+                const durasiDetik = Math.max(Number(sesi.waitSeconds) || 10, 10 + Math.floor(Math.random() * 11));
                 let sisa = durasiDetik;
+                const labelHeader = iklan ? '<i class="fa fa-bullhorn"></i> Promosi' : '<i class="fa fa-book"></i> Artikel singkat';
+                // Konten tengah: kartu iklan (jika /iklan.json ada & valid) atau fallback ke artikel lama.
+                let kontenTengah;
+                if (iklan) {
+                    const warnaIklan = iklan.warna || '#25D366';
+                    const ikonIklan = iklan.ikon || 'fa-bullhorn';
+                    kontenTengah = `
+                        <style id="css-iklan-gate">
+                        .iklan-kartu-mengambang{display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.12);margin:2px 0 14px;animation:iklanMengambang 3s ease-in-out infinite}
+                        @keyframes iklanMengambang{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+                        .iklan-ikon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--iklan-warna,#25D366);color:#fff;font-size:20px;flex-shrink:0}
+                        .iklan-info{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+                        .iklan-info strong{font-size:1rem;color:#fff}
+                        .iklan-info span{font-size:.72rem;color:#aaa}
+                        .iklan-badge{font-size:.62rem;padding:3px 8px;border-radius:999px;background:rgba(255,59,48,.15);color:#ff6b60;border:1px solid rgba(255,59,48,.3);white-space:nowrap}
+                        .iklan-deskripsi{color:#ccc;font-size:.88rem;line-height:1.6;margin:0 0 14px;white-space:pre-line}
+                        .iklan-tombol-cek{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;background:var(--iklan-warna,#25D366);color:#fff;font-weight:600;font-size:.95rem;text-decoration:none;margin-bottom:14px;transition:transform .15s,opacity .15s}
+                        .iklan-tombol-cek:hover{transform:translateY(-1px);opacity:.92}
+                        </style>
+                        <div class="iklan-kartu-mengambang" style="--iklan-warna:${escapeHtml(warnaIklan)}">
+                            <div class="iklan-ikon"><i class="fa ${escapeHtml(ikonIklan)}"></i></div>
+                            <div class="iklan-info">
+                                <strong>${escapeHtml(iklan.nama || 'Channel Kami')}</strong>
+                                <span>${escapeHtml(iklan.label || 'Ikuti kami')}</span>
+                            </div>
+                            <span class="iklan-badge">Promo</span>
+                        </div>
+                        <p class="iklan-deskripsi">${escapeHtml(iklan.deskripsi || '')}</p>
+                        <a class="iklan-tombol-cek" href="${escapeHtml(iklan.link || '#')}" target="_blank" rel="noopener" style="--iklan-warna:${escapeHtml(warnaIklan)}">
+                            <i class="fa fa-external-link"></i> Cek
+                        </a>
+                    `;
+                } else {
+                    kontenTengah = `
+                        ${gambarArtikel ? `<img class="artikel-download-gambar" src="${escapeHtml(gambarArtikel)}" alt="${escapeHtml(item['nama file'])}" loading="eager" decoding="async">` : ''}
+                        <div class="artikel-download-konten">
+                            <h3 id="judul-artikel-download">${escapeHtml(artikel.judul)}</h3>
+                            <p>${escapeHtml(artikel.isi)}</p>
+                        </div>
+                    `;
+                }
                 const overlayLama = document.getElementById('artikel-download-overlay');
                 if (overlayLama) overlayLama.remove();
                 const overlay = document.createElement('div');
@@ -324,16 +368,12 @@ async function tampilkanDetail() {
                     <div class="artikel-download-backdrop"></div>
                     <section class="artikel-download-modal" role="dialog" aria-modal="true" aria-labelledby="judul-artikel-download">
                         <div class="artikel-download-modal-header">
-                            <span class="artikel-download-label"><i class="fa fa-book"></i> Artikel singkat</span>
-                            <button type="button" class="artikel-download-close" aria-label="Tutup artikel">
+                            <span class="artikel-download-label">${labelHeader}</span>
+                            <button type="button" class="artikel-download-close" aria-label="Tutup">
                                 <i class="fa fa-times"></i>
                             </button>
                         </div>
-                        ${gambarArtikel ? `<img class="artikel-download-gambar" src="${escapeHtml(gambarArtikel)}" alt="${escapeHtml(item['nama file'])}" loading="eager" decoding="async">` : ''}
-                        <div class="artikel-download-konten">
-                            <h3 id="judul-artikel-download">${escapeHtml(artikel.judul)}</h3>
-                            <p>${escapeHtml(artikel.isi)}</p>
-                        </div>
+                        ${kontenTengah}
                         <div class="artikel-download-timer">
                             <div class="artikel-download-waktu">
                                 <i class="fa fa-clock"></i>
@@ -341,7 +381,7 @@ async function tampilkanDetail() {
                             </div>
                             <div class="artikel-download-progress"><span id="artikel-download-progress-bar"></span></div>
                             <button type="button" class="tombol-unduh artikel-download-lanjut" id="artikel-download-lanjut" disabled>
-                                <i class="fa fa-lock"></i> Menunggu...
+                                <i class="fa fa-lock"></i> Tunggu ${sisa} detik
                             </button>
                         </div>
                     </section>
@@ -372,14 +412,17 @@ async function tampilkanDetail() {
                         const persen = Math.min(100, ((durasiDetik - sisa) / durasiDetik) * 100);
                         progressBar.style.width = `${persen}%`;
                     }
-                    if (sisa > 0) return;
+                    if (sisa > 0) {
+                        if (tombolLanjut) tombolLanjut.innerHTML = '<i class="fa fa-lock"></i> Tunggu ' + sisa + ' detik';
+                        return;
+                    }
                     clearInterval(interval);
                     interval = null;
                     if (teksSisa) teksSisa.textContent = 'Selesai';
                     if (progressBar) progressBar.style.width = '100%';
                     if (tombolLanjut) {
                         tombolLanjut.disabled = false;
-                        tombolLanjut.innerHTML = '<i class="fa fa-download"></i> Lanjut Download';
+                        tombolLanjut.innerHTML = '<i class="fa fa-download"></i> Unduh File';
                         tombolLanjut.classList.add('siap');
                     }
                 }, 1000);

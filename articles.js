@@ -38,3 +38,26 @@ export const ARTIKEL_DOWNLOAD = [
 export function ambilArtikelAcak() {
   return ARTIKEL_DOWNLOAD[Math.floor(Math.random() * ARTIKEL_DOWNLOAD.length)];
 }
+
+// ==============================================
+// IKLAN DOWNLOAD GATE — menggantikan artikel untuk user biasa.
+// Daftar iklan diambil dari file static /iklan.json (bukan API function,
+// aman dari batas Vercel). Edit langsung iklan.json untuk menambah/mengubah
+// channel yang dipromosikan. Jika gagal dimuat, gate fallback ke artikel lama.
+// ==============================================
+let _cacheIklan = null;
+export async function ambilIklanAcak() {
+  if (_cacheIklan === null) {
+    try {
+      const res = await fetch('/iklan.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('iklan.json tidak ditemukan (' + res.status + ')');
+      const data = await res.json();
+      _cacheIklan = Array.isArray(data) ? data : (Array.isArray(data && data.iklan) ? data.iklan : []);
+    } catch (e) {
+      console.warn('Gagal memuat iklan, fallback ke artikel:', e);
+      _cacheIklan = [];
+    }
+  }
+  if (!_cacheIklan.length) return null;
+  return _cacheIklan[Math.floor(Math.random() * _cacheIklan.length)];
+}

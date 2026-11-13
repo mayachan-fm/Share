@@ -403,6 +403,55 @@ function mulaiPemantauanPremiumOwner() {
   }, 60000);
 }
 
+function tampilPesanIklan(text, jenis = "info") {
+  const box = document.getElementById("owner-pesan-iklan");
+  if (!box) return;
+  box.className = `owner-pesan ${jenis}`;
+  box.textContent = text;
+}
+function renderIklan(list) {
+  const box = document.getElementById("owner-daftar-iklan");
+  const count = document.getElementById("owner-count-iklan");
+  if (!box || !count) return;
+  count.textContent = `${list.length} iklan`;
+  if (!list.length) { box.innerHTML = `<div class="admin-list-empty">Belum ada iklan. Tambahkan lewat form di atas.</div>`; return; }
+  box.innerHTML = list.map(item => `
+    <div class="owner-staff-item">
+      <div class="owner-staff-icon" style="background:${esc(item.warna || '#ff3b30')}"><i class="fa ${esc(item.ikon || 'fa-bullhorn')}"></i></div>
+      <div class="owner-staff-main">
+        <strong>${esc(item.nama)}</strong>
+        <span class="owner-role-badge role-user">${esc(item.label || 'Promosi')}</span>
+        <small style="word-break:break-all">${esc(item.link)}</small>
+        <small>${esc(item.deskripsi || '').slice(0, 120)}${(item.deskripsi || '').length > 120 ? '…' : ''}</small>
+      </div>
+      <button type="button" class="tombol-hapus-admin tombol-hapus-iklan" data-id="${esc(item.id)}"><i class="fa fa-trash"></i> Hapus</button>
+    </div>`).join("");
+  box.querySelectorAll(".tombol-hapus-iklan").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      if (!confirm("Hapus iklan ini dari daftar?")) return;
+      btn.disabled = true;
+      try {
+        const result = await apiPremium("iklan_hapus", { id: btn.dataset.id });
+        tampilPesanIklan(result.message, "sukses");
+        await muatIklan();
+      } catch (error) {
+        tampilPesanIklan(error.message, "error");
+        btn.disabled = false;
+      }
+    });
+  });
+}
+async function muatIklan() {
+  const box = document.getElementById("owner-daftar-iklan");
+  if (!box) return;
+  box.innerHTML = `<div class="admin-list-empty">Memuat daftar iklan...</div>`;
+  try {
+    const result = await apiPremium("iklan_list");
+    renderIklan(result.iklan || []);
+  } catch (error) {
+    box.innerHTML = `<div class="admin-list-empty">${esc(error.message)}</div>`;
+  }
+}
 function renderStaff(staff) {
   const list = document.getElementById("owner-daftar-staf");
   const count = document.getElementById("owner-count-staf");
@@ -684,6 +733,36 @@ onAuthStateChanged(auth, async user => {
       </div>
     </section>
 
+    <section class="owner-section-card owner-iklan-section">
+      <div class="owner-section-title">
+        <div><h3><i class="fa fa-bullhorn"></i> Kelola Iklan / Promosi</h3><p>Iklan tampil di halaman tunggu download (Download Gate), dipilih acak. Disimpan di file iklan.json.</p></div>
+      </div>
+      <div class="owner-manage-subsection">
+        <div class="admin-json-header">
+          <div><h3><i class="fa fa-plus-circle"></i> Tambah Iklan</h3><p>Cukup isi nama channel, deskripsi singkat, dan link. Ikon &amp; warna otomatis menyesuaikan (WA hijau, YouTube merah, TikTok pink, dll).</p></div>
+        </div>
+        <form id="form-tambah-iklan" class="owner-add-form" autocomplete="off">
+          <label>Nama Channel / Promo
+            <input id="iklan-nama" type="text" required maxlength="80" placeholder="mis. Channel WhatsApp MC Addon">
+          </label>
+          <label>Deskripsi singkat
+            <textarea id="iklan-deskripsi" required maxlength="300" rows="3" placeholder="Jelaskan singkat channel/promo ini..."></textarea>
+          </label>
+          <label>Link (https://...)
+            <input id="iklan-link" type="url" required maxlength="300" placeholder="https://wa.me/628xxx atau https://youtube.com/...">
+          </label>
+          <button type="submit" class="tombol-utama"><i class="fa fa-plus"></i> Tambah Iklan</button>
+        </form>
+        <div id="owner-pesan-iklan" class="owner-pesan info" role="alert"></div>
+      </div>
+      <div class="owner-manage-subsection">
+        <div class="admin-json-header">
+          <div><h3><i class="fa fa-list"></i> Daftar Iklan Aktif</h3><p>Setiap kali pengguna klik Unduh, satu iklan dipilih acak dari daftar ini.</p></div>
+          <span class="admin-data-count" id="owner-count-iklan">Memuat...</span>
+        </div>
+        <div id="owner-daftar-iklan" class="owner-daftar-staf"></div>
+      </div>
+    </section>
     <section class="aktivitas-box owner-section-card">
       <div class="aktivitas-header"><div><h3><i class="fa fa-history"></i> Semua Aktivitas</h3><p>Riwayat pengelolaan addon dan perubahan role Admin.</p></div><button type="button" class="tombol-sekunder" id="muat-aktivitas-owner"><i class="fa fa-refresh"></i> Muat ulang</button></div>
       <div id="aktivitas-owner" class="aktivitas-daftar"><div class="aktivitas-kosong">Memuat aktivitas...</div></div>
@@ -771,8 +850,33 @@ onAuthStateChanged(auth, async user => {
     }
   });
 
+  document.getElementById("form-tambah-iklan").addEventListener("submit", async event => {
+    event.preventDefault();
+    const namaEl = document.getElementById("iklan-nama");
+    const deskEl = document.getElementById("iklan-deskripsi");
+    const linkEl = document.getElementById("iklan-link");
+    const button = event.currentTarget.querySelector("button[type=submit]");
+    const nama = namaEl.value.trim();
+    const deskripsi = deskEl.value.trim();
+    const link = linkEl.value.trim();
+    if (!nama || !deskripsi || !link) return;
+    button.disabled = true;
+    button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Memproses...';
+    try {
+      const result = await apiPremium("iklan_tambah", { nama, deskripsi, link });
+      tampilPesanIklan(result.message, "sukses");
+      namaEl.value = ""; deskEl.value = ""; linkEl.value = "";
+      await muatIklan();
+    } catch (error) {
+      tampilPesanIklan(error.message, "error");
+    } finally {
+      button.disabled = false;
+      button.innerHTML = '<i class="fa fa-plus"></i> Tambah Iklan';
+    }
+  });
   await muatStaff();
   await muatPremium();
+  await muatIklan();
   mulaiPemantauanPremiumOwner();
   await muatDashboardStatistikOwner();
   await muatLaporanOwner();
