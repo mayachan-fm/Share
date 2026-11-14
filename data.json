@@ -4093,5 +4093,17 @@
     "tanggal unggah": "11 November 2026",
     "description": "DIMENSI BARU MENUNGGU ANDA! Jelajahi dimensi baru yang menakutkan, hadapi makhluk unik, temukan struktur yang terlupakan, dan gunakan alat yang belum pernah ada sebelumnya untuk bertahan hidup di dunia di mana lingkungannya sendiri yang melawan Anda.\n\n+ 16 MOB KUSTOM;\n+ STRUKTUR BARU;\n+ BLOK BARU, ITEM, SENJATA, DAN BANYAK LAGI!",
     "tanggal diperbarui": "13 November 2026"
+  },
+  "super_satisfying_sounds": {
+    "slug": "super_satisfying_sounds",
+    "nama file": "Super Satisfying Sounds 1.0",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-14-21cb2deb-36cd-4860-988f-0e84e07484cf.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.1/Super.Satisfying.Sounds.resources.MDF.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "11.76 MB",
+    "tanggal unggah": "14 November 2026",
+    "description": "Jadikan dunia Anda terdengar lebih memuaskan dengan banyak koleksi suara yang disempurnakan untuk blok, gerakan, interaksi, dan banyak lagi!\n\n- Suara pemecah, penempatan & pukulan blok yang memuaskan!\n- Suara langkah kaki unik untuk blok berbeda!\n- Interaksi yang ditingkatkan untuk pintu, peti & lainnya!"
   }
 }
