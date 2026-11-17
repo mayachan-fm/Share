@@ -56,10 +56,38 @@ async function bacaIklanNormal() {
       link: String(it.link || '').trim(),
       label: String(it.label || turunan.label),
       ikon: String(it.ikon || turunan.ikon),
-      warna: String(it.warna || turunan.warna)
+      warna: String(it.warna || turunan.warna),
+      berakhir: it.berakhir == null ? null : (Number(it.berakhir) || null),
+      ditambahkan: Number(it.ditambahkan) || null
     };
   }).filter(it => it.nama && it.link);
   return { list, sha: current.sha };
+}
+// Iklan aktif jika permanen (berakhir null) atau belum melewati tanggal berakhirnya.
+function iklanAktif(it, now = Date.now()) { return it.berakhir == null || Number(it.berakhir) > now; }
+// Baca iklan lalu BUANG yang sudah kadaluwarsa (auto-delete). Jika ada yang terhapus,
+// tulis langsung kembali ke GitHub + catat aktivitas, sehingga benar-benar hilang dari berkas.
+async function bacaIklanAktif(ownerDecoded = null) {
+  const { list, sha } = await bacaIklanNormal();
+  const now = Date.now();
+  const aktif = list.filter(it => iklanAktif(it, now));
+  const kedaluwarsa = list.filter(it => !iklanAktif(it, now));
+  let shaBaru = sha;
+  if (kedaluwarsa.length) {
+    const namaDihapus = kedaluwarsa.map(x => x.nama).filter(Boolean).join(', ').slice(0, 120) || 'beberapa iklan';
+    try {
+      const hasilTulis = await tulisIklan(aktif, sha, `Hapus otomatis iklan kadaluwarsa: ${namaDihapus}`);
+      shaBaru = (hasilTulis && hasilTulis.content && hasilTulis.content.sha) || null;
+      if (ownerDecoded) {
+        for (const x of kedaluwarsa) {
+          try { await catatAktivitas({ decoded: ownerDecoded, role: 'owner', aksi: 'iklan_kadaluwarsa', targetId: x.id, targetName: x.nama, detail: 'Iklan/promosi dihapus otomatis karena masa aktif berakhir' }); } catch (_) {}
+        }
+      }
+    } catch (e) {
+      console.warn('Gagal membersihkan iklan kadaluwarsa:', e.message);
+    }
+  }
+  return { list: aktif, sha: shaBaru };
 }
 async function tulisIklan(list, sha, pesanCommit) {
   const encoded = Buffer.from(JSON.stringify(list, null, 2) + '\n', 'utf8').toString('base64');
@@ -307,25 +335,31 @@ module.exports = async (req, res) => {
 
     // === Kelola Iklan / Promosi — disimpan di iklan.json (dibaca frontend langsung sebagai file static). ===
     if (action === 'iklan_list') {
-      const { list } = await bacaIklanNormal();
+      const { list } = await bacaIklanAktif(owner);
       return send(res, 200, { ok: true, iklan: list });
     }
     if (action === 'iklan_tambah') {
       const nama = String(req.body?.nama || '').trim();
       const deskripsi = String(req.body?.deskripsi || '').trim();
       const link = String(req.body?.link || '').trim();
+      const durasi = String(req.body?.durasi || 'permanen').trim().toLowerCase();
+      const hariDurasi = { '7_hari': 7, '30_hari': 30, '90_hari': 90 };
       if (!nama || nama.length > 80) return send(res, 400, { ok: false, error: 'Nama channel wajib diisi (maks. 80 karakter).' });
       if (!deskripsi || deskripsi.length > 800) return send(res, 400, { ok: false, error: 'Deskripsi wajib diisi (maks. 800 karakter).' });
       let linkBersih = link;
       try { const u = new URL(link); if (!['http:', 'https:'].includes(u.protocol)) throw new Error(); linkBersih = u.href; } catch (_) { return send(res, 400, { ok: false, error: 'Link harus diawali https:// yang valid.' }); }
-      const { list, sha } = await bacaIklanNormal();
-      if (list.length >= MAKS_IKLAN) return send(res, 400, { ok: false, error: `Maksimal ${MAKS_IKLAN} iklan. Hapus salah satu dulu.` });
+      const { list, sha } = await bacaIklanAktif(owner);
+      if (list.length >= MAKS_IKLAN) return send(res, 400, { ok: false, error: `Maksimal ${MAKS_IKLAN} iklan aktif. Hapus salah satu dulu.` });
       const turunan = derivasiTampilanIklan(linkBersih);
-      const item = { id: idIklan(), nama, deskripsi, link: linkBersih, label: turunan.label, ikon: turunan.ikon, warna: turunan.warna, ditambahkan: Date.now() };
+      const berakhir = (durasi === 'permanen' || !hariDurasi[durasi]) ? null : Date.now() + hariDurasi[durasi] * 24 * 60 * 60 * 1000;
+      const item = { id: idIklan(), nama, deskripsi, link: linkBersih, label: turunan.label, ikon: turunan.ikon, warna: turunan.warna, ditambahkan: Date.now(), berakhir };
       list.push(item);
       await tulisIklan(list, sha, `Tambah iklan: ${nama}`);
-      await catatAktivitas({ decoded: owner, role: 'owner', aksi: 'iklan_tambah', targetId: item.id, targetName: nama, detail: 'Menambahkan iklan/promosi ke iklan.json' });
-      return send(res, 200, { ok: true, message: `Iklan "${nama}" berhasil ditambahkan.`, iklan: list });
+      const labelDurasi = berakhir
+        ? `berakhir ${new Date(berakhir).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`
+        : 'permanen';
+      await catatAktivitas({ decoded: owner, role: 'owner', aksi: 'iklan_tambah', targetId: item.id, targetName: nama, detail: `Menambahkan iklan/promosi (${labelDurasi})` });
+      return send(res, 200, { ok: true, message: `Iklan "${nama}" berhasil ditambahkan (${labelDurasi}).`, iklan: list });
     }
     if (action === 'iklan_hapus') {
       const id = String(req.body?.id || '').trim();
