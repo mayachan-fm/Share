@@ -52,7 +52,10 @@ export async function ambilIklanAcak() {
       const res = await fetch('/iklan.json', { cache: 'no-store' });
       if (!res.ok) throw new Error('iklan.json tidak ditemukan (' + res.status + ')');
       const data = await res.json();
-      _cacheIklan = Array.isArray(data) ? data : (Array.isArray(data && data.iklan) ? data.iklan : []);
+      const semuaIklan = Array.isArray(data) ? data : (Array.isArray(data && data.iklan) ? data.iklan : []);
+      const sekarang = Date.now();
+      // Buang iklan yang masa aktifnya sudah habis (berakhir <= sekarang). Item tanpa berakhir = permanen.
+      _cacheIklan = semuaIklan.filter(it => !(it && it.berakhir != null && Number(it.berakhir) <= sekarang));
     } catch (e) {
       console.warn('Gagal memuat iklan, fallback ke artikel:', e);
       _cacheIklan = [];

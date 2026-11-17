@@ -413,9 +413,19 @@ function renderIklan(list) {
   const box = document.getElementById("owner-daftar-iklan");
   const count = document.getElementById("owner-count-iklan");
   if (!box || !count) return;
-  count.textContent = `${list.length} iklan`;
-  if (!list.length) { box.innerHTML = `<div class="admin-list-empty">Belum ada iklan. Tambahkan lewat form di atas.</div>`; return; }
-  box.innerHTML = list.map(item => `
+  count.textContent = `${list.length} iklan aktif`;
+  if (!list.length) { box.innerHTML = `<div class="admin-list-empty">Belum ada iklan aktif. Tambahkan lewat form di atas.</div>`; return; }
+  const sekarang = Date.now();
+  box.innerHTML = list.map(item => {
+    let infoMasa;
+    if (!item.berakhir) {
+      infoMasa = '<span style="color:#34c759"><i class="fa fa-check-circle"></i> Permanen (tidak berakhir)</span>';
+    } else if (Number(item.berakhir) <= sekarang) {
+      infoMasa = '<span style="color:#ff6b60"><i class="fa fa-clock-o"></i> Kadaluwarsa</span>';
+    } else {
+      infoMasa = `<span style="color:#ffcc00"><i class="fa fa-hourglass-half"></i> Berakhir ${esc(formatPremiumDate(item.berakhir))} · ${esc(formatSisaPremium(item.berakhir))}</span>`;
+    }
+    return `
     <div class="owner-staff-item">
       <div class="owner-staff-icon" style="background:${esc(item.warna || '#ff3b30')}"><i class="fa ${esc(item.ikon || 'fa-bullhorn')}"></i></div>
       <div class="owner-staff-main">
@@ -423,9 +433,11 @@ function renderIklan(list) {
         <span class="owner-role-badge role-user">${esc(item.label || 'Promosi')}</span>
         <small style="word-break:break-all">${esc(item.link)}</small>
         <small>${esc(item.deskripsi || '').slice(0, 120)}${(item.deskripsi || '').length > 120 ? '…' : ''}</small>
+        <small>${infoMasa}</small>
       </div>
       <button type="button" class="tombol-hapus-admin tombol-hapus-iklan" data-id="${esc(item.id)}"><i class="fa fa-trash"></i> Hapus</button>
-    </div>`).join("");
+    </div>`;
+  }).join("");
   box.querySelectorAll(".tombol-hapus-iklan").forEach(btn => {
     btn.addEventListener("click", async () => {
       if (!confirm("Hapus iklan ini dari daftar?")) return;
@@ -751,6 +763,15 @@ onAuthStateChanged(auth, async user => {
           <label>Link (https://...)
             <input id="iklan-link" type="url" required maxlength="300" placeholder="https://wa.me/628xxx atau https://youtube.com/...">
           </label>
+          <label>Masa aktif promosi
+            <select id="iklan-durasi">
+              <option value="7_hari">7 hari</option>
+              <option value="30_hari" selected>30 hari</option>
+              <option value="90_hari">90 hari</option>
+              <option value="permanen">Permanen (tidak berakhir)</option>
+            </select>
+            <small style="display:block;margin-top:4px;opacity:.65">Setelah masa aktif habis, promosi otomatis terhapus.</small>
+          </label>
           <button type="submit" class="tombol-utama"><i class="fa fa-plus"></i> Tambah Iklan</button>
         </form>
         <div id="owner-pesan-iklan" class="owner-pesan info" role="alert"></div>
@@ -855,17 +876,20 @@ onAuthStateChanged(auth, async user => {
     const namaEl = document.getElementById("iklan-nama");
     const deskEl = document.getElementById("iklan-deskripsi");
     const linkEl = document.getElementById("iklan-link");
+    const durasiEl = document.getElementById("iklan-durasi");
     const button = event.currentTarget.querySelector("button[type=submit]");
     const nama = namaEl.value.trim();
     const deskripsi = deskEl.value.trim();
     const link = linkEl.value.trim();
+    const durasi = durasiEl ? durasiEl.value : "permanen";
     if (!nama || !deskripsi || !link) return;
     button.disabled = true;
     button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Memproses...';
     try {
-      const result = await apiPremium("iklan_tambah", { nama, deskripsi, link });
+      const result = await apiPremium("iklan_tambah", { nama, deskripsi, link, durasi });
       tampilPesanIklan(result.message, "sukses");
       namaEl.value = ""; deskEl.value = ""; linkEl.value = "";
+      if (durasiEl) durasiEl.value = "30_hari";
       await muatIklan();
     } catch (error) {
       tampilPesanIklan(error.message, "error");
