@@ -333,7 +333,12 @@ async function tampilkanDetail() {
                         .iklan-info strong{font-size:1rem;color:#fff}
                         .iklan-info span{font-size:.72rem;color:#aaa}
                         .iklan-badge{font-size:.62rem;padding:3px 8px;border-radius:999px;background:rgba(255,59,48,.15);color:#ff6b60;border:1px solid rgba(255,59,48,.3);white-space:nowrap}
-                        .iklan-deskripsi{color:#ccc;font-size:.88rem;line-height:1.6;margin:0 0 14px;white-space:pre-line}
+                        .iklan-deskripsi{color:#ccc;font-size:.88rem;line-height:1.6;margin:0 0 14px;white-space:pre-line;max-height:132px;overflow-y:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.28) transparent}
+                        .iklan-deskripsi::-webkit-scrollbar{width:6px}
+                        .iklan-deskripsi::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:999px}
+                        .iklan-deskripsi::-webkit-scrollbar-track{background:transparent}
+                        .iklan-gulir-hint{font-size:.66rem;color:#8a8f98;text-align:center;margin:-6px 0 12px;letter-spacing:.2px}
+                        .iklan-gulir-hint i{margin-right:4px}
                         .iklan-tombol-cek{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:12px;border:none;cursor:pointer;background:var(--iklan-warna,#25D366);color:#fff;font-weight:600;font-size:.95rem;text-decoration:none;margin-bottom:14px;transition:transform .15s,opacity .15s}
                         .iklan-tombol-cek:hover{transform:translateY(-1px);opacity:.92}
                         </style>
@@ -389,6 +394,14 @@ async function tampilkanDetail() {
                 document.body.appendChild(overlay);
                 document.body.classList.add('download-gate-terbuka');
                 tombolGate.hidden = true;
+                // Jika deskripsi iklan kepanjangan, tampilkan petunjuk bisa digulir
+                const deskIklan = overlay.querySelector('.iklan-deskripsi');
+                if (deskIklan && deskIklan.scrollHeight > deskIklan.clientHeight + 2) {
+                    const hintGulir = document.createElement('div');
+                    hintGulir.className = 'iklan-gulir-hint';
+                    hintGulir.innerHTML = '<i class="fa fa-angle-double-down"></i> Gulir untuk baca selengkapnya';
+                    deskIklan.after(hintGulir);
+                }
                 const modal = overlay.querySelector('.artikel-download-modal');
                 const tombolTutup = overlay.querySelector('.artikel-download-close');
                 const tombolLanjut = overlay.querySelector('#artikel-download-lanjut');
