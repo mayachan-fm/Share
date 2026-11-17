@@ -315,7 +315,7 @@ module.exports = async (req, res) => {
       const deskripsi = String(req.body?.deskripsi || '').trim();
       const link = String(req.body?.link || '').trim();
       if (!nama || nama.length > 80) return send(res, 400, { ok: false, error: 'Nama channel wajib diisi (maks. 80 karakter).' });
-      if (!deskripsi || deskripsi.length > 300) return send(res, 400, { ok: false, error: 'Deskripsi wajib diisi (maks. 300 karakter).' });
+      if (!deskripsi || deskripsi.length > 800) return send(res, 400, { ok: false, error: 'Deskripsi wajib diisi (maks. 800 karakter).' });
       let linkBersih = link;
       try { const u = new URL(link); if (!['http:', 'https:'].includes(u.protocol)) throw new Error(); linkBersih = u.href; } catch (_) { return send(res, 400, { ok: false, error: 'Link harus diawali https:// yang valid.' }); }
       const { list, sha } = await bacaIklanNormal();
