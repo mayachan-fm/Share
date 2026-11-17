@@ -141,6 +141,32 @@
     .owner-section-card textarea::placeholder {
       color: rgba(255,255,255,.35);
     }
+    /* ===== INPUT FORM OWNER (Tambah Admin / Premium / Iklan) — background gelap + full-width agar teks terlihat & rapi ===== */
+    .owner-add-form label { display: block; margin-top: 12px; }
+    .owner-add-form label:first-of-type { margin-top: 0; }
+    .owner-add-form input,
+    .owner-add-form select,
+    .owner-add-form textarea {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 6px;
+      padding: 11px 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 10px;
+      outline: none;
+      background: rgba(0,0,0,.28);
+      color: #fff !important;
+      font: inherit;
+      font-weight: 400;
+    }
+    .owner-add-form textarea { min-height: 92px; resize: vertical; }
+    .owner-add-form input:focus,
+    .owner-add-form select:focus,
+    .owner-add-form textarea:focus { border-color: var(--merahUtama, #ff3b30); }
+    .owner-add-form select option { background: #171717; color: #fff; }
+    .owner-add-form input::placeholder,
+    .owner-add-form textarea::placeholder { color: rgba(255,255,255,.4); }
     .statistik-card strong {
       color: var(--pc-accent, #34c759) !important;
       font-weight: 800 !important;
