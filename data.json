@@ -4117,5 +4117,17 @@
     "ukuran": "31.09 MB",
     "tanggal unggah": "16 November 2026",
     "description": "Bebaskan JUJUTSU batin Anda dengan Add-On ANIME JUTSU kami! SEMUANYA terinspirasi dari acara ANIME FAVORIT Anda!\n+ 70+ konten Anime di dalamnya!\n+ Animasi serangan yang belum pernah dilihat sebelumnya!\n+ Vanilla VFX & pertarungan bos yang menantang!\n+ Hewan peliharaan, monster, dan tunggangan untuk dipanggil!\nDapatkan Add-On ini untuk meluncurkan arc baru Anda!"
+  },
+  "model_a_s_view": {
+    "slug": "model_a_s_view",
+    "nama file": "Model A&S View dengan lengan Vanilla Armor",
+    "type file": "Texturepack",
+    "kategori": "resource",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-18-8ff51b75-9f80-40fe-ae3b-0770a234fb35.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.3/VmodelbyVance_v1.3.mcpack",
+    "versi mc": "1.26+",
+    "ukuran": "752 KB",
+    "tanggal unggah": "18 November 2026",
+    "description": "Sesuaikan sepenuhnya posisi, rotasi, dan skala model tampilan Anda dengan dukungan tambahan untuk lengan baju zirah standar."
   }
 }
