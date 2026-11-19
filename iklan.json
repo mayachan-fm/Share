@@ -6,16 +6,9 @@
     "link": "https://whatsapp.com/channel/0029VbBwXsd1NCrUD2ZJcT0D",
     "label": "Channel WhatsApp",
     "ikon": "fa-whatsapp",
-    "warna": "#25D366"
-  },
-  {
-    "id": "ik_mwfk8ng1sgus",
-    "nama": "hilmahazzkiya16",
-    "deskripsi": "Follow akun ini",
-    "link": "https://tiktok.com/@hilmahazzkiya16",
-    "label": "Akun TikTok",
-    "ikon": "fa-music",
-    "warna": "#fe2c55"
+    "warna": "#25D366",
+    "berakhir": null,
+    "ditambahkan": null
   },
   {
     "id": "ik_mwfkv7klz6qq",
@@ -24,7 +17,9 @@
     "link": "https://chat.whatsapp.com/LEeQMVOujNx8mgAtDUcwEi?s=cl&p=a&iam=2",
     "label": "Channel WhatsApp",
     "ikon": "fa-whatsapp",
-    "warna": "#25D366"
+    "warna": "#25D366",
+    "berakhir": null,
+    "ditambahkan": null
   },
   {
     "id": "ik_mwfl34bhrqw0",
@@ -33,7 +28,9 @@
     "link": "https://tiktok.com/@salju_020",
     "label": "Akun TikTok",
     "ikon": "fa-music",
-    "warna": "#fe2c55"
+    "warna": "#fe2c55",
+    "berakhir": null,
+    "ditambahkan": null
   },
   {
     "id": "ik_mwfm33857gci",
@@ -42,7 +39,9 @@
     "link": "https://chat.whatsapp.com/IuqtjlNubdACkHw4mwyNCj?s=cl&p=a&mlu=4&ilr=4&iam=2",
     "label": "Channel WhatsApp",
     "ikon": "fa-whatsapp",
-    "warna": "#25D366"
+    "warna": "#25D366",
+    "berakhir": null,
+    "ditambahkan": null
   },
   {
     "id": "ik_mwfqez9hel16",
@@ -51,7 +50,9 @@
     "link": "https://tiktok.com/@irfan.naufall3",
     "label": "Akun TikTok",
     "ikon": "fa-music",
-    "warna": "#fe2c55"
+    "warna": "#fe2c55",
+    "berakhir": null,
+    "ditambahkan": null
   },
   {
     "id": "ik_mwknz84c1wmg",
@@ -60,6 +61,8 @@
     "link": "https://chat.whatsapp.com/Dh87LZ7ufbxLZ4ykLY7JHj",
     "label": "Channel WhatsApp",
     "ikon": "fa-whatsapp",
-    "warna": "#25D366"
+    "warna": "#25D366",
+    "berakhir": null,
+    "ditambahkan": null
   }
 ]
