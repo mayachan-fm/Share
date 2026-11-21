@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>🎮 Craft Mobs: Create a Monster and Fight! — MC Addon Share</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="logo.png" type="image/png">
+
+    <!-- === OPEN GRAPH / PRATINJAU WHATSAPP === -->
+    <meta property="og:site_name" content="MC Addon Share" />
+    <meta property="og:title" content="🎮 Craft Mobs: Create a Monster and Fight!" />
+    <meta property="og:description" content="Gabungkan mob jadi monster terkuat dan pertahankan desamu dari gelombang musuh. Main gratis langsung di browser tanpa install!" />
+    <meta property="og:url" content="https://mc-share.vercel.app/game.html" />
+    <meta property="og:image" content="https://static.playgama.com/p-img/pg/craft-mobs-create-a-monster-and-fight/big_preview/a47f5d2456ae414b99d6f1c0a653032d?width=1200" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:type" content="website" />
+
+    <!-- === PWA (Progressive Web App) === -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#101916">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MC Addon">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Terapkan tema tersimpan (sama seperti script.js di beranda) -->
+    <script>
+    (function () {
+        try {
+            var id = localStorage.getItem('tema-mcaddon') || 'default';
+            var h = document.documentElement;
+            ['tema-default', 'tema-gelap', 'tema-nether', 'tema-end', 'tema-emerald'].forEach(function (c) { h.classList.remove(c); });
+            if (id && id !== 'default') h.classList.add('tema-' + id);
+        } catch (e) {}
+    })();
+    </script>
+
+    <style>
+        /* ======== HALAMAN GAME (tidak mengubah style.css) ======== */
+        .game-konten, .game-konten *, .game-toolbar, .game-toolbar *,
+        .game-shell, .game-shell *, .game-catatan { box-sizing: border-box; }
+
+        .game-konten { padding: 18px 0 8px; }
+
+        .game-info {
+            background: var(--gelapKartu, #222222);
+            border: 1px solid rgba(92, 120, 108, 0.28);
+            border-radius: 16px;
+            padding: 16px;
+        }
+        .game-info-judul { display: flex; gap: 13px; align-items: center; }
+        .game-info-judul img {
+            width: 58px; height: 58px; flex: 0 0 58px;
+            border-radius: 13px; object-fit: cover;
+            border: 1px solid rgba(255,255,255,.12);
+            background: #171717;
+        }
+        .game-info-judul-teks { min-width: 0; }
+        .game-info h1 {
+            font-size: 16.5px; margin: 0; line-height: 1.35;
+            color: #fff; font-weight: 800;
+        }
+        .game-pengembang {
+            margin-top: 5px; font-size: 12px; color: var(--teksAbu, #b0b0b0);
+        }
+        .game-pengembang b { color: #e8f0ec; font-weight: 600; }
+        .game-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 11px; }
+        .game-tag {
+            font-size: 11px; padding: 4px 10px; border-radius: 999px;
+            background: rgba(255,255,255,.06); color: #cfe0d8;
+            border: 1px solid rgba(255,255,255,.09);
+        }
+        .game-desc { margin: 12px 0 0; color: var(--teksAbu, #b0b0b0); font-size: 13px; line-height: 1.65; }
+        .game-cara {
+            margin-top: 11px; padding: 11px 13px; border-radius: 11px;
+            background: rgba(255,255,255,.045);
+            border: 1px solid rgba(255,255,255,.07);
+            font-size: 12.5px; color: #d8e4de; line-height: 1.6;
+        }
+        .game-cara b { color: #fff; }
+
+        .game-toolbar { display: flex; gap: 10px; margin: 14px auto 0; max-width: 520px; width: 100%; }
+        .game-btn {
+            flex: 1 1 0; min-width: 0;
+            display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+            padding: 11px 10px; border-radius: 11px;
+            font-size: 13px; font-weight: 600; text-decoration: none;
+            white-space: nowrap; overflow: hidden;
+            border: 1px solid rgba(255,255,255,.13);
+            background: var(--gelapSedang, #1a1a1a); color: #fff;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
+        }
+        .game-btn:hover { background: var(--batasGelap, #333333); }
+        .game-btn.utama { background: var(--merahUtama, #ff3b30); border-color: transparent; }
+        .game-btn.utama:hover { background: var(--merahMuda, #ff6b5b); }
+
+        .game-shell-wrap { max-width: 520px; margin: 12px auto 0; }
+        .game-shell {
+            position: relative; width: 100%;
+            height: min(72vh, 720px);
+            background: #000; border-radius: 14px; overflow: hidden;
+            border: 1px solid rgba(92, 120, 108, 0.35);
+            box-shadow: 0 18px 50px rgba(0,0,0,.45);
+        }
+        .game-shell iframe {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            border: 0; background: #242424; display: block;
+        }
+        .game-poster {
+            position: absolute; inset: 0; z-index: 2;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 14px; color: #fff; text-align: center; padding: 20px;
+            background:
+                linear-gradient(180deg, rgba(11,15,14,.62), rgba(11,15,14,.92)),
+                #0b0f0e center/cover no-repeat;
+            transition: opacity .35s ease;
+        }
+        .game-poster.sembunyi { opacity: 0; pointer-events: none; }
+        .game-poster .spinner {
+            width: 46px; height: 46px;
+            border: 4px solid rgba(255,255,255,.15);
+            border-top-color: var(--merahUtama, #ff3b30);
+            border-radius: 50%;
+            animation: game-putar 1s linear infinite;
+        }
+        @keyframes game-putar { to { transform: rotate(360deg); } }
+        .game-poster p { margin: 0; font-size: 13px; color: #cfe0d8; }
+        .game-poster small { font-size: 11.5px; color: #8fa79b; }
+
+        .game-catatan {
+            max-width: 520px; margin: 12px auto 4px;
+            font-size: 12px; color: var(--teksAbu, #b0b0b0);
+            text-align: center; line-height: 1.55;
+        }
+        .game-catatan a { color: var(--merahUtama, #ff3b30); text-decoration: none; }
+
+        @media (max-width: 640px) {
+            .game-shell { height: min(66vh, 620px); border-radius: 12px; }
+            .game-toolbar { gap: 8px; }
+            .game-btn { font-size: 11.5px; padding: 10px 6px; gap: 5px; }
+            .game-info { padding: 14px; }
+            .game-info h1 { font-size: 15.5px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header header-tetap">
+    <div class="container header-dalam">
+        <a href="index.html" class="tombol-kembali"><i class="fa fa-arrow-left"></i> Beranda</a>
+        <div class="header-aksi" aria-label="Aksi game">
+            <a class="header-ikon" href="https://playgama.com/game/craft-mobs-create-a-monster-and-fight" target="_blank" rel="noopener" aria-label="Buka halaman game di Playgama" title="Buka di Playgama">
+                <i class="fa fa-external-link"></i>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="konten-utama">
+    <section class="game-konten">
+        <div class="container">
+
+            <!-- INFO SINGKAT GAME -->
+            <div class="game-info">
+                <div class="game-info-judul">
+                    <img src="https://static.playgama.com/p-img/pg/craft-mobs-create-a-monster-and-fight/icon/00cb2887e97b4fdd823fc5bfdf1392a7?width=218" alt="Ikon Craft Mobs: Create a Monster and Fight!">
+                    <div class="game-info-judul-teks">
+                        <h1>Craft Mobs: Create a Monster and Fight!</h1>
+                        <div class="game-pengembang">Pengembang: <b>DudaGames</b> · Dirilis Agu 2026</div>
+                    </div>
+                </div>
+                <div class="game-meta">
+                    <span class="game-tag">🎮 Merge</span>
+                    <span class="game-tag">🛡️ Defense</span>
+                    <span class="game-tag">🧟 Monster</span>
+                    <span class="game-tag">🧊 Voxel 3D</span>
+                    <span class="game-tag">⚔️ PvE</span>
+                </div>
+                <p class="game-desc">
+                    Masuk ke dunia voxel Pixelcraft: gelombang monster terus menyerang desa.
+                    Gabungkan mob yang sama menjadi unit yang lebih kuat, susun pasukan terbaik,
+                    lalu tonton pertarungan otomatis melawan musuh. Kumpulkan koin, diamond,
+                    dan buka semua koleksi di Bestiary!
+                </p>
+                <div class="game-cara">
+                    <b>🕹️ Cara main:</b> di PC tahan <b>klik kiri</b> lalu seret satu mob ke mob lain untuk menggabung.
+                    Di HP, <b>sentuh dan geser</b> mob ke mob sejenis. Klik/ketuk untuk memilih dan mengaktifkan hadiah.
+                    Setelah pasukan siap, tekan tombol battle untuk mulai pertarungan.
+                </div>
+            </div>
+
+            <!-- TOOLBAR -->
+            <div class="game-toolbar">
+                <button type="button" class="game-btn utama" id="btn-fullscreen">
+                    <i class="fa fa-expand"></i> Layar Penuh
+                </button>
+                <button type="button" class="game-btn" id="btn-muat-ulang">
+                    <i class="fa fa-refresh"></i> Muat Ulang
+                </button>
+                <a class="game-btn" href="https://playgama.com/game/craft-mobs-create-a-monster-and-fight" target="_blank" rel="noopener">
+                    <i class="fa fa-external-link"></i> Playgama
+                </a>
+            </div>
+
+            <!-- EMBED GAME -->
+            <div class="game-shell-wrap">
+                <div class="game-shell" id="game-shell">
+                    <div class="game-poster" id="poster-game" style="background-image:url('https://static.playgama.com/p-img/pg/craft-mobs-create-a-monster-and-fight/big_preview/a47f5d2456ae414b99d6f1c0a653032d?width=1200')">
+                        <div class="spinner"></div>
+                        <p>Memuat game…</p>
+                        <small>Game pertama kali dimuat agak lama, tunggu sebentar ya</small>
+                    </div>
+                    <iframe
+                        id="frame-game"
+                        title="Craft Mobs: Create a Monster and Fight!"
+                        src="https://craft-mobs-create-a-monster-and-fight.games.playgama.com/cmsd416fh032ehh0h99g93osq/__patch__/cmshwdozc01drq50hwufysr5p/index.html?platform_id=playgama"
+                        allowfullscreen
+                        loading="eager"
+                        allow="fullscreen; gamepad; accelerometer; gyroscope"
+                    ></iframe>
+                </div>
+            </div>
+
+            <p class="game-catatan">
+                Game ini diputar langsung dari Playgama (DudaGames) di dalam halaman kita, jadi tidak perlu pindah situs.
+                Kalau layar game kosong / tidak muncul, coba <b>Muat Ulang</b> atau buka lewat tombol <b>Playgama</b> di atas.
+            </p>
+
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 MC Addon Share</p>
+        </div>
+    </footer>
+</main>
+
+<nav class="navigasi-bawah" aria-label="Navigasi utama">
+    <a href="index.html" class="nav-item" data-nav="beranda">
+        <i class="fa fa-home"></i><span>Beranda</span>
+    </a>
+    <a href="index.html#kotak-cari" class="nav-item" data-nav="cari">
+        <i class="fa fa-search"></i><span>Cari</span>
+    </a>
+    <a href="index.html#wadah-addon" class="nav-item" data-nav="disukai">
+        <i class="fa fa-thumbs-up"></i><span>Disukai</span>
+    </a>
+    <a href="profil.html" class="nav-item" data-nav="profil">
+        <i class="fa fa-user"></i><span>Profil</span>
+    </a>
+</nav>
+
+<script>
+(function () {
+    var frame = document.getElementById('frame-game');
+    var poster = document.getElementById('poster-game');
+    var shell = document.getElementById('game-shell');
+
+    function sembunyikanPoster() { poster.classList.add('sembunyi'); }
+
+    frame.addEventListener('load', function () {
+        setTimeout(sembunyikanPoster, 500);
+    });
+    // Pengaman: sembunyikan poster maksimal 20 detik walau event load telat
+    setTimeout(sembunyikanPoster, 20000);
+
+    document.getElementById('btn-fullscreen').addEventListener('click', function () {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+            (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        } else if (shell.requestFullscreen) {
+            shell.requestFullscreen();
+        } else if (shell.webkitRequestFullscreen) {
+            shell.webkitRequestFullscreen();
+        }
+    });
+
+    document.getElementById('btn-muat-ulang').addEventListener('click', function () {
+        poster.classList.remove('sembunyi');
+        frame.src = frame.src;
+    });
+})();
+</script>
+
+<!-- === Daftarkan Service Worker PWA === -->
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('/service-worker.js').catch(function () {});
+        });
+    }
+</script>
+
+</body>
+</html>

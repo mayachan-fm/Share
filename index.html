@@ -11,6 +11,42 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="logo.png" type="image/png">
+
+    <!-- ===== KARTU GAME (style lokal, tidak ubah style.css) ===== -->
+    <style>
+        .bagian-game { margin-top: 16px; }
+        .kartu-game, .kartu-game *, .kartu-game-ikon, .kartu-game-teks, .kartu-game-cta { box-sizing: border-box; }
+        .kartu-game {
+            display: flex; align-items: center; gap: 14px;
+            width: 100%;
+            text-decoration: none; color: #fff;
+            background: linear-gradient(135deg, rgba(255,59,48,.14), rgba(34,120,80,.10));
+            border: 1px solid rgba(255,59,48,.30);
+            border-radius: 16px; padding: 15px 16px;
+            transition: transform .18s ease, border-color .18s ease;
+        }
+        .kartu-game:hover { transform: translateY(-2px); border-color: rgba(255,59,48,.55); }
+        .kartu-game-ikon {
+            width: 52px; height: 52px; flex: 0 0 52px; border-radius: 14px;
+            background: var(--merahUtama, #ff3b30);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #fff;
+            box-shadow: 0 8px 22px rgba(255,59,48,.32);
+        }
+        .kartu-game-teks { flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; gap: 4px; }
+        .kartu-game-teks strong { font-size: 15px; overflow-wrap: anywhere; }
+        .kartu-game-teks span { font-size: 12.5px; color: var(--teksAbu, #b0b0b0); line-height: 1.5; overflow-wrap: anywhere; }
+        .kartu-game-cta {
+            flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12.5px; font-weight: 700; color: #fff;
+            background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.14);
+            padding: 9px 13px; border-radius: 999px; white-space: nowrap;
+        }
+        @media (max-width: 520px) {
+            .kartu-game { flex-wrap: wrap; }
+            .kartu-game-cta { width: 100%; justify-content: center; }
+        }
+    </style>
     <meta property="og:image" content="situs-logo.png">
     <meta property="og:title" content="Kumpulan Addon Minecraft">
     <meta property="og:description" content="Koleksi Addon & Mod Minecraft Bedrock terlengkap">
@@ -42,6 +78,7 @@
             <span>MC Addon Share</span>
         </a>
         <div class="header-aksi" aria-label="Aksi cepat">
+            <a href="game.html" class="header-ikon" aria-label="Main game" title="🎮 Main Game"><i class="fa fa-gamepad"></i></a>
             <a href="#kotak-cari" class="header-ikon" aria-label="Cari"><i class="fa fa-search"></i></a>
             <a href="profil.html" class="header-ikon" aria-label="Notifikasi dan profil"><i class="fa fa-bell"></i></a>
             <a href="profil.html" class="header-ikon header-profil" aria-label="Profil"><i class="fa fa-user"></i></a>
@@ -84,6 +121,20 @@
                 <p>Total Pengguna</p>
             </div>
         </div>
+    </div>
+</section>
+
+<!-- BAGIAN GAME -->
+<section class="bagian-game">
+    <div class="container">
+        <a href="game.html" class="kartu-game">
+            <span class="kartu-game-ikon"><i class="fa fa-gamepad"></i></span>
+            <span class="kartu-game-teks">
+                <strong>🎮 Main Game: Craft Mobs — Create a Monster and Fight!</strong>
+                <span>Gabungkan mob jadi monster terkuat dan pertahankan desamu dari gelombang musuh. Main gratis langsung di browser, tanpa install.</span>
+            </span>
+            <span class="kartu-game-cta"><i class="fa fa-play-circle"></i> Main Sekarang</span>
+        </a>
     </div>
 </section>
 
