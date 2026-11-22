@@ -4130,5 +4130,17 @@
     "tanggal unggah": "18 November 2026",
     "description": "Model Tampilan A&S oleh VanceMc\nPERSYARATAN PENTING: Paket ini dirancang untuk digunakan di atas paket Action & Stuff asli . Pastikan Anda telah menginstal dan mengaktifkan Action & Stuff di bawah paket ini dalam urutan pemuatan agar semuanya berfungsi dengan benar!\n\nSesuaikan sepenuhnya posisi, skala, dan rotasi model tampilan Anda dengan dukungan tambahan berupa pelindung lengan.",
     "tanggal diperbarui": "18 November 2026"
+  },
+  "naturalist_biomes": {
+    "slug": "naturalist_biomes",
+    "nama file": "Naturalist Biomes",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-22-1b0fbf1f-2b78-4415-aa3b-3cd45411855f.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.4/Naturalist.Biomes.Add-On.addon.1.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "76.31 MB",
+    "tanggal unggah": "22 November 2026",
+    "description": "Add-On Bioma Naturalis menambahkan bioma baru ke DUNIA APAPUN!\n\n- 25+ Bioma Baru\n- 15+ Hewan Baru\n- 650+ Item, Balok, Tanaman, & Pohon Baru\n- VFX Khusus & Acara Cuaca\n- Desa & Bangunan Adat\n- Kompatibel dengan Add-On Naturalis"
   }
 }
