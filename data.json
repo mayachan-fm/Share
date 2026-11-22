@@ -4178,5 +4178,17 @@
     "ukuran": "163.96 KB",
     "tanggal unggah": "22 November 2026",
     "description": "Punya banyak XP? Ubah menjadi Permata XP!\n- Permata dapat disimpan dengan aman di peti dan ditukar dengan pemain lain.\n- Aktifkan Permata untuk melepaskan poin pengalaman yang tersimpan!\n- Bertahan hidup dan ramah Multipemain"
+  },
+  "blasters": {
+    "slug": "blasters",
+    "nama file": "Blasters.",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-22-d12b9fe5-319d-4735-b5fa-a82911e7fbff.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.8/BLASTERS.Add-On.addon.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "7.95 MB",
+    "tanggal unggah": "22 November 2026",
+    "description": "Bermainlah dengan blaster untuk kelangsungan hidup Anda\nUbah pengaturan ledakan untuk membuat blaster sempurna Anda\nAdd-On BLASTERS berfungsi dalam multipemain"
   }
 }
