@@ -4166,5 +4166,17 @@
     "ukuran": "10.47 MB",
     "tanggal unggah": "22 November 2026",
     "description": "- 5 Tipe Zombie dan masih banyak lagi varian/skin\n- Bioma Baru\n- Baju Besi Baru\n- Peledakan Turret Khusus untuk Pertahanan Pangkalan\n- Suara dan Visual Khusus\n- Sesuaikan mutasi atau biarkan bermutasi secara alami\n- UI Unik untuk Penskalaan Kesulitan"
+  },
+  "xp_gems": {
+    "slug": "xp_gems",
+    "nama file": "Xp Gems",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-22-3ac9fe5c-08dd-4172-a4a0-7587e738d5f1.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.7/XP.Gems.Add-On.addon.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "163.96 KB",
+    "tanggal unggah": "22 November 2026",
+    "description": "Punya banyak XP? Ubah menjadi Permata XP!\n- Permata dapat disimpan dengan aman di peti dan ditukar dengan pemain lain.\n- Aktifkan Permata untuk melepaskan poin pengalaman yang tersimpan!\n- Bertahan hidup dan ramah Multipemain"
   }
 }
