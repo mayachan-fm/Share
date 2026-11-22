@@ -4154,5 +4154,17 @@
     "ukuran": "9.24 MB",
     "tanggal unggah": "22 November 2026",
     "description": "Tools & Toys adalah Add-On Kualitas Hidup terbaik, meningkatkan waktu yang Anda habiskan di dunia bertahan hidup melalui lebih dari 30 item unik dan fungsional - disertai dengan taburan mainan menyenangkan untuk menciptakan petualangan baru bersama teman-teman Anda (atau memainkan beberapa trik pada mereka)!"
+  },
+  "zombie_frontline": {
+    "slug": "zombie_frontline",
+    "nama file": "Zombie Frontline",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-22-bd8cdc28-6bd2-40b5-95dd-514a4f3bc3e6.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.6/Zombie.Frontline.addon.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "10.47 MB",
+    "tanggal unggah": "22 November 2026",
+    "description": "- 5 Tipe Zombie dan masih banyak lagi varian/skin\n- Bioma Baru\n- Baju Besi Baru\n- Peledakan Turret Khusus untuk Pertahanan Pangkalan\n- Suara dan Visual Khusus\n- Sesuaikan mutasi atau biarkan bermutasi secara alami\n- UI Unik untuk Penskalaan Kesulitan"
   }
 }
