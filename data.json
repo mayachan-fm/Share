@@ -4190,5 +4190,17 @@
     "ukuran": "7.95 MB",
     "tanggal unggah": "22 November 2026",
     "description": "Bermainlah dengan blaster untuk kelangsungan hidup Anda\nUbah pengaturan ledakan untuk membuat blaster sempurna Anda\nAdd-On BLASTERS berfungsi dalam multipemain"
+  },
+  "social_villagers": {
+    "slug": "social_villagers",
+    "nama file": "Social Villagers",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-23-959f0b17-148c-4f27-9e93-dee22c447f89.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.9/Social.Villagers.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "4 MB",
+    "tanggal unggah": "23 November 2026",
+    "description": "Penduduk Desa Sosial\nPenduduk desa di game vanilla hanya berdiri dan mendengus. Addon ini memberi mereka suara. Mereka berbicara, bereaksi terhadap apa yang Anda lakukan, mengobrol satu sama lain, dan benar-benar terasa seperti mereka tinggal di desa."
   }
 }
