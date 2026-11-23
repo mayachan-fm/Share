@@ -4202,5 +4202,17 @@
     "ukuran": "4 MB",
     "tanggal unggah": "23 November 2026",
     "description": "Penduduk Desa Sosial\nPenduduk desa di game vanilla hanya berdiri dan mendengus. Addon ini memberi mereka suara. Mereka berbicara, bereaksi terhadap apa yang Anda lakukan, mengobrol satu sama lain, dan benar-benar terasa seperti mereka tinggal di desa."
+  },
+  "floating_containers": {
+    "slug": "floating_containers",
+    "nama file": "Floating Containers",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-23-a3a315d4-8bc6-486e-b27c-86dc6c228e2b.png",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.1.0/Floating.Containers.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "36,63 KB",
+    "tanggal unggah": "23 November 2026",
+    "description": "Dengan add-on ini, Anda dapat menempatkan wadah mengambang di atas peti, shulker, dan tong untuk melihat dan memanipulasi isinya. Anda dapat mengurutkan item secara normal atau alfabetis, menyimpan atau mengeluarkan semua item dari peti (termasuk memfilter item mana yang ingin Anda simpan atau keluarkan), memindahkan semua item ke peti lain, meminimalkan wadah mengambang, dan banyak lagi."
   }
 }
