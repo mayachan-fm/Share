@@ -10,9 +10,15 @@ import { statusPremium } from "./premium.js";
 export const DAFTAR_TEMA = [
   { id: "default", nama: "Default", premium: false, ikon: "fa-circle", warna: "#5D9C41" },
   { id: "gelap", nama: "Ultra Gelap", premium: false, ikon: "fa-moon-o", warna: "#111111" },
-  { id: "nether", nama: "Nether 🔥", premium: true, ikon: "fa-fire", warna: "#ff5a36" },
-  { id: "end", nama: "The End 🌌", premium: true, ikon: "fa-magic", warna: "#a855f7" },
-  { id: "emerald", nama: "Emerald 💎", premium: true, ikon: "fa-gem", warna: "#10b981" }
+  { id: "nether", nama: "Nether", premium: false, ikon: "fa-fire", warna: "#ff5a36" },
+  { id: "end", nama: "The End", premium: false, ikon: "fa-magic", warna: "#a855f7" },
+  { id: "emerald", nama: "Emerald", premium: false, ikon: "fa-gem", warna: "#10b981" },
+  { id: "gaming", nama: "Arena Merah", premium: true, ikon: "fa-gamepad", warna: "#ff4030" },
+  { id: "terang", nama: "Minimalis Terang", premium: true, ikon: "fa-sun-o", warna: "#2563eb" },
+  { id: "pixel", nama: "Blok Piksel", premium: true, ikon: "fa-th-large", warna: "#72c13f" },
+  { id: "banner", nama: "Banner Unggulan", premium: true, ikon: "fa-star", warna: "#38bdf8" },
+  { id: "neon", nama: "Neon Malam", premium: true, ikon: "fa-magic", warna: "#a855f7" },
+  { id: "emas", nama: "Emas Studio", premium: true, ikon: "fa-trophy", warna: "#e8b25a" }
 ];
 
 export function terapkanTema(id) {
