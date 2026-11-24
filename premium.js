@@ -1,80 +1,65 @@
 // ==============================================
-// PREMIUM ACCESS — MC ADDON SHARE (STAGE P5)
-// Status Premium otomatis mengikuti waktu kedaluwarsa. Dipakai juga untuk tampilan Profil. Belum mengubah Download.
+// PREMIUM UI — MC ADDON SHARE
+// Helper tampilan untuk fitur Premium: badge, tema eksklusif, cek status.
 // ==============================================
 import { db } from "./auth.js";
 import { ref, get } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+import { statusPremium } from "./premium.js";
 
-/**
- * Mengambil data Premium milik UID tertentu.
- * Hanya gunakan untuk UID milik user yang sedang login pada sisi browser.
- */
-export async function ambilDataPremium(uid) {
-  if (!uid) return null;
+// Daftar tema. premium:false = gratis, premium:true = khusus Premium.
+export const DAFTAR_TEMA = [
+  { id: "default", nama: "Default", premium: false, ikon: "fa-circle", warna: "#5D9C41" },
+  { id: "gelap", nama: "Ultra Gelap", premium: false, ikon: "fa-moon-o", warna: "#111111" },
+  { id: "nether", nama: "Nether", premium: false, ikon: "fa-fire", warna: "#ff5a36" },
+  { id: "end", nama: "The End", premium: false, ikon: "fa-magic", warna: "#a855f7" },
+  { id: "emerald", nama: "Emerald", premium: false, ikon: "fa-gem", warna: "#10b981" },
+  { id: "gaming", nama: "Arena Merah", premium: true, ikon: "fa-gamepad", warna: "#ff4030" },
+  { id: "terang", nama: "Minimalis Terang", premium: true, ikon: "fa-sun-o", warna: "#2563eb" },
+  { id: "pixel", nama: "Blok Piksel", premium: true, ikon: "fa-th-large", warna: "#72c13f" },
+  { id: "banner", nama: "Banner Unggulan", premium: true, ikon: "fa-star", warna: "#38bdf8" },
+  { id: "neon", nama: "Neon Malam", premium: true, ikon: "fa-magic", warna: "#a855f7" },
+  { id: "emas", nama: "Emas Studio", premium: true, ikon: "fa-trophy", warna: "#e8b25a" }
+];
 
-  try {
-    const snapshot = await get(ref(db, `premium/${uid}`));
-    return snapshot.exists() ? snapshot.val() : null;
-  } catch (error) {
-    console.error("Gagal membaca data Premium:", error);
-    return null;
+export function terapkanTema(id) {
+  const html = document.documentElement;
+  DAFTAR_TEMA.forEach((t) => html.classList.remove("tema-" + t.id));
+  if (id && id !== "default") html.classList.add("tema-" + id);
+  try { localStorage.setItem("tema-mcaddon", id || "default"); } catch (e) {}
+}
+
+export function muatTemaTersimpan() {
+  try { return localStorage.getItem("tema-mcaddon") || "default"; } catch (e) { return "default"; }
+}
+
+// HTML badge mahkota Premium. Sisipkan di samping username.
+export function badgePremiumHtml(extraClass = "") {
+  return `<span class="badge-premium ${extraClass}" title="Pengguna Premium"><i class="fa fa-crown"></i></span>`;
+}
+
+// Cache set UID yang sedang Premium aktif (untuk badge di komentar).
+let _setPremium = null;
+let _sedangMemuat = null;
+export async function ambilSetPremiumUid() {
+  if (_setPremium) return _setPremium;
+  if (!_sedangMemuat) {
+    _sedangMemuat = (async () => {
+      const set = new Set();
+      try {
+        const snap = await get(ref(db, "premium"));
+        if (snap.exists()) {
+          snap.forEach((child) => {
+            if (statusPremium(child.val()).aktif) set.add(child.key);
+          });
+        }
+      } catch (e) { console.warn("Gagal memuat daftar Premium:", e); }
+      _setPremium = set;
+      return set;
+    })();
   }
+  return _sedangMemuat;
 }
 
-function tipoPermanen(tipe, berakhir) {
-  return tipe === "permanen" || berakhir === null;
-}
-
-/**
- * Status Premium dihitung dari waktu saat ini.
- * Tidak perlu menghapus data ketika Premium kedaluwarsa.
- */
-export function statusPremium(data, sekarang = Date.now()) {
-  if (!data || typeof data !== "object") {
-    return {
-      aktif: false,
-      tipe: null,
-      mulai: null,
-      berakhir: null,
-      permanen: false
-    };
-  }
-
-  const tipe = String(data.tipe || "").toLowerCase();
-  const mulai = Number(data.mulai) || null;
-  const berakhir = data.berakhir === null || data.berakhir === undefined || data.berakhir === ""
-    ? null
-    : Number(data.berakhir) || null;
-
-  const dicabutPada = data.dicabutPada === null || data.dicabutPada === undefined || data.dicabutPada === ""
-    ? null
-    : Number(data.dicabutPada) || null;
-  const permanen = tipoPermanen(tipe, berakhir);
-  const kadaluarsa = !permanen && !dicabutPada && Number.isFinite(berakhir) && Number(sekarang) >= berakhir;
-  const aktif = dicabutPada
-    ? false
-    : (permanen ? true : !kadaluarsa);
-  const sisaMs = aktif && !permanen && Number.isFinite(berakhir)
-    ? Math.max(0, berakhir - Number(sekarang))
-    : null;
-
-  return {
-    aktif,
-    kadaluarsa,
-    tipe: data.tipe || null,
-    mulai,
-    berakhir,
-    permanen,
-    dicabutPada,
-    sisaMs
-  };
-}
-
-/**
- * Helper praktis untuk halaman yang hanya membutuhkan true/false.
- */
-export async function apakahPremiumAktif(user) {
-  if (!user?.uid) return false;
-  const data = await ambilDataPremium(user.uid);
-  return statusPremium(data).aktif;
+export function apakahUidPremiumSync(uid) {
+  return !!(_setPremium && uid && _setPremium.has(uid));
 }

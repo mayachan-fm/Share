@@ -32,7 +32,7 @@
         try {
             var id = localStorage.getItem('tema-mcaddon') || 'default';
             var h = document.documentElement;
-            ['tema-default', 'tema-gelap', 'tema-nether', 'tema-end', 'tema-emerald'].forEach(function (c) { h.classList.remove(c); });
+            ['tema-default', 'tema-gelap', 'tema-nether', 'tema-end', 'tema-emerald', 'tema-gaming', 'tema-terang', 'tema-pixel', 'tema-banner', 'tema-neon', 'tema-emas'].forEach(function (c) { h.classList.remove(c); });
             if (id && id !== 'default') h.classList.add('tema-' + id);
         } catch (e) {}
     })();

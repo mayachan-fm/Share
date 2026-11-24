@@ -4,7 +4,7 @@
   try {
     var tema = localStorage.getItem("tema-mcaddon") || "default";
     var html = document.documentElement;
-    ["gelap", "nether", "end", "emerald"].forEach(function (t) {
+    ["gelap", "nether", "end", "emerald", "gaming", "terang", "pixel", "banner", "neon", "emas"].forEach(function (t) {
       html.classList.remove("tema-" + t);
     });
     if (tema && tema !== "default") html.classList.add("tema-" + tema);

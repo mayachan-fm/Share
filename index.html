@@ -4,7 +4,7 @@
 <head>
 
     <meta name="google-site-verification" content="J4Led46mNPNOpklCDI4SXlPMF5ZqdlfOWH6XWNyEXF4" />
-
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MC Addon Share</title>
@@ -47,188 +47,6 @@
             .kartu-game-cta { width: 100%; justify-content: center; }
         }
     </style>
-
-    <!-- ============================================================
-         TEMA 5 — NEON UNGU-CYAN (hanya halaman utama / index.html)
-         Dipasang lewat class .beranda-neon di <body>; halaman lain
-         (detail, profil, admin, owner) memakai style.css apa adanya.
-         ============================================================ -->
-    <style id="css-beranda-neon">
-        .beranda-neon{
-            --merahUtama:#a855f7;
-            --merahMuda:#c084fc;
-            --utama:#a855f7;
-            --utama-cerah:#d8b4fe;
-            --cyan:#22d3ee;
-            --kartu-neon:rgba(33,26,70,.66);
-            --batas-neon:rgba(168,85,247,.26);
-            --batas-neon-lemah:rgba(168,85,247,.15);
-            --teks-neon:#ece9ff;
-            --abu-neon:#b6b0da;
-            color:var(--teks-neon);
-            background:
-                radial-gradient(700px 340px at 50% -80px, rgba(139,92,246,.24), transparent 72%),
-                radial-gradient(520px 300px at 4% 40%, rgba(34,211,238,.10), transparent 70%),
-                radial-gradient(560px 330px at 98% 80%, rgba(139,92,246,.14), transparent 72%),
-                linear-gradient(180deg,#0d0b26 0%,#0b0a1d 45%,#090818 100%);
-            background-attachment:fixed;
-        }
-        .beranda-neon .konten-utama{position:relative;z-index:1}
-
-        /* dekorasi kubus mengambang */
-        .neon-latar{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-        .neon-kubus{position:absolute;display:block;border-radius:14px;border:1px solid rgba(168,85,247,.22);
-            background:linear-gradient(135deg,rgba(168,85,247,.20),rgba(34,211,238,.10));
-            box-shadow:0 0 26px rgba(139,92,246,.16);animation:neonFloat 7s ease-in-out infinite}
-        .neon-kubus.nk1{width:52px;height:52px;top:17%;left:5%;transform:rotate(12deg)}
-        .neon-kubus.nk2{width:32px;height:32px;top:36%;right:7%;animation-delay:1.6s}
-        .neon-kubus.nk3{width:24px;height:24px;bottom:24%;left:9%;animation-delay:3s;border-color:rgba(34,211,238,.28)}
-        .neon-kubus.nk4{width:42px;height:42px;bottom:36%;right:5%;animation-delay:2.2s;opacity:.7}
-        .neon-kubus.nk5{width:20px;height:20px;top:60%;left:47%;animation-delay:.8s;opacity:.55}
-        @keyframes neonFloat{0%,100%{translate:0 0}50%{translate:0 -14px}}
-        @media (prefers-reduced-motion:reduce){.neon-kubus{animation:none}}
-        @media (max-width:600px){.neon-kubus.nk2,.neon-kubus.nk4,.neon-kubus.nk5{display:none}}
-
-        /* header */
-        .beranda-neon .header-tetap{background:rgba(14,12,38,.72);border-bottom:1px solid var(--batas-neon-lemah);
-            backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-            box-shadow:0 8px 30px rgba(0,0,0,.30),0 0 26px rgba(139,92,246,.08)}
-        .beranda-neon .logo-web{color:#fff}
-        .beranda-neon .logo-web img{box-shadow:0 0 18px rgba(168,85,247,.35)}
-        .beranda-neon .header-ikon{color:#c8c2f2}
-        .beranda-neon .header-ikon:hover,.beranda-neon .header-ikon:focus-visible{color:#fff;background:rgba(168,85,247,.18)}
-
-        /* hero sambutan */
-        .beranda-neon .bagian-sambutan{width:min(92%,720px);height:auto;min-height:206px;margin:18px auto 0;
-            padding:28px 26px;display:flex;align-items:center;gap:18px;text-align:left;
-            border:1px solid var(--batas-neon);border-radius:22px;overflow:hidden;
-            background:linear-gradient(135deg,rgba(124,58,237,.34) 0%,rgba(88,60,180,.20) 45%,rgba(34,211,238,.16) 100%);
-            box-shadow:0 18px 45px rgba(0,0,0,.34),0 0 34px rgba(139,92,246,.16),inset 0 1px 0 rgba(255,255,255,.08)}
-        .beranda-neon .latar-gambar{display:none}
-        .beranda-neon .isi-sambutan{position:relative;z-index:2;margin:0;width:min(470px,100%);min-width:0}
-        .beranda-neon .isi-sambutan h1{color:#fff;font-size:clamp(24px,4.6vw,34px);line-height:1.14;font-weight:800;margin-bottom:10px;letter-spacing:-.5px}
-        .beranda-neon .isi-sambutan h1 span{display:inline-block;background:linear-gradient(90deg,#c084fc,#22d3ee);
-            -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
-        .beranda-neon .isi-sambutan p{color:#cfc9f2;font-size:14.5px;line-height:1.55;margin:0;max-width:none}
-        .beranda-neon .hero-kubus{margin-left:auto;flex:0 0 auto;width:116px;height:116px;position:relative}
-        .beranda-neon .hero-kubus i{position:absolute;display:block;border-radius:14px;border:1px solid rgba(216,180,254,.45)}
-        .beranda-neon .hero-kubus i:nth-child(1){width:64px;height:64px;left:6px;bottom:0;background:linear-gradient(135deg,#7c3aed,#4c1d95);box-shadow:0 0 26px rgba(139,92,246,.45)}
-        .beranda-neon .hero-kubus i:nth-child(2){width:46px;height:46px;right:4px;bottom:14px;background:linear-gradient(135deg,#22d3ee,#0e7490);box-shadow:0 0 22px rgba(34,211,238,.40)}
-        .beranda-neon .hero-kubus i:nth-child(3){width:28px;height:28px;right:16px;top:6px;bottom:auto;left:auto;background:linear-gradient(135deg,#c084fc,#7c3aed);box-shadow:0 0 18px rgba(192,132,252,.45)}
-        @media (max-width:600px){
-            .beranda-neon .hero-kubus{display:none}
-            .beranda-neon .bagian-sambutan{padding:24px 20px;min-height:184px}
-            .beranda-neon .isi-sambutan{width:100%}
-        }
-
-        /* statistik utama */
-        .beranda-neon .info-utama{margin-top:16px}
-        .beranda-neon .info-utama .container{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;min-width:0;
-            background:transparent;border:0;overflow:visible;box-shadow:none;padding:0}
-        .beranda-neon .kotak-info{min-width:0;flex-direction:column;align-items:center;text-align:center;gap:9px;padding:16px 12px;
-            background:var(--kartu-neon);border:1px solid var(--batas-neon-lemah);border-radius:18px;
-            box-shadow:0 10px 26px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.05)}
-        .beranda-neon .kotak-info + .kotak-info::before{display:none}
-        .beranda-neon .kotak-info i{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:13px;
-            font-size:19px;color:#e9d5ff;background:linear-gradient(135deg,rgba(168,85,247,.28),rgba(34,211,238,.20));
-            box-shadow:inset 0 0 0 1px rgba(192,132,252,.30)}
-        .beranda-neon .kotak-info span{font-size:21px;color:#fff}
-        .beranda-neon .kotak-info p{font-size:12px;color:var(--abu-neon)}
-        @media (max-width:560px){
-            .beranda-neon .kotak-info{padding:13px 8px;border-radius:15px}
-            .beranda-neon .kotak-info i{width:36px;height:36px;font-size:16px}
-            .beranda-neon .kotak-info span{font-size:18px}
-        }
-
-        /* kartu game */
-        .beranda-neon .bagian-game{margin-top:16px}
-        .beranda-neon .kartu-game{background:linear-gradient(135deg,rgba(139,92,246,.16),rgba(34,211,238,.10));border-color:rgba(168,85,247,.30)}
-        .beranda-neon .kartu-game:hover{border-color:rgba(168,85,247,.55)}
-        .beranda-neon .kartu-game-ikon{background:linear-gradient(135deg,#8b5cf6,#0891b2);box-shadow:0 8px 22px rgba(139,92,246,.32)}
-        .beranda-neon .kartu-game-cta{background:rgba(168,85,247,.14);border-color:rgba(192,132,252,.32);color:#e9d5ff}
-
-        /* pencarian + kategori */
-        .beranda-neon .bagian-filter{padding:22px 0 8px}
-        .beranda-neon #kotak-cari{height:50px;background:rgba(24,19,54,.72);border:1px solid var(--batas-neon-lemah);
-            border-radius:999px;color:#fff}
-        .beranda-neon #kotak-cari::placeholder{color:#8f88bd}
-        .beranda-neon #kotak-cari:focus{border-color:var(--utama);box-shadow:0 0 0 3px rgba(168,85,247,.16)}
-        .beranda-neon .tombol-cari{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#6d28d9);
-            box-shadow:0 8px 22px rgba(139,92,246,.35)}
-        .beranda-neon .tombol-cari:hover{filter:brightness(1.08)}
-        .beranda-neon .filter-kategori{gap:8px}
-        .beranda-neon .btn-kategori{min-width:78px;padding:10px 8px;border-radius:12px;background:rgba(30,25,66,.66);
-            border:1px solid var(--batas-neon-lemah);color:var(--abu-neon)}
-        .beranda-neon .btn-kategori i{color:#c8c2f2}
-        .beranda-neon .btn-kategori.aktif{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-color:transparent;color:#fff;
-            box-shadow:0 8px 20px rgba(139,92,246,.32)}
-        .beranda-neon .btn-kategori.aktif i{color:#fff}
-
-        /* judul bagian + filter lanjutan */
-        .beranda-neon .judul-bagian{color:#fff}
-        .beranda-neon .bagian-top-addon .filter-kontrol{background:rgba(30,25,66,.66);border-color:var(--batas-neon-lemah)}
-        .beranda-neon .bagian-top-addon .filter-kontrol span{color:#cfc9f2}
-        .beranda-neon .bagian-top-addon .filter-kontrol select{color:#fff}
-        .beranda-neon .bagian-top-addon .filter-kontrol option{background:#171330;color:#fff}
-
-        /* kartu Pilihan Addon (geser) */
-        .beranda-neon #wadah-top .kartu-geser{background:var(--kartu-neon);border-color:var(--batas-neon-lemah);
-            box-shadow:0 10px 24px rgba(0,0,0,.22)}
-        .beranda-neon #wadah-top .kartu-geser:hover{box-shadow:0 14px 30px rgba(139,92,246,.28);border-color:rgba(168,85,247,.45)}
-        .beranda-neon .wadah-geser::-webkit-scrollbar{height:4px}
-        .beranda-neon .wadah-geser::-webkit-scrollbar-thumb{background:rgba(168,85,247,.35);border-radius:99px}
-
-        /* kartu Semua Koleksi */
-        .beranda-neon #wadah-addon .kartu-addon{background:#1b1540;border-color:#3b2f78;
-            box-shadow:0 6px 16px rgba(0,0,0,.42),0 2px 9px rgba(139,92,246,.14)}
-        .beranda-neon #wadah-addon .kartu-addon:hover{box-shadow:0 10px 24px rgba(139,92,246,.30);border-color:rgba(168,85,247,.50)}
-        .beranda-neon #wadah-addon .garis-pembatas{background:#3a2f72}
-
-        /* isi kartu umum */
-        .beranda-neon .gambar-wadah img{background:#1b1640}
-        .beranda-neon .tipe-file{background:linear-gradient(135deg,#8b5cf6,#6d28d9);box-shadow:0 4px 14px rgba(139,92,246,.35)}
-        .beranda-neon .kartu-isi h3,.beranda-neon .kartu-isi h4{color:#fff}
-        .beranda-neon .garis-pembatas{background:rgba(255,255,255,.08)}
-        .beranda-neon .info-unduh{color:var(--abu-neon)}
-        .beranda-neon .info-unduh i{color:var(--utama)}
-        .beranda-neon .tombol-like,.beranda-neon .tombol-bagi{background:rgba(255,255,255,.07);color:#c8c2f2}
-        .beranda-neon .tombol-like.sudah{background:rgba(168,85,247,.28);color:#d8b4fe}
-        .beranda-neon .tombol-like:hover,.beranda-neon .tombol-bagi:hover{background:var(--utama);color:#fff}
-
-        /* tombol lanjut Pilihan Addon */
-        .beranda-neon #wadah-top .tombol-lanjut-pilihan{border-color:rgba(168,85,247,.30);background:rgba(139,92,246,.14);color:#c084fc}
-        .beranda-neon #wadah-top .tombol-lanjut-pilihan:hover{background:rgba(139,92,246,.24);border-color:rgba(168,85,247,.55)}
-
-        /* paginasi (di-inject script.js) */
-        .beranda-neon .tombol-paginasi{border-color:#3b3370;background:#171330;color:#d8d4f5}
-        .beranda-neon .tombol-paginasi:hover:not(:disabled){border-color:var(--utama);color:#d8b4fe}
-        .beranda-neon .tombol-paginasi.aktif{background:var(--utama);border-color:var(--utama);color:#fff}
-        .beranda-neon .info-paginasi{color:var(--abu-neon)}
-        .beranda-neon .titik-paginasi{color:#8f88bd}
-
-        /* panel notifikasi + badge (di-inject script.js) */
-        .beranda-neon .badge-notif-header{background:var(--utama);box-shadow:0 0 0 2px #12102a}
-        .beranda-neon .panel-notifikasi{background:#171330;border-color:#3b2f78}
-        .beranda-neon .panel-notifikasi-header{border-bottom-color:#2c2560}
-        .beranda-neon .panel-notifikasi-count{color:#c084fc}
-        .beranda-neon .panel-notifikasi-item:hover{background:#221b50}
-        .beranda-neon .panel-notifikasi-item.belum-dibaca{background:rgba(139,92,246,.08)}
-        .beranda-neon .panel-notifikasi-ikon{background:#2c2560;color:#c084fc}
-        .beranda-neon .panel-notifikasi-footer a{color:#c084fc}
-
-        /* nav bawah + footer */
-        .beranda-neon .navigasi-bawah{background:rgba(13,11,36,.85);border-top:1px solid var(--batas-neon-lemah);
-            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-        .beranda-neon .nav-item{color:#9d96c9}
-        .beranda-neon .nav-item.aktif,.beranda-neon .nav-item:hover{color:#c084fc}
-        .beranda-neon .footer{border-top-color:rgba(168,85,247,.14);background:transparent;color:#9d96c9}
-
-        /* pesan kosong + kartu login */
-        .beranda-neon .pesan-kosong,.beranda-neon .pesan-hilang{color:var(--abu-neon)}
-        .beranda-neon .login-card{background:#1b1540;border-color:#3b2f78}
-        .beranda-neon .login-card p{color:#c6c0e6}
-    </style>
-
     <meta property="og:image" content="situs-logo.png">
     <meta property="og:title" content="Kumpulan Addon Minecraft">
     <meta property="og:description" content="Koleksi Addon & Mod Minecraft Bedrock terlengkap">
@@ -242,17 +60,17 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:type" content="website" />
-
+    
     <!-- === PWA (Progressive Web App) === -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#151033">
+    <meta name="theme-color" content="#101916">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="MC Addon">
     <link rel="apple-touch-icon" href="icon-192.png">
 
 </head>
-<body class="beranda-neon">
+<body>
 <header class="header-tetap">
     <div class="container header-dalam">
         <a href="index.html" class="logo-web">
@@ -268,14 +86,6 @@
     </div>
 </header>
 
-<div class="neon-latar" aria-hidden="true">
-    <span class="neon-kubus nk1"></span>
-    <span class="neon-kubus nk2"></span>
-    <span class="neon-kubus nk3"></span>
-    <span class="neon-kubus nk4"></span>
-    <span class="neon-kubus nk5"></span>
-</div>
-
 <main class="konten-utama">
 
 <!-- BAGIAN UTAMA SAMBUTAN -->
@@ -285,7 +95,6 @@
         <h1>Selamat Datang di <span>MC Addon Share</span></h1>
         <p>Temukan, bagikan, dan unduh berbagai addon Minecraft Bedrock dengan mudah.</p>
     </div>
-    <div class="hero-kubus" aria-hidden="true"><i></i><i></i><i></i></div>
 </section>
 
 <!-- BAGIAN INFO UTAMA -->

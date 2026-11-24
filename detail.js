@@ -23,7 +23,7 @@ import { getDatabase, ref, get, increment, set, push, onValue } from "https://ww
     try {
         const id = localStorage.getItem('tema-mcaddon') || 'default';
         const html = document.documentElement;
-        ['tema-default','tema-gelap','tema-nether','tema-end','tema-emerald'].forEach(c => html.classList.remove(c));
+        ['tema-default','tema-gelap','tema-nether','tema-end','tema-emerald','tema-gaming','tema-terang','tema-pixel','tema-banner','tema-neon','tema-emas'].forEach(c => html.classList.remove(c));
         if (id && id !== 'default') html.classList.add('tema-' + id);
     } catch (_) {}
 })();

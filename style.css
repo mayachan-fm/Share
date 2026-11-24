@@ -3008,3 +3008,441 @@ html.tema-emerald { /* Emerald (Premium) */
 body, .header-tetap, .navigasi-bawah, .kartu-addon, .kartu-detail, .tombol-utama, .tombol-unduh {
     transition: background-color .3s ease, border-color .3s ease, color .3s ease;
 }
+
+/* ============================================================
+   6 TEMA VISUAL BARU (khusus Premium) — dipilih di halaman Profil
+   gaming (Arena Merah) | terang (Minimalis Terang) | pixel (Blok Piksel)
+   banner (Banner Unggulan) | neon (Neon Malam) | emas (Emas Studio)
+   Class dipasang di <html>; komponen bersama memakai variabel --tema-*.
+   Tidak mengubah tata letak, ID, ataupun fungsi JavaScript.
+   ============================================================ */
+
+/* ---------- Palet tiap tema ---------- */
+html.tema-gaming{
+  --tema-aksen:#ff4030; --tema-aksen2:#ff8a5c; --tema-aksen-tek:#ffffff;
+  --tema-bg:#0d0808; --tema-kartu:#201313; --tema-chip:#2c1a18; --tema-input:#180f0d;
+  --tema-batas:rgba(255,80,60,.26); --tema-teks:#f6e9e7; --tema-redup:#c3a8a3;
+  --tema-header:rgba(15,9,9,.93); --tema-nav:rgba(17,10,10,.96); --tema-footer:rgba(10,6,6,.45);
+  --tema-glow:rgba(255,45,37,.34); --tema-glow-soft:rgba(255,45,37,.14); --tema-radius:12px;
+  --tema-shadow:0 10px 24px rgba(0,0,0,.45);
+  --tema-bg-grad:radial-gradient(700px 320px at 50% -60px,rgba(255,64,48,.16),transparent 70%);
+  --merahUtama:#ff4030; --merahMuda:#ff8a5c;
+}
+html.tema-terang{
+  --tema-aksen:#2563eb; --tema-aksen2:#60a5fa; --tema-aksen-tek:#ffffff;
+  --tema-bg:#f3f5fa; --tema-kartu:#ffffff; --tema-chip:#e9eff8; --tema-input:#ffffff;
+  --tema-batas:#d6deeb; --tema-teks:#1c2433; --tema-redup:#5b6678;
+  --tema-header:rgba(255,255,255,.93); --tema-nav:rgba(255,255,255,.96); --tema-footer:#e8edf5;
+  --tema-glow:rgba(37,99,235,.20); --tema-glow-soft:rgba(37,99,235,.10); --tema-radius:14px;
+  --tema-shadow:0 10px 24px rgba(30,50,90,.10);
+  --tema-bg-grad:radial-gradient(720px 320px at 50% -60px,rgba(37,99,235,.10),transparent 70%);
+  --merahUtama:#2563eb; --merahMuda:#60a5fa;
+}
+html.tema-pixel{
+  --tema-aksen:#72c13f; --tema-aksen2:#b6e86a; --tema-aksen-tek:#10220a;
+  --tema-bg:#14180f; --tema-kartu:#20281a; --tema-chip:#2a3520; --tema-input:#1a2114;
+  --tema-batas:#4a7c2f; --tema-teks:#e8f5d8; --tema-redup:#a7c18c;
+  --tema-header:rgba(18,23,13,.93); --tema-nav:rgba(20,25,15,.96); --tema-footer:rgba(12,15,9,.5);
+  --tema-glow:rgba(114,193,63,.30); --tema-glow-soft:rgba(114,193,63,.13); --tema-radius:4px;
+  --tema-shadow:4px 4px 0 rgba(0,0,0,.42);
+  --tema-bg-grad:radial-gradient(700px 320px at 50% -60px,rgba(114,193,63,.12),transparent 70%);
+  --merahUtama:#72c13f; --merahMuda:#b6e86a;
+}
+html.tema-banner{
+  --tema-aksen:#38bdf8; --tema-aksen2:#f59e0b; --tema-aksen-tek:#082233;
+  --tema-bg:#0d1524; --tema-kartu:#16223a; --tema-chip:#1d2c49; --tema-input:#131e33;
+  --tema-batas:rgba(96,165,250,.28); --tema-teks:#e7eefc; --tema-redup:#a7bcdb;
+  --tema-header:rgba(11,18,32,.93); --tema-nav:rgba(12,19,34,.96); --tema-footer:rgba(9,14,26,.5);
+  --tema-glow:rgba(56,189,248,.28); --tema-glow-soft:rgba(56,189,248,.13); --tema-radius:16px;
+  --tema-shadow:0 14px 34px rgba(0,0,0,.34);
+  --tema-bg-grad:radial-gradient(760px 340px at 50% -70px,rgba(56,189,248,.16),transparent 70%);
+  --merahUtama:#38bdf8; --merahMuda:#7dd3fc;
+}
+html.tema-neon{
+  --tema-aksen:#a855f7; --tema-aksen2:#22d3ee; --tema-aksen-tek:#ffffff;
+  --tema-bg:#0d0b26; --tema-kartu:rgba(33,26,70,.66); --tema-chip:rgba(52,40,96,.62); --tema-input:rgba(24,18,52,.85);
+  --tema-batas:rgba(168,85,247,.28); --tema-teks:#ece9ff; --tema-redup:#b6b0da;
+  --tema-header:rgba(15,11,38,.92); --tema-nav:rgba(17,13,42,.95); --tema-footer:rgba(13,10,34,.5);
+  --tema-glow:rgba(168,85,247,.38); --tema-glow-soft:rgba(168,85,247,.15); --tema-radius:16px;
+  --tema-shadow:0 12px 30px rgba(0,0,0,.40);
+  --tema-bg-grad:radial-gradient(760px 340px at 50% -70px,rgba(139,92,246,.18),transparent 70%);
+  --merahUtama:#a855f7; --merahMuda:#c084fc;
+}
+html.tema-emas{
+  --tema-aksen:#e8b25a; --tema-aksen2:#f6d08a; --tema-aksen-tek:#2a1a08;
+  --tema-bg:#1b130b; --tema-kartu:#2a1d11; --tema-chip:#352516; --tema-input:#241a10;
+  --tema-batas:rgba(232,178,90,.32); --tema-teks:#f5e7cf; --tema-redup:#cdb493;
+  --tema-header:rgba(22,15,8,.93); --tema-nav:rgba(24,17,9,.96); --tema-footer:rgba(15,10,5,.5);
+  --tema-glow:rgba(232,178,90,.28); --tema-glow-soft:rgba(232,178,90,.13); --tema-radius:18px;
+  --tema-shadow:0 12px 28px rgba(0,0,0,.38);
+  --tema-bg-grad:radial-gradient(720px 320px at 50% -60px,rgba(232,178,90,.14),transparent 70%);
+  --merahUtama:#e8b25a; --merahMuda:#f6d08a;
+}
+
+/* ---------- Lapisan komponen bersama (enam tema) ---------- */
+html.tema-gaming body, html.tema-terang body, html.tema-pixel body,
+html.tema-banner body, html.tema-neon body, html.tema-emas body{
+  background-color:var(--tema-bg);
+  background-image:var(--tema-bg-grad);
+  background-attachment:fixed;
+  color:var(--tema-teks);
+}
+html.tema-gaming .header-tetap, html.tema-terang .header-tetap, html.tema-pixel .header-tetap,
+html.tema-banner .header-tetap, html.tema-neon .header-tetap, html.tema-emas .header-tetap{
+  background:var(--tema-header); border-bottom-color:var(--tema-batas);
+}
+html.tema-gaming .logo-web, html.tema-terang .logo-web, html.tema-pixel .logo-web,
+html.tema-banner .logo-web, html.tema-neon .logo-web, html.tema-emas .logo-web{color:var(--tema-teks)}
+html.tema-gaming .header-ikon, html.tema-terang .header-ikon, html.tema-pixel .header-ikon,
+html.tema-banner .header-ikon, html.tema-neon .header-ikon, html.tema-emas .header-ikon{color:var(--tema-redup)}
+html.tema-gaming .header-ikon:hover, html.tema-terang .header-ikon:hover, html.tema-pixel .header-ikon:hover,
+html.tema-banner .header-ikon:hover, html.tema-neon .header-ikon:hover, html.tema-emas .header-ikon:hover{
+  color:var(--tema-aksen); background:var(--tema-chip);
+}
+html.tema-gaming .navigasi-bawah, html.tema-terang .navigasi-bawah, html.tema-pixel .navigasi-bawah,
+html.tema-banner .navigasi-bawah, html.tema-neon .navigasi-bawah, html.tema-emas .navigasi-bawah{
+  background:var(--tema-nav); border-top-color:var(--tema-batas);
+}
+html.tema-gaming .nav-item, html.tema-terang .nav-item, html.tema-pixel .nav-item,
+html.tema-banner .nav-item, html.tema-neon .nav-item, html.tema-emas .nav-item{color:var(--tema-redup)}
+html.tema-gaming .nav-item.aktif, html.tema-gaming .nav-item:hover,
+html.tema-terang .nav-item.aktif, html.tema-terang .nav-item:hover,
+html.tema-pixel .nav-item.aktif, html.tema-pixel .nav-item:hover,
+html.tema-banner .nav-item.aktif, html.tema-banner .nav-item:hover,
+html.tema-neon .nav-item.aktif, html.tema-neon .nav-item:hover,
+html.tema-emas .nav-item.aktif, html.tema-emas .nav-item:hover{color:var(--tema-aksen)}
+
+/* Hero sambutan */
+html.tema-gaming .bagian-sambutan, html.tema-terang .bagian-sambutan, html.tema-pixel .bagian-sambutan,
+html.tema-banner .bagian-sambutan, html.tema-neon .bagian-sambutan, html.tema-emas .bagian-sambutan{
+  background:var(--tema-kartu); border-color:var(--tema-batas); border-radius:var(--tema-radius); box-shadow:var(--tema-shadow);
+}
+html.tema-gaming .isi-sambutan h1, html.tema-terang .isi-sambutan h1, html.tema-pixel .isi-sambutan h1,
+html.tema-banner .isi-sambutan h1, html.tema-neon .isi-sambutan h1, html.tema-emas .isi-sambutan h1{color:var(--tema-teks)}
+html.tema-gaming .isi-sambutan h1 span, html.tema-terang .isi-sambutan h1 span, html.tema-pixel .isi-sambutan h1 span,
+html.tema-banner .isi-sambutan h1 span, html.tema-neon .isi-sambutan h1 span, html.tema-emas .isi-sambutan h1 span{color:var(--tema-aksen);text-shadow:none}
+html.tema-gaming .isi-sambutan p, html.tema-terang .isi-sambutan p, html.tema-pixel .isi-sambutan p,
+html.tema-banner .isi-sambutan p, html.tema-neon .isi-sambutan p, html.tema-emas .isi-sambutan p{color:var(--tema-redup)}
+html.tema-gaming .judul-bagian, html.tema-terang .judul-bagian, html.tema-pixel .judul-bagian,
+html.tema-banner .judul-bagian, html.tema-neon .judul-bagian, html.tema-emas .judul-bagian{color:var(--tema-teks)}
+
+/* Statistik */
+html.tema-gaming .info-utama .container, html.tema-terang .info-utama .container, html.tema-pixel .info-utama .container,
+html.tema-banner .info-utama .container, html.tema-neon .info-utama .container, html.tema-emas .info-utama .container{
+  background:var(--tema-kartu); border-color:var(--tema-batas); box-shadow:var(--tema-shadow);
+}
+html.tema-gaming .kotak-info i, html.tema-terang .kotak-info i, html.tema-pixel .kotak-info i,
+html.tema-banner .kotak-info i, html.tema-neon .kotak-info i, html.tema-emas .kotak-info i{color:var(--tema-aksen)}
+html.tema-gaming .kotak-info span, html.tema-terang .kotak-info span, html.tema-pixel .kotak-info span,
+html.tema-banner .kotak-info span, html.tema-neon .kotak-info span, html.tema-emas .kotak-info span{color:var(--tema-teks)}
+html.tema-gaming .kotak-info p, html.tema-terang .kotak-info p, html.tema-pixel .kotak-info p,
+html.tema-banner .kotak-info p, html.tema-neon .kotak-info p, html.tema-emas .kotak-info p{color:var(--tema-redup)}
+html.tema-gaming .kotak-info + .kotak-info::before, html.tema-terang .kotak-info + .kotak-info::before,
+html.tema-pixel .kotak-info + .kotak-info::before, html.tema-banner .kotak-info + .kotak-info::before,
+html.tema-neon .kotak-info + .kotak-info::before, html.tema-emas .kotak-info + .kotak-info::before{background:var(--tema-batas)}
+
+/* Pencarian & kategori */
+html.tema-gaming #kotak-cari, html.tema-terang #kotak-cari, html.tema-pixel #kotak-cari,
+html.tema-banner #kotak-cari, html.tema-neon #kotak-cari, html.tema-emas #kotak-cari{
+  background:var(--tema-input); border-color:var(--tema-batas); color:var(--tema-teks);
+}
+html.tema-gaming #kotak-cari::placeholder, html.tema-terang #kotak-cari::placeholder, html.tema-pixel #kotak-cari::placeholder,
+html.tema-banner #kotak-cari::placeholder, html.tema-neon #kotak-cari::placeholder, html.tema-emas #kotak-cari::placeholder{color:var(--tema-redup)}
+html.tema-gaming #kotak-cari:focus, html.tema-terang #kotak-cari:focus, html.tema-pixel #kotak-cari:focus,
+html.tema-banner #kotak-cari:focus, html.tema-neon #kotak-cari:focus, html.tema-emas #kotak-cari:focus{
+  border-color:var(--tema-aksen); box-shadow:0 0 0 3px var(--tema-glow-soft);
+}
+html.tema-gaming .tombol-cari, html.tema-terang .tombol-cari, html.tema-pixel .tombol-cari,
+html.tema-banner .tombol-cari, html.tema-neon .tombol-cari, html.tema-emas .tombol-cari{
+  background:var(--tema-aksen); color:var(--tema-aksen-tek); box-shadow:0 8px 20px var(--tema-glow);
+}
+html.tema-gaming .btn-kategori, html.tema-terang .btn-kategori, html.tema-pixel .btn-kategori,
+html.tema-banner .btn-kategori, html.tema-neon .btn-kategori, html.tema-emas .btn-kategori{
+  background:var(--tema-chip); border-color:var(--tema-batas); color:var(--tema-redup);
+}
+html.tema-gaming .btn-kategori.aktif, html.tema-terang .btn-kategori.aktif, html.tema-pixel .btn-kategori.aktif,
+html.tema-banner .btn-kategori.aktif, html.tema-neon .btn-kategori.aktif, html.tema-emas .btn-kategori.aktif{
+  background:var(--tema-aksen); color:var(--tema-aksen-tek); box-shadow:0 7px 18px var(--tema-glow);
+}
+html.tema-gaming .bagian-top-addon .filter-kontrol, html.tema-terang .bagian-top-addon .filter-kontrol,
+html.tema-pixel .bagian-top-addon .filter-kontrol, html.tema-banner .bagian-top-addon .filter-kontrol,
+html.tema-neon .bagian-top-addon .filter-kontrol, html.tema-emas .bagian-top-addon .filter-kontrol{
+  background:var(--tema-chip); border-color:var(--tema-batas);
+}
+html.tema-gaming .bagian-top-addon .filter-kontrol span, html.tema-terang .bagian-top-addon .filter-kontrol span,
+html.tema-pixel .bagian-top-addon .filter-kontrol span, html.tema-banner .bagian-top-addon .filter-kontrol span,
+html.tema-neon .bagian-top-addon .filter-kontrol span, html.tema-emas .bagian-top-addon .filter-kontrol span{color:var(--tema-redup)}
+html.tema-gaming .bagian-top-addon .filter-kontrol select, html.tema-terang .bagian-top-addon .filter-kontrol select,
+html.tema-pixel .bagian-top-addon .filter-kontrol select, html.tema-banner .bagian-top-addon .filter-kontrol select,
+html.tema-neon .bagian-top-addon .filter-kontrol select, html.tema-emas .bagian-top-addon .filter-kontrol select{color:var(--tema-teks)}
+html.tema-gaming .bagian-top-addon .filter-kontrol select option, html.tema-terang .bagian-top-addon .filter-kontrol select option,
+html.tema-pixel .bagian-top-addon .filter-kontrol select option, html.tema-banner .bagian-top-addon .filter-kontrol select option,
+html.tema-neon .bagian-top-addon .filter-kontrol select option, html.tema-emas .bagian-top-addon .filter-kontrol select option{
+  background:var(--tema-kartu); color:var(--tema-teks);
+}
+
+/* Kartu addon (carousel & grid) */
+html.tema-gaming .kartu-addon, html.tema-gaming .kartu-geser,
+html.tema-terang .kartu-addon, html.tema-terang .kartu-geser,
+html.tema-pixel .kartu-addon, html.tema-pixel .kartu-geser,
+html.tema-banner .kartu-addon, html.tema-banner .kartu-geser,
+html.tema-neon .kartu-addon, html.tema-neon .kartu-geser,
+html.tema-emas .kartu-addon, html.tema-emas .kartu-geser{
+  background:var(--tema-kartu); border-color:var(--tema-batas); border-radius:var(--tema-radius); box-shadow:var(--tema-shadow);
+}
+html.tema-gaming .kartu-addon:hover, html.tema-gaming .kartu-geser:hover,
+html.tema-terang .kartu-addon:hover, html.tema-terang .kartu-geser:hover,
+html.tema-pixel .kartu-addon:hover, html.tema-pixel .kartu-geser:hover,
+html.tema-banner .kartu-addon:hover, html.tema-banner .kartu-geser:hover,
+html.tema-neon .kartu-addon:hover, html.tema-neon .kartu-geser:hover,
+html.tema-emas .kartu-addon:hover, html.tema-emas .kartu-geser:hover{box-shadow:0 12px 26px var(--tema-glow)}
+html.tema-gaming .kartu-isi h3, html.tema-gaming .kartu-isi h4,
+html.tema-terang .kartu-isi h3, html.tema-terang .kartu-isi h4,
+html.tema-pixel .kartu-isi h3, html.tema-pixel .kartu-isi h4,
+html.tema-banner .kartu-isi h3, html.tema-banner .kartu-isi h4,
+html.tema-neon .kartu-isi h3, html.tema-neon .kartu-isi h4,
+html.tema-emas .kartu-isi h3, html.tema-emas .kartu-isi h4{color:var(--tema-teks)}
+html.tema-gaming .garis-pembatas, html.tema-terang .garis-pembatas, html.tema-pixel .garis-pembatas,
+html.tema-banner .garis-pembatas, html.tema-neon .garis-pembatas, html.tema-emas .garis-pembatas{background:var(--tema-batas)}
+html.tema-gaming .tipe-file, html.tema-terang .tipe-file, html.tema-pixel .tipe-file,
+html.tema-banner .tipe-file, html.tema-neon .tipe-file, html.tema-emas .tipe-file{
+  background:var(--tema-aksen); color:var(--tema-aksen-tek);
+}
+html.tema-gaming .info-unduh, html.tema-terang .info-unduh, html.tema-pixel .info-unduh,
+html.tema-banner .info-unduh, html.tema-neon .info-unduh, html.tema-emas .info-unduh{color:var(--tema-redup)}
+html.tema-gaming .info-unduh i, html.tema-terang .info-unduh i, html.tema-pixel .info-unduh i,
+html.tema-banner .info-unduh i, html.tema-neon .info-unduh i, html.tema-emas .info-unduh i{color:var(--tema-aksen)}
+html.tema-gaming .tombol-like, html.tema-gaming .tombol-bagi,
+html.tema-terang .tombol-like, html.tema-terang .tombol-bagi,
+html.tema-pixel .tombol-like, html.tema-pixel .tombol-bagi,
+html.tema-banner .tombol-like, html.tema-banner .tombol-bagi,
+html.tema-neon .tombol-like, html.tema-neon .tombol-bagi,
+html.tema-emas .tombol-like, html.tema-emas .tombol-bagi{background:var(--tema-chip); color:var(--tema-redup)}
+html.tema-gaming .tombol-like.sudah, html.tema-terang .tombol-like.sudah, html.tema-pixel .tombol-like.sudah,
+html.tema-banner .tombol-like.sudah, html.tema-neon .tombol-like.sudah, html.tema-emas .tombol-like.sudah{
+  background:var(--tema-glow-soft); color:var(--tema-aksen);
+}
+html.tema-gaming .tombol-like:hover, html.tema-gaming .tombol-bagi:hover,
+html.tema-terang .tombol-like:hover, html.tema-terang .tombol-bagi:hover,
+html.tema-pixel .tombol-like:hover, html.tema-pixel .tombol-bagi:hover,
+html.tema-banner .tombol-like:hover, html.tema-banner .tombol-bagi:hover,
+html.tema-neon .tombol-like:hover, html.tema-neon .tombol-bagi:hover,
+html.tema-emas .tombol-like:hover, html.tema-emas .tombol-bagi:hover{background:var(--tema-aksen); color:var(--tema-aksen-tek)}
+html.tema-gaming #wadah-top .tombol-lanjut-pilihan, html.tema-terang #wadah-top .tombol-lanjut-pilihan,
+html.tema-pixel #wadah-top .tombol-lanjut-pilihan, html.tema-banner #wadah-top .tombol-lanjut-pilihan,
+html.tema-neon #wadah-top .tombol-lanjut-pilihan, html.tema-emas #wadah-top .tombol-lanjut-pilihan{
+  background:var(--tema-chip); border-color:var(--tema-batas); color:var(--tema-aksen);
+}
+
+/* Halaman detail */
+html.tema-gaming .kartu-detail, html.tema-terang .kartu-detail, html.tema-pixel .kartu-detail,
+html.tema-banner .kartu-detail, html.tema-neon .kartu-detail, html.tema-emas .kartu-detail{
+  background:var(--tema-kartu); border-color:var(--tema-batas); border-radius:var(--tema-radius);
+}
+html.tema-gaming .detail-info, html.tema-terang .detail-info, html.tema-pixel .detail-info,
+html.tema-banner .detail-info, html.tema-neon .detail-info, html.tema-emas .detail-info{background:var(--tema-chip)}
+html.tema-gaming .info-item span, html.tema-terang .info-item span, html.tema-pixel .info-item span,
+html.tema-banner .info-item span, html.tema-neon .info-item span, html.tema-emas .info-item span{color:var(--tema-aksen)}
+html.tema-gaming .detail-deskripsi, html.tema-terang .detail-deskripsi, html.tema-pixel .detail-deskripsi,
+html.tema-banner .detail-deskripsi, html.tema-neon .detail-deskripsi, html.tema-emas .detail-deskripsi{color:var(--tema-redup)}
+html.tema-gaming .detail-unduh, html.tema-terang .detail-unduh, html.tema-pixel .detail-unduh,
+html.tema-banner .detail-unduh, html.tema-neon .detail-unduh, html.tema-emas .detail-unduh{color:var(--tema-redup)}
+html.tema-gaming .detail-unduh i, html.tema-terang .detail-unduh i, html.tema-pixel .detail-unduh i,
+html.tema-banner .detail-unduh i, html.tema-neon .detail-unduh i, html.tema-emas .detail-unduh i{color:var(--tema-aksen)}
+html.tema-gaming .tombol-unduh, html.tema-terang .tombol-unduh, html.tema-pixel .tombol-unduh,
+html.tema-banner .tombol-unduh, html.tema-neon .tombol-unduh, html.tema-emas .tombol-unduh{
+  background:var(--tema-aksen); color:var(--tema-aksen-tek);
+}
+html.tema-gaming .tombol-unduh:hover, html.tema-terang .tombol-unduh:hover, html.tema-pixel .tombol-unduh:hover,
+html.tema-banner .tombol-unduh:hover, html.tema-neon .tombol-unduh:hover, html.tema-emas .tombol-unduh:hover{background:var(--tema-aksen2)}
+html.tema-gaming .tombol-bagi-detail, html.tema-terang .tombol-bagi-detail, html.tema-pixel .tombol-bagi-detail,
+html.tema-banner .tombol-bagi-detail, html.tema-neon .tombol-bagi-detail, html.tema-emas .tombol-bagi-detail{
+  background:var(--tema-chip); color:var(--tema-teks);
+}
+html.tema-gaming .tombol-bagi-detail:hover, html.tema-terang .tombol-bagi-detail:hover, html.tema-pixel .tombol-bagi-detail:hover,
+html.tema-banner .tombol-bagi-detail:hover, html.tema-neon .tombol-bagi-detail:hover, html.tema-emas .tombol-bagi-detail:hover{background:var(--tema-aksen)}
+html.tema-gaming .tombol-kembali, html.tema-terang .tombol-kembali, html.tema-pixel .tombol-kembali,
+html.tema-banner .tombol-kembali, html.tema-neon .tombol-kembali, html.tema-emas .tombol-kembali{color:var(--tema-aksen)}
+
+/* Komentar */
+html.tema-gaming .kartu-komentar, html.tema-terang .kartu-komentar, html.tema-pixel .kartu-komentar,
+html.tema-banner .kartu-komentar, html.tema-neon .kartu-komentar, html.tema-emas .kartu-komentar{
+  background:var(--tema-kartu); border-color:var(--tema-batas);
+}
+html.tema-gaming .judul-komentar, html.tema-terang .judul-komentar, html.tema-pixel .judul-komentar,
+html.tema-banner .judul-komentar, html.tema-neon .judul-komentar, html.tema-emas .judul-komentar{color:var(--tema-aksen)}
+html.tema-gaming #input-komentar, html.tema-terang #input-komentar, html.tema-pixel #input-komentar,
+html.tema-banner #input-komentar, html.tema-neon #input-komentar, html.tema-emas #input-komentar{
+  background:var(--tema-input); border-color:var(--tema-batas); color:var(--tema-teks);
+}
+html.tema-gaming .isi-komentar, html.tema-terang .isi-komentar, html.tema-pixel .isi-komentar,
+html.tema-banner .isi-komentar, html.tema-neon .isi-komentar, html.tema-emas .isi-komentar{border-bottom-color:var(--tema-batas)}
+html.tema-gaming .teks-komentar, html.tema-terang .teks-komentar, html.tema-pixel .teks-komentar,
+html.tema-banner .teks-komentar, html.tema-neon .teks-komentar, html.tema-emas .teks-komentar{color:var(--tema-teks)}
+html.tema-gaming .waktu-komentar, html.tema-terang .waktu-komentar, html.tema-pixel .waktu-komentar,
+html.tema-banner .waktu-komentar, html.tema-neon .waktu-komentar, html.tema-emas .waktu-komentar{color:var(--tema-redup)}
+
+/* Profil, login, dan panel admin/owner */
+html.tema-gaming .profil-avatar, html.tema-terang .profil-avatar, html.tema-pixel .profil-avatar,
+html.tema-banner .profil-avatar, html.tema-neon .profil-avatar, html.tema-emas .profil-avatar{background:var(--tema-aksen)}
+html.tema-gaming .profil-akun-login, html.tema-terang .profil-akun-login, html.tema-pixel .profil-akun-login,
+html.tema-banner .profil-akun-login, html.tema-neon .profil-akun-login, html.tema-emas .profil-akun-login{
+  background:var(--tema-kartu); border-color:var(--tema-batas);
+}
+html.tema-gaming .profil-nama, html.tema-terang .profil-nama, html.tema-pixel .profil-nama,
+html.tema-banner .profil-nama, html.tema-neon .profil-nama, html.tema-emas .profil-nama{color:var(--tema-teks)}
+html.tema-gaming .profil-subjudul, html.tema-terang .profil-subjudul, html.tema-pixel .profil-subjudul,
+html.tema-banner .profil-subjudul, html.tema-neon .profil-subjudul, html.tema-emas .profil-subjudul,
+html.tema-gaming .form-akun label, html.tema-terang .form-akun label, html.tema-pixel .form-akun label,
+html.tema-banner .form-akun label, html.tema-neon .form-akun label, html.tema-emas .form-akun label{color:var(--tema-redup)}
+html.tema-gaming .form-akun input, html.tema-terang .form-akun input, html.tema-pixel .form-akun input,
+html.tema-banner .form-akun input, html.tema-neon .form-akun input, html.tema-emas .form-akun input{
+  background:var(--tema-input); border-color:var(--tema-batas); color:var(--tema-teks);
+}
+html.tema-gaming .form-akun input:focus, html.tema-terang .form-akun input:focus, html.tema-pixel .form-akun input:focus,
+html.tema-banner .form-akun input:focus, html.tema-neon .form-akun input:focus, html.tema-emas .form-akun input:focus{border-color:var(--tema-aksen)}
+html.tema-gaming .form-akun small, html.tema-terang .form-akun small, html.tema-pixel .form-akun small,
+html.tema-banner .form-akun small, html.tema-neon .form-akun small, html.tema-emas .form-akun small{color:var(--tema-redup)}
+html.tema-gaming .tombol-akun, html.tema-terang .tombol-akun, html.tema-pixel .tombol-akun,
+html.tema-banner .tombol-akun, html.tema-neon .tombol-akun, html.tema-emas .tombol-akun{background:var(--tema-aksen); color:var(--tema-aksen-tek)}
+html.tema-gaming .tombol-sekunder, html.tema-terang .tombol-sekunder, html.tema-pixel .tombol-sekunder,
+html.tema-banner .tombol-sekunder, html.tema-neon .tombol-sekunder, html.tema-emas .tombol-sekunder{color:var(--tema-aksen)}
+html.tema-gaming .tombol-logout, html.tema-terang .tombol-logout, html.tema-pixel .tombol-logout,
+html.tema-banner .tombol-logout, html.tema-neon .tombol-logout, html.tema-emas .tombol-logout{background:var(--tema-chip); color:var(--tema-teks)}
+html.tema-gaming .login-card, html.tema-terang .login-card, html.tema-pixel .login-card,
+html.tema-banner .login-card, html.tema-neon .login-card, html.tema-emas .login-card{background:var(--tema-kartu); border-color:var(--tema-batas)}
+html.tema-gaming .login-card p, html.tema-terang .login-card p, html.tema-pixel .login-card p,
+html.tema-banner .login-card p, html.tema-neon .login-card p, html.tema-emas .login-card p{color:var(--tema-redup)}
+html.tema-gaming .login-tutup, html.tema-terang .login-tutup, html.tema-pixel .login-tutup,
+html.tema-banner .login-tutup, html.tema-neon .login-tutup, html.tema-emas .login-tutup{color:var(--tema-redup)}
+html.tema-gaming .kartu-login-komentar, html.tema-terang .kartu-login-komentar, html.tema-pixel .kartu-login-komentar,
+html.tema-banner .kartu-login-komentar, html.tema-neon .kartu-login-komentar, html.tema-emas .kartu-login-komentar{
+  background:var(--tema-chip); border-color:var(--tema-batas);
+}
+html.tema-gaming .panel-card, html.tema-terang .panel-card, html.tema-pixel .panel-card,
+html.tema-banner .panel-card, html.tema-neon .panel-card, html.tema-emas .panel-card{
+  background:var(--tema-kartu); border-color:var(--tema-batas);
+}
+html.tema-gaming .panel-card input, html.tema-gaming .panel-card select, html.tema-gaming .panel-card textarea,
+html.tema-terang .panel-card input, html.tema-terang .panel-card select, html.tema-terang .panel-card textarea,
+html.tema-pixel .panel-card input, html.tema-pixel .panel-card select, html.tema-pixel .panel-card textarea,
+html.tema-banner .panel-card input, html.tema-banner .panel-card select, html.tema-banner .panel-card textarea,
+html.tema-neon .panel-card input, html.tema-neon .panel-card select, html.tema-neon .panel-card textarea,
+html.tema-emas .panel-card input, html.tema-emas .panel-card select, html.tema-emas .panel-card textarea{
+  background:var(--tema-input); color:var(--tema-teks); border-color:var(--tema-batas);
+}
+
+/* Footer, notifikasi, paginasi, halaman game */
+html.tema-gaming .footer, html.tema-terang .footer, html.tema-pixel .footer,
+html.tema-banner .footer, html.tema-neon .footer, html.tema-emas .footer{
+  background:var(--tema-footer); border-top-color:var(--tema-batas); color:var(--tema-redup);
+}
+html.tema-gaming .notifikasi, html.tema-terang .notifikasi, html.tema-pixel .notifikasi,
+html.tema-banner .notifikasi, html.tema-neon .notifikasi, html.tema-emas .notifikasi{background:var(--tema-aksen); color:var(--tema-aksen-tek)}
+html.tema-gaming .kontrol-paginasi .info-paginasi, html.tema-terang .kontrol-paginasi .info-paginasi,
+html.tema-pixel .kontrol-paginasi .info-paginasi, html.tema-banner .kontrol-paginasi .info-paginasi,
+html.tema-neon .kontrol-paginasi .info-paginasi, html.tema-emas .kontrol-paginasi .info-paginasi{color:var(--tema-redup)}
+html.tema-gaming .tombol-paginasi, html.tema-terang .tombol-paginasi, html.tema-pixel .tombol-paginasi,
+html.tema-banner .tombol-paginasi, html.tema-neon .tombol-paginasi, html.tema-emas .tombol-paginasi{
+  background:var(--tema-chip); border-color:var(--tema-batas); color:var(--tema-teks);
+}
+html.tema-gaming .tombol-paginasi:hover:not(:disabled), html.tema-terang .tombol-paginasi:hover:not(:disabled),
+html.tema-pixel .tombol-paginasi:hover:not(:disabled), html.tema-banner .tombol-paginasi:hover:not(:disabled),
+html.tema-neon .tombol-paginasi:hover:not(:disabled), html.tema-emas .tombol-paginasi:hover:not(:disabled){
+  border-color:var(--tema-aksen); color:var(--tema-aksen);
+}
+html.tema-gaming .tombol-paginasi.aktif, html.tema-terang .tombol-paginasi.aktif, html.tema-pixel .tombol-paginasi.aktif,
+html.tema-banner .tombol-paginasi.aktif, html.tema-neon .tombol-paginasi.aktif, html.tema-emas .tombol-paginasi.aktif{
+  background:var(--tema-aksen); border-color:var(--tema-aksen); color:var(--tema-aksen-tek);
+}
+html.tema-gaming .titik-paginasi, html.tema-terang .titik-paginasi, html.tema-pixel .titik-paginasi,
+html.tema-banner .titik-paginasi, html.tema-neon .titik-paginasi, html.tema-emas .titik-paginasi{color:var(--tema-redup)}
+html.tema-gaming .game-info, html.tema-terang .game-info, html.tema-pixel .game-info,
+html.tema-banner .game-info, html.tema-neon .game-info, html.tema-emas .game-info{
+  background:var(--tema-kartu); border-color:var(--tema-batas);
+}
+html.tema-gaming .form-laporan-addon select, html.tema-gaming .form-laporan-addon textarea,
+html.tema-terang .form-laporan-addon select, html.tema-terang .form-laporan-addon textarea,
+html.tema-pixel .form-laporan-addon select, html.tema-pixel .form-laporan-addon textarea,
+html.tema-banner .form-laporan-addon select, html.tema-banner .form-laporan-addon textarea,
+html.tema-neon .form-laporan-addon select, html.tema-neon .form-laporan-addon textarea,
+html.tema-emas .form-laporan-addon select, html.tema-emas .form-laporan-addon textarea{
+  background:var(--tema-input); color:var(--tema-teks); border-color:var(--tema-batas);
+}
+html.tema-gaming .laporan-owner-item, html.tema-terang .laporan-owner-item, html.tema-pixel .laporan-owner-item,
+html.tema-banner .laporan-owner-item, html.tema-neon .laporan-owner-item, html.tema-emas .laporan-owner-item{
+  background:var(--tema-chip); border-color:var(--tema-batas);
+}
+
+/* ---------- Ciri khas tiap tema ---------- */
+html.tema-gaming .bagian-sambutan{border-color:rgba(255,64,48,.45)}
+html.tema-gaming .kartu-addon:hover, html.tema-gaming .kartu-geser:hover{box-shadow:0 12px 26px rgba(255,45,37,.28)}
+
+html.tema-terang .tombol-like.sudah{background:rgba(37,99,235,.14)}
+html.tema-terang .tombol-lanjut-pilihan, html.tema-terang #wadah-top .tombol-lanjut-pilihan{background:#e9eff8}
+
+html.tema-pixel .bagian-sambutan{border-width:2px}
+html.tema-pixel .bagian-sambutan::before{
+  content:""; position:absolute; left:0; right:0; top:0; height:8px; z-index:1;
+  background:repeating-linear-gradient(90deg,#6fbf3a 0 16px,#57a52c 16px 32px);
+}
+html.tema-pixel .kartu-addon, html.tema-pixel .kartu-geser, html.tema-pixel .kartu-detail{box-shadow:4px 4px 0 rgba(0,0,0,.42)}
+
+html.tema-banner .bagian-sambutan{
+  border-color:rgba(56,189,248,.40);
+  box-shadow:0 18px 45px rgba(0,0,0,.35),0 0 42px rgba(56,189,248,.12);
+}
+html.tema-banner .wadah-geser .kartu-geser:first-child{
+  border-color:#f59e0b;
+  box-shadow:0 0 0 1px rgba(245,158,11,.40),0 12px 30px rgba(245,158,11,.18);
+}
+
+html.tema-neon .kartu-addon, html.tema-neon .kartu-geser, html.tema-neon .kartu-detail{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+html.tema-neon .bagian-sambutan{background:linear-gradient(135deg,rgba(139,92,246,.32),rgba(34,211,238,.14));border-color:rgba(168,85,247,.35)}
+html.tema-neon .tombol-cari, html.tema-neon .btn-kategori.aktif, html.tema-neon .tombol-unduh{background:linear-gradient(135deg,#a855f7,#8b5cf6)}
+html.tema-neon .tipe-file{background:linear-gradient(135deg,#8b5cf6,#22d3ee)}
+
+html.tema-emas .tombol-unduh, html.tema-emas .btn-kategori.aktif{background:linear-gradient(135deg,#e8b25a,#c9852f)}
+html.tema-emas .bagian-sambutan{border-color:rgba(232,178,90,.34)}
+
+/* ===== Perbaikan cakupan tema terhadap aturan spesifik-ID di style.css ===== */
+html.tema-gaming #wadah-addon .kartu-addon, html.tema-terang #wadah-addon .kartu-addon,
+html.tema-pixel #wadah-addon .kartu-addon, html.tema-banner #wadah-addon .kartu-addon,
+html.tema-neon #wadah-addon .kartu-addon, html.tema-emas #wadah-addon .kartu-addon{
+  background:var(--tema-kartu); border-color:var(--tema-batas); border-radius:var(--tema-radius); box-shadow:var(--tema-shadow);
+}
+html.tema-gaming #wadah-addon .kartu-addon:hover, html.tema-terang #wadah-addon .kartu-addon:hover,
+html.tema-pixel #wadah-addon .kartu-addon:hover, html.tema-banner #wadah-addon .kartu-addon:hover,
+html.tema-neon #wadah-addon .kartu-addon:hover, html.tema-emas #wadah-addon .kartu-addon:hover{
+  box-shadow:0 12px 26px var(--tema-glow);
+}
+html.tema-gaming #wadah-addon .garis-pembatas, html.tema-terang #wadah-addon .garis-pembatas,
+html.tema-pixel #wadah-addon .garis-pembatas, html.tema-banner #wadah-addon .garis-pembatas,
+html.tema-neon #wadah-addon .garis-pembatas, html.tema-emas #wadah-addon .garis-pembatas{background:var(--tema-batas)}
+html.tema-gaming #wadah-addon .tombol-like.sudah, html.tema-terang #wadah-addon .tombol-like.sudah,
+html.tema-pixel #wadah-addon .tombol-like.sudah, html.tema-banner #wadah-addon .tombol-like.sudah,
+html.tema-neon #wadah-addon .tombol-like.sudah, html.tema-emas #wadah-addon .tombol-like.sudah{
+  background:var(--tema-glow-soft); color:var(--tema-aksen);
+}
+html.tema-gaming #wadah-top .kartu-geser, html.tema-terang #wadah-top .kartu-geser,
+html.tema-pixel #wadah-top .kartu-geser, html.tema-banner #wadah-top .kartu-geser,
+html.tema-neon #wadah-top .kartu-geser, html.tema-emas #wadah-top .kartu-geser{
+  background:var(--tema-kartu); border-color:var(--tema-batas);
+}
+html.tema-gaming #wadah-addon .kartu-isi h3, html.tema-terang #wadah-addon .kartu-isi h3,
+html.tema-pixel #wadah-addon .kartu-isi h3, html.tema-banner #wadah-addon .kartu-isi h3,
+html.tema-neon #wadah-addon .kartu-isi h3, html.tema-emas #wadah-addon .kartu-isi h3{color:var(--tema-teks)}
+html.tema-gaming .gambar-wadah, html.tema-terang .gambar-wadah, html.tema-pixel .gambar-wadah,
+html.tema-banner .gambar-wadah, html.tema-neon .gambar-wadah, html.tema-emas .gambar-wadah{background:var(--tema-chip)}
+html.tema-gaming .detail-gambar, html.tema-terang .detail-gambar, html.tema-pixel .detail-gambar,
+html.tema-banner .detail-gambar, html.tema-neon .detail-gambar, html.tema-emas .detail-gambar{background:var(--tema-chip)}
+html.tema-gaming .kartu-detail .detail-judul h2, html.tema-terang .kartu-detail .detail-judul h2,
+html.tema-pixel .kartu-detail .detail-judul h2, html.tema-banner .kartu-detail .detail-judul h2,
+html.tema-neon .kartu-detail .detail-judul h2, html.tema-emas .kartu-detail .detail-judul h2{color:var(--tema-teks)}
+html.tema-gaming .kartu-komentar .teks-komentar, html.tema-terang .kartu-komentar .teks-komentar,
+html.tema-pixel .kartu-komentar .teks-komentar, html.tema-banner .kartu-komentar .teks-komentar,
+html.tema-neon .kartu-komentar .teks-komentar, html.tema-emas .kartu-komentar .teks-komentar{color:var(--tema-teks)}
+html.tema-terang .bagian-sambutan{background:#ffffff !important}
+html.tema-terang .latar-gambar{
+  background-image:linear-gradient(180deg,rgba(243,245,250,.80),rgba(226,232,244,.88)) !important;
+}

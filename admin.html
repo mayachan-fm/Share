@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel Admin — MC Addon Share</title>
 <link rel="stylesheet" href="style.css">
+<script>
+(function () {
+  try {
+    var id = localStorage.getItem('tema-mcaddon') || 'default';
+    var h = document.documentElement;
+    ['tema-default','tema-gelap','tema-nether','tema-end','tema-emerald','tema-gaming','tema-terang','tema-pixel','tema-banner','tema-neon','tema-emas'].forEach(function (c) { h.classList.remove(c); });
+    if (id && id !== 'default') h.classList.add('tema-' + id);
+  } catch (e) {}
+})();
+</script>
 <link rel="icon" href="logo.png" type="image/png">
 <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <!-- === OPEN GRAPH / PRATINJAU WHATSAPP === -->

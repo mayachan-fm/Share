@@ -493,9 +493,15 @@ onAuthStateChanged(auth, async (user) => {
   var TEMAS=[
     {id:'default',nama:'Default',premium:false,bg:'#1a1a1a',aksen:'#ff3b30'},
     {id:'gelap',nama:'Ultra Gelap',premium:false,bg:'#000000',aksen:'#ff3b30'},
-    {id:'nether',nama:'Nether',premium:true,bg:'#2a1610',aksen:'#ff5a36'},
-    {id:'end',nama:'The End',premium:true,bg:'#241a33',aksen:'#a855f7'},
-    {id:'emerald',nama:'Emerald',premium:true,bg:'#162a20',aksen:'#10b981'}
+    {id:'nether',nama:'Nether',premium:false,bg:'#2a1610',aksen:'#ff5a36'},
+    {id:'end',nama:'The End',premium:false,bg:'#241a33',aksen:'#a855f7'},
+    {id:'emerald',nama:'Emerald',premium:false,bg:'#162a20',aksen:'#10b981'},
+    {id:'gaming',nama:'Arena Merah',premium:true,bg:'#1c1212',aksen:'#ff4030'},
+    {id:'terang',nama:'Minimalis Terang',premium:true,bg:'#f3f5fa',aksen:'#2563eb'},
+    {id:'pixel',nama:'Blok Piksel',premium:true,bg:'#20281a',aksen:'#72c13f'},
+    {id:'banner',nama:'Banner Unggulan',premium:true,bg:'#16223a',aksen:'#38bdf8'},
+    {id:'neon',nama:'Neon Malam',premium:true,bg:'#151033',aksen:'#a855f7'},
+    {id:'emas',nama:'Emas Studio',premium:true,bg:'#2a1d11',aksen:'#e8b25a'}
   ];
   function simpan(id){try{localStorage.setItem('tema-mcaddon',id||'default');}catch(e){}}
   function terapkan(id){
