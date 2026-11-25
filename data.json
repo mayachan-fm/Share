@@ -4250,5 +4250,17 @@
     "ukuran": "3 KB",
     "tanggal unggah": "24 November 2026",
     "description": "By CR AIKO"
+  },
+  "build_your_vehicle": {
+    "slug": "build_your_vehicle",
+    "nama file": "Build Your Vehicle",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-25-f095f188-55a4-4318-bdbb-d87350edd662.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.1.3/Build.your.Vehicle.Add-On.addon.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "1.39 MB",
+    "tanggal unggah": "25 November 2026",
+    "description": "Membangun. Lem. Menyetir! Buat mobil, truk, perahu, wahana amfibi, dan apa pun di antaranya! Sesuaikan kendaraan Anda, tambahkan lampu dan klakson, dan hidupkan. Ajaklah teman dan massa untuk ikut dalam perjalanan, atau berkendaralah dengan remote control. Jika Anda bisa membayangkannya, Anda bisa mengendarainya."
   }
 }
