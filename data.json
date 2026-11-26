@@ -4286,5 +4286,17 @@
     "ukuran": "3.54 MB",
     "tanggal unggah": "26 November 2026",
     "description": "Tetap terhidrasi. Tetap waras. Tetap hidup. Rasa haus terkuras, kewarasan retak, dan rasa dingin mulai menjalar. HyperCraft tidak dapat menahan tangan Anda — ia menguji setiap naluri bertahan hidup yang Anda miliki. Keahlian Anda tidak berarti apa-apa sampai dibuktikan di sini. Kamu pikir kamu bisa mengatasinya?\n\nOleh Studio Loren & Studio Pathway"
+  },
+  "mega_chest": {
+    "slug": "mega_chest",
+    "nama file": "Mega Chest 1.0",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-26-d14e527b-539c-4320-8983-1ccb7ef47c83.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.0/Mega.Chest.1.0.Add-On.addon.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "925.84 KB",
+    "tanggal unggah": "26 November 2026",
+    "description": "Peti vanilla menampung 27 slot. Netherite Chest menampung 108. Mega Chest Add-On menambahkan delapan tingkatan yang dapat diupgrade dari Iron ke Netherite, dan peningkatan membuat item Anda tetap di tempatnya.\n\n- Delapan Rune Kekuatan\n- Magnet item: menarik tetesan dari 4 blok\n- Hopper mencapainya dari jarak 3 blok\n- Output Redstone diskalakan hingga seberapa penuhnya\n- Penyortiran sekali klik"
   }
 }
