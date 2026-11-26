@@ -102,7 +102,21 @@ module.exports = async (req, res) => {
       bypass = premiumAktif(premiumSnap.val(), now);
     }
 
-    const waitSeconds = bypass ? 0 : Math.floor(Math.random() * (WAIT_MAX - WAIT_MIN + 1)) + WAIT_MIN;
+    // Premium/Admin/Owner tidak memakai node sesi Firebase. Akses istimewa
+    // akan diverifikasi ulang pada /api/download-file ketika tombol download
+    // ditekan. Ini menghindari sesi Premium hilang/tidak terbaca antar function.
+    if (bypass) {
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({
+        ok: true,
+        gateToken: null,
+        waitSeconds: 0,
+        bypass: true,
+        directPrivileged: true
+      });
+    }
+
+    const waitSeconds = Math.floor(Math.random() * (WAIT_MAX - WAIT_MIN + 1)) + WAIT_MIN;
     const readyAt = now + waitSeconds * 1000;
     const gateToken = await createDownloadSession(admin.database(), {
       uid: user.uid,
@@ -110,7 +124,7 @@ module.exports = async (req, res) => {
       downloadUrl: String(link),
       readyAt,
       expiresAt: now + SESSION_TTL,
-      bypass,
+      bypass: false,
       fastPrivileged: false,
       createdAt: now
     });
@@ -119,7 +133,7 @@ module.exports = async (req, res) => {
     }));
 
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({ ok: true, gateToken, waitSeconds, bypass });
+    return res.status(200).json({ ok: true, gateToken, waitSeconds, bypass: false });
   } catch (error) {
     console.error('download-gate start error:', error);
     const status = error.code && String(error.code).startsWith('auth/') ? 401 : 500;

@@ -141,9 +141,8 @@ async function tampilkanDetail() {
                 if (token) detailHeaders.Authorization = `Bearer ${token}`;
             } catch (_) {}
         }
-        // Detail hanya mengambil satu addon. Untuk Premium/Admin/Owner, API sekaligus
-        // menyiapkan token download singkat sehingga klik Download tidak perlu
-        // memanggil /api/download-gate lagi.
+        // Detail hanya mengambil data addon. Akses Premium/Admin/Owner
+        // diverifikasi server-side saat tombol Download ditekan.
         const respon = await fetch(`/api/catalog?slug=${encodeURIComponent(slug)}`, {
             cache: 'no-store',
             headers: detailHeaders
@@ -239,10 +238,30 @@ async function tampilkanDetail() {
                 body: JSON.stringify({ slug: idAddonSekarang })
             });
             const data = await response.json().catch(() => ({}));
-            if (!response.ok || !data.ok || !data.gateToken) {
+            if (!response.ok || !data.ok || (!data.gateToken && data.bypass !== true)) {
                 throw new Error(data.error || 'Gagal menyiapkan Download Gate.');
             }
             return data;
+        }
+        async function bukaDownloadIstimewa(slug) {
+            if (!usuarioActual) throw new Error('Silakan login kembali untuk menggunakan akses Premium.');
+            let idToken;
+            try {
+                idToken = await usuarioActual.getIdToken(true);
+            } catch (error) {
+                throw new Error('Sesi login tidak dapat diverifikasi. Silakan login ulang.');
+            }
+            const response = await fetch('/api/download-file', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slug, idToken }),
+                cache: 'no-store'
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.ok || !data.url) {
+                throw new Error(data.error || 'Download Premium tidak dapat dibuka.');
+            }
+            window.location.assign(data.url);
         }
         async function bukaEndpointDownload(gateToken) {
             const headers = { 'Content-Type': 'application/json' };
@@ -290,8 +309,8 @@ async function tampilkanDetail() {
                     // istimewa, response bypass=true sehingga download langsung
                     // dibuka tanpa timer; user biasa tetap mengikuti Download Gate.
                     const sesi = await mulaiSesiDownload();
-                    if (sesi.bypass) {
-                        await bukaEndpointDownload(sesi.gateToken);
+                    if (sesi.bypass === true) {
+                        await bukaDownloadIstimewa(idAddonSekarang);
                     } else {
                         await mulaiDownloadGate(sesi);
                     }

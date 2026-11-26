@@ -47,6 +47,60 @@ function premiumAktif(data, now) {
   return tipe === 'permanen' || berakhir === null || (Number.isFinite(berakhir) && now < berakhir);
 }
 
+async function isPrivilegedUser(database, uid) {
+  if (!uid) return false;
+  const roleSnap = await database.ref(`roles/${uid}`).once('value');
+  const role = String(roleSnap.val() || 'user').toLowerCase();
+  if (role === 'admin' || role === 'owner') return true;
+  const premiumSnap = await database.ref(`premium/${uid}`).once('value');
+  return premiumAktif(premiumSnap.val(), Date.now());
+}
+
+async function getCatalogDownloadUrl(slug) {
+  const owner = 'mayachan-fm';
+  const repo = 'Share';
+  const branch = 'main';
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error('GITHUB_TOKEN belum disetel di Vercel.');
+
+  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data.json?ref=${encodeURIComponent(branch)}`, {
+    headers: {
+      Accept: 'application/vnd.github+json',
+      Authorization: `Bearer ${token}`,
+      'X-GitHub-Api-Version': '2026-03-10'
+    }
+  });
+  const raw = await response.text();
+  let current;
+  try { current = JSON.parse(raw); } catch (_) { current = null; }
+  if (!response.ok || !current || !current.content || current.encoding !== 'base64') {
+    const reason = current && current.message ? current.message : `GitHub API error ${response.status}`;
+    throw new Error(`Katalog addon tidak dapat dibaca: ${reason}`);
+  }
+
+  let catalog;
+  try {
+    catalog = JSON.parse(Buffer.from(current.content.replace(/\n/g, ''), 'base64').toString('utf8'));
+  } catch (_) {
+    throw new Error('Data katalog addon tidak valid.');
+  }
+  const item = catalog && catalog[slug];
+  const link = item && String(item['link download'] || '').trim();
+  let parsed;
+  try { parsed = new URL(link); } catch (_) { parsed = null; }
+  if (!parsed || !['http:', 'https:'].includes(parsed.protocol)) {
+    const error = new Error('Link download addon tidak ditemukan atau tidak valid.');
+    error.status = 404;
+    throw error;
+  }
+  return link;
+}
+
+async function catatDownload(database, slug) {
+  const counterPromise = database.ref(`jumlah_unduh/${slug}`).set(admin.database.ServerValue.increment(1));
+  waitUntil(counterPromise.catch((error) => console.error('download counter error:', error)));
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method tidak diizinkan.' });
 
@@ -54,10 +108,31 @@ module.exports = async (req, res) => {
     getFirebaseAdmin();
     const body = parseBody(req);
     const gateToken = String(body.gateToken || '').trim();
-    if (!gateToken) return res.status(400).json({ ok: false, error: 'Token Download Gate tidak ditemukan.' });
-
     const database = admin.database();
     const currentUid = await verifyCurrentUid(req);
+
+    // Jalur Premium/Admin/Owner: tidak menggunakan token sesi RTDB. Akun
+    // diverifikasi ulang di endpoint ini, lalu URL diambil langsung dari katalog
+    // server. Guest/User biasa tetap wajib memakai gateToken satu-kali.
+    if (!gateToken) {
+      const slug = String(body.slug || '').trim();
+      if (!/^[a-z0-9_-]{1,80}$/i.test(slug)) {
+        return res.status(400).json({ ok: false, error: 'Token atau slug Download Gate tidak valid.' });
+      }
+      if (!currentUid) {
+        return res.status(401).json({ ok: false, error: 'Login diperlukan untuk akses tanpa timer.' });
+      }
+      const allowed = await isPrivilegedUser(database, currentUid);
+      if (!allowed) {
+        return res.status(403).json({ ok: false, error: 'Akses Premium/Admin/Owner tidak aktif.' });
+      }
+
+      const link = await getCatalogDownloadUrl(slug);
+      await catatDownload(database, slug);
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({ ok: true, url: link, privileged: true });
+    }
+
     const preview = await readDownloadSession(database, gateToken);
 
     // Setiap token yang dibuat untuk akun login terikat pada UID tersebut.
@@ -89,8 +164,7 @@ module.exports = async (req, res) => {
     const session = await consumeDownloadSession(database, gateToken, currentUid);
     const link = String(session.downloadUrl);
 
-    const counterPromise = database.ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
-    waitUntil(counterPromise.catch((error) => console.error('download counter error:', error)));
+    await catatDownload(database, session.slug);
     waitUntil(cleanupExpiredDownloadSessions(database).catch((error) => {
       console.error('download gate cleanup error:', error);
     }));
