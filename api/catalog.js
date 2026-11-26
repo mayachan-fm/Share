@@ -1,13 +1,10 @@
 const admin = require('firebase-admin');
-const { waitUntil } = require('@vercel/functions');
-const { createDownloadSession, cleanupExpiredDownloadSessions } = require('../lib/download-gate-sessions');
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
 const PATH = 'data.json';
 const BRANCH = 'main';
 const GITHUB_API = 'https://api.github.com';
 const CATALOG_CACHE_TTL = 60 * 1000;
-const PRIVILEGED_TOKEN_TTL = 5 * 60 * 1000;
 // UA crawler yang perlu dapat HTML OG — HARUS sama dengan list di vercel.json rewrite.
 const UA_CRAWLER = /facebookexternalhit|WhatsApp|Twitterbot|TelegramBot|LinkedInBot|Slackbot|Discordbot|redditbot|Googlebot|BingPreview|Applebot/i;
 let catalogCache = null;
@@ -178,30 +175,12 @@ module.exports = async (req, res) => {
       if (!item || typeof item !== 'object') return send(res, 404, { ok: false, error: 'Addon tidak ditemukan.' });
       const safe = { ...item };
       delete safe['link download'];
-      let downloadAccessToken = null;
-      try {
-        const access = await getPrivilegedAccess(req);
-        if (access && /^https?:\/\//i.test(String(item['link download'] || ''))) {
-          const now = Date.now();
-          downloadAccessToken = await createDownloadSession(admin.database(), {
-            uid: access.uid,
-            slug,
-            downloadUrl: String(item['link download']),
-            bypass: true,
-            fastPrivileged: true,
-            readyAt: now,
-            expiresAt: now + PRIVILEGED_TOKEN_TTL,
-            createdAt: now
-          });
-          waitUntil(cleanupExpiredDownloadSessions(admin.database()).catch((cleanupError) => {
-            console.error('download gate cleanup error:', cleanupError);
-          }));
-        }
-      } catch (error) {
-        console.warn('Privileged detail access unavailable:', error.message || error);
-      }
+      // Jangan membuat token download istimewa saat halaman detail dimuat.
+      // Token dibuat baru ketika tombol Download ditekan melalui /api/download-gate.
+      // Ini mencegah sesi Premium/Admin/Owner kedaluwarsa saat pengguna masih
+      // membaca halaman, dan memastikan status akses diperiksa tepat saat download.
       res.setHeader('Cache-Control', 'no-store');
-      return send(res, 200, { ok: true, idAddon: slug, item: safe, downloadAccessToken });
+      return send(res, 200, { ok: true, idAddon: slug, item: safe });
     }
     const publicData = {};
     for (const [key, item] of Object.entries(data)) {

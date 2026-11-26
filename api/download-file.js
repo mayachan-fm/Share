@@ -70,10 +70,9 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Jalur bypass dari /api/download-gate tetap memeriksa status Premium/role
-    // saat token ditukar. Jalur cepat dari /api/catalog sudah memeriksa akses
-    // ketika halaman detail dimuat; tokennya terikat UID dan hanya berlaku 5 menit.
-    if (preview.bypass === true && preview.fastPrivileged !== true) {
+    // Setiap sesi bypass selalu memeriksa ulang Premium/role saat token ditukar.
+    // Dengan begitu, status yang sudah dicabut tidak bisa memakai sesi lama.
+    if (preview.bypass === true) {
       if (!currentUid) return res.status(403).json({ ok: false, error: 'Login diperlukan untuk akses istimewa.' });
       const roleSnap = await database.ref(`roles/${currentUid}`).once('value');
       const role = String(roleSnap.val() || 'user').toLowerCase();

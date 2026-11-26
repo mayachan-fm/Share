@@ -33,7 +33,6 @@ const app = getApp();
 const db = getDatabase(app);
 let usuarioActual = null;
 let authResuelta = false;
-let privilegedDownloadToken = null;
 onAuthStateChanged(auth, (user) => {
     usuarioActual = user;
     authResuelta = true;
@@ -155,7 +154,6 @@ async function tampilkanDetail() {
         const idAddon = payload.idAddon || slug;
         const item = payload.item;
         namaAddonSekarang = item['nama file'] || '';
-        privilegedDownloadToken = payload.downloadAccessToken || null;
         if (!item || !idAddon) {
             wadah.innerHTML = `<div class="pesan-kosong"><i class="fa fa-exclamation-circle"></i><p>Data tidak ditemukan</p></div>`;
             return;
@@ -287,18 +285,15 @@ async function tampilkanDetail() {
             tombolGate.addEventListener('click', async () => {
                 tombolGate.disabled = true;
                 try {
-                    // Premium/Admin/Owner sudah diverifikasi ketika detail dimuat.
-                    // Gunakan token singkat yang sudah tersedia agar klik download
-                    // tidak melakukan request gate + query Firebase lagi.
-                    if (privilegedDownloadToken) {
-                        await bukaEndpointDownload(privilegedDownloadToken);
+                    // Buat sesi tepat saat tombol ditekan. Server akan memeriksa
+                    // status Premium/Admin/Owner pada saat itu juga. Untuk akun
+                    // istimewa, response bypass=true sehingga download langsung
+                    // dibuka tanpa timer; user biasa tetap mengikuti Download Gate.
+                    const sesi = await mulaiSesiDownload();
+                    if (sesi.bypass) {
+                        await bukaEndpointDownload(sesi.gateToken);
                     } else {
-                        const sesi = await mulaiSesiDownload();
-                        if (sesi.bypass) {
-                            await bukaEndpointDownload(sesi.gateToken);
-                        } else {
-                            await mulaiDownloadGate(sesi);
-                        }
+                        await mulaiDownloadGate(sesi);
                     }
                 } catch (error) {
                     console.error('Gagal menyiapkan Download Gate:', error);
