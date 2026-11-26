@@ -33,8 +33,8 @@ function renderOgHtml(req, data) {
   const item = slug && data && typeof data === 'object' ? data[slug] : null;
   const nama = item ? String(item['nama file'] || 'Addon') : 'Kumpulan Addon Minecraft';
   const deskripsi = item
-    ? potongTeks(item.description || 'Koleksi Addon & Mod Minecraft Bedrock terlengkap.', 160)
-    : 'Koleksi Addon & Mod Minecraft Bedrock terlengkap. Temukan, bagikan, dan unduh berbagai addon dengan mudah.';
+    ? potongTeks(item.description || 'Koleksi Addon & Mod Minecraft Bedrock.', 160)
+    : 'Koleksi Addon & Mod Minecraft Bedrock. Temukan, bagikan, dan unduh berbagai addon dengan mudah.';
   const gambar = item && item['link gambar'] ? item['link gambar'] : `https://${host}/situs-logo.png`;
   const judul = item ? `${escapeHtml(nama)} | MC Addon Share` : 'Detail Addon | MC Addon Share';
   return `<!DOCTYPE html>
