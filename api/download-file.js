@@ -1,5 +1,5 @@
 const admin = require('firebase-admin');
-const crypto = require('crypto');
+const { readDownloadSession, consumeDownloadSession, cleanupExpiredDownloadSessions } = require('../lib/download-gate-sessions');
 const { waitUntil } = require('@vercel/functions');
 
 function getFirebaseAdmin() {
@@ -27,30 +27,6 @@ function parseBody(req) {
   return Object.fromEntries(params.entries());
 }
 
-function signingSecret() {
-  const source = process.env.DOWNLOAD_GATE_SECRET || process.env.FIREBASE_PRIVATE_KEY || process.env.GITHUB_TOKEN;
-  if (!source) throw new Error('Secret Download Gate belum tersedia di server.');
-  return crypto.createHash('sha256').update(String(source)).digest();
-}
-
-function verifyGateToken(token) {
-  const parts = String(token || '').split('.');
-  if (parts.length !== 2) throw new Error('Token Download Gate tidak valid.');
-  const [encodedPayload, encodedSig] = parts;
-  const expected = crypto.createHmac('sha256', signingSecret()).update(encodedPayload).digest('base64url');
-  const a = Buffer.from(encodedSig);
-  const b = Buffer.from(expected);
-  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) throw new Error('Token Download Gate tidak valid.');
-
-  let payload;
-  try { payload = JSON.parse(Buffer.from(encodedPayload, 'base64url').toString('utf8')); } catch (_) {
-    throw new Error('Token Download Gate rusak.');
-  }
-  if (!payload || !/^[a-z0-9_-]{1,80}$/i.test(String(payload.slug || ''))) throw new Error('Token Download Gate tidak lengkap.');
-  if (!/^https?:\/\//i.test(String(payload.downloadUrl || ''))) throw new Error('Link download dalam token tidak valid.');
-  return payload;
-}
-
 async function verifyCurrentUid(req) {
   const header = req.headers.authorization || '';
   let idToken = '';
@@ -75,65 +51,56 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method tidak diizinkan.' });
 
   try {
+    getFirebaseAdmin();
     const body = parseBody(req);
     const gateToken = String(body.gateToken || '').trim();
     if (!gateToken) return res.status(400).json({ ok: false, error: 'Token Download Gate tidak ditemukan.' });
 
-    const session = verifyGateToken(gateToken);
-    const now = Date.now();
-    if (now > Number(session.expiresAt || 0)) {
-      return res.status(403).json({ ok: false, error: 'Sesi Download Gate sudah kedaluwarsa. Silakan mulai download lagi.' });
-    }
-    if (now < Number(session.readyAt || 0)) {
-      const sisa = Math.max(1, Math.ceil((Number(session.readyAt) - now) / 1000));
-      return res.status(403).json({ ok: false, error: `Download belum siap. Tunggu ${sisa} detik lagi.` });
-    }
-
-    // Fast path untuk Premium/Admin/Owner. Token ini sudah dibuat setelah akses
-    // diverifikasi di /api/catalog dan hanya berlaku singkat. Tidak perlu Firebase
-    // Auth/Realtime Database lagi pada saat klik download.
-    if (session.privileged === true) {
-      getFirebaseAdmin();
-      const counterPromise = admin.database().ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
-      waitUntil(counterPromise.catch((error) => console.error('download counter error:', error)));
-      res.setHeader('Cache-Control', 'no-store');
-      return res.status(200).json({ ok: true, url: String(session.downloadUrl) });
-    }
-
-    getFirebaseAdmin();
+    const database = admin.database();
     const currentUid = await verifyCurrentUid(req);
-    if (session.uid && session.uid !== currentUid) {
-      return res.status(403).json({ ok: false, error: 'Token Download Gate bukan milik akun ini.' });
-    }
-    if (session.uid && !currentUid) {
-      return res.status(401).json({ ok: false, error: 'Sesi login tidak dapat diverifikasi. Silakan login ulang.' });
+    const preview = await readDownloadSession(database, gateToken);
+
+    // Setiap token yang dibuat untuk akun login terikat pada UID tersebut.
+    // Token istimewa yang dibuat saat detail dimuat juga wajib berasal dari
+    // akun yang sama; token tidak bisa dipindahkan ke akun lain.
+    if (preview.uid && preview.uid !== currentUid) {
+      return res.status(currentUid ? 403 : 401).json({
+        ok: false,
+        error: currentUid ? 'Token Download Gate bukan milik akun ini.' : 'Login diperlukan untuk menggunakan sesi download ini.'
+      });
     }
 
-    if (session.bypass) {
+    // Jalur bypass dari /api/download-gate tetap memeriksa status Premium/role
+    // saat token ditukar. Jalur cepat dari /api/catalog sudah memeriksa akses
+    // ketika halaman detail dimuat; tokennya terikat UID dan hanya berlaku 5 menit.
+    if (preview.bypass === true && preview.fastPrivileged !== true) {
       if (!currentUid) return res.status(403).json({ ok: false, error: 'Login diperlukan untuk akses istimewa.' });
-      const roleSnap = await admin.database().ref(`roles/${currentUid}`).once('value');
+      const roleSnap = await database.ref(`roles/${currentUid}`).once('value');
       const role = String(roleSnap.val() || 'user').toLowerCase();
       let stillAllowed = role === 'admin' || role === 'owner';
       if (!stillAllowed) {
-        const premiumSnap = await admin.database().ref(`premium/${currentUid}`).once('value');
-        stillAllowed = premiumAktif(premiumSnap.val(), now);
+        const premiumSnap = await database.ref(`premium/${currentUid}`).once('value');
+        stillAllowed = premiumAktif(premiumSnap.val(), Date.now());
       }
       if (!stillAllowed) return res.status(403).json({ ok: false, error: 'Akses Premium/Admin/Owner sudah tidak aktif.' });
     }
 
+    // Transaksi Firebase mengunci token secara atomik. Dari dua permintaan
+    // bersamaan hanya satu yang dapat mengubah state available menjadi consumed.
+    const session = await consumeDownloadSession(database, gateToken, currentUid);
     const link = String(session.downloadUrl);
 
-    // Counter tidak boleh menahan respons download. Vercel waitUntil() menjaga
-    // Promise tetap hidup setelah respons dikirim, sehingga URL bisa dibuka
-    // segera sementara counter tetap diperbarui secara atomik di background.
-    const counterPromise = admin.database().ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
+    const counterPromise = database.ref(`jumlah_unduh/${session.slug}`).set(admin.database.ServerValue.increment(1));
     waitUntil(counterPromise.catch((error) => console.error('download counter error:', error)));
+    waitUntil(cleanupExpiredDownloadSessions(database).catch((error) => {
+      console.error('download gate cleanup error:', error);
+    }));
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ok: true, url: link });
   } catch (error) {
     console.error('download-file error:', error);
-    const status = error.code && String(error.code).startsWith('auth/') ? 401 : 500;
+    const status = Number(error.status) || (error.code && String(error.code).startsWith('auth/') ? 401 : 500);
     return res.status(status).json({ ok: false, error: error.message || 'Gagal membuka download.' });
   }
 };

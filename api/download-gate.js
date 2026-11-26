@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
-const crypto = require('crypto');
+const { waitUntil } = require('@vercel/functions');
+const { createDownloadSession, cleanupExpiredDownloadSessions } = require('../lib/download-gate-sessions');
 
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
@@ -61,22 +62,6 @@ async function readCatalogCached() {
   return data;
 }
 
-function signingSecret() {
-  const source = process.env.DOWNLOAD_GATE_SECRET || process.env.FIREBASE_PRIVATE_KEY || process.env.GITHUB_TOKEN;
-  if (!source) throw new Error('Secret Download Gate belum tersedia di server.');
-  return crypto.createHash('sha256').update(String(source)).digest();
-}
-
-function base64url(value) {
-  return Buffer.from(value).toString('base64url');
-}
-
-function signGatePayload(payload) {
-  const encoded = base64url(JSON.stringify(payload));
-  const signature = crypto.createHmac('sha256', signingSecret()).update(encoded).digest('base64url');
-  return `${encoded}.${signature}`;
-}
-
 async function identifyUser(req) {
   const header = req.headers.authorization || '';
   if (!header.startsWith('Bearer ')) return { uid: null, role: 'user' };
@@ -118,16 +103,20 @@ module.exports = async (req, res) => {
     }
 
     const waitSeconds = bypass ? 0 : Math.floor(Math.random() * (WAIT_MAX - WAIT_MIN + 1)) + WAIT_MIN;
-    const gateToken = signGatePayload({
-      uid: user.uid || null,
+    const readyAt = now + waitSeconds * 1000;
+    const gateToken = await createDownloadSession(admin.database(), {
+      uid: user.uid,
       slug,
       downloadUrl: String(link),
-      readyAt: now + waitSeconds * 1000,
+      readyAt,
       expiresAt: now + SESSION_TTL,
       bypass,
-      createdAt: now,
-      nonce: crypto.randomUUID()
+      fastPrivileged: false,
+      createdAt: now
     });
+    waitUntil(cleanupExpiredDownloadSessions(admin.database()).catch((error) => {
+      console.error('download gate cleanup error:', error);
+    }));
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ok: true, gateToken, waitSeconds, bypass });

@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
-const crypto = require('crypto');
+const { waitUntil } = require('@vercel/functions');
+const { createDownloadSession, cleanupExpiredDownloadSessions } = require('../lib/download-gate-sessions');
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
 const PATH = 'data.json';
@@ -33,8 +34,8 @@ function renderOgHtml(req, data) {
   const item = slug && data && typeof data === 'object' ? data[slug] : null;
   const nama = item ? String(item['nama file'] || 'Addon') : 'Kumpulan Addon Minecraft';
   const deskripsi = item
-    ? potongTeks(item.description || 'Koleksi Addon & Mod Minecraft Bedrock.', 160)
-    : 'Koleksi Addon & Mod Minecraft Bedrock. Temukan, bagikan, dan unduh berbagai addon dengan mudah.';
+    ? potongTeks(item.description || 'Koleksi Addon & Mod Minecraft Bedrock terlengkap.', 160)
+    : 'Koleksi Addon & Mod Minecraft Bedrock terlengkap. Temukan, bagikan, dan unduh berbagai addon dengan mudah.';
   const gambar = item && item['link gambar'] ? item['link gambar'] : `https://${host}/situs-logo.png`;
   const judul = item ? `${escapeHtml(nama)} | MC Addon Share` : 'Detail Addon | MC Addon Share';
   return `<!DOCTYPE html>
@@ -121,16 +122,6 @@ async function readCatalogCached() {
   catalogCacheAt = now;
   return data;
 }
-function signingSecret() {
-  const source = process.env.DOWNLOAD_GATE_SECRET || process.env.FIREBASE_PRIVATE_KEY || process.env.GITHUB_TOKEN || process.env.TOKEN_GITHUB;
-  if (!source) throw new Error('Secret Download Gate belum tersedia di server.');
-  return crypto.createHash('sha256').update(String(source)).digest();
-}
-function signAccessToken(payload) {
-  const encoded = Buffer.from(JSON.stringify(payload)).toString('base64url');
-  const signature = crypto.createHmac('sha256', signingSecret()).update(encoded).digest('base64url');
-  return `${encoded}.${signature}`;
-}
 function premiumAktif(data, now) {
   if (!data || typeof data !== 'object' || data.dicabutPada) return false;
   const tipe = String(data.tipe || '').toLowerCase();
@@ -192,16 +183,19 @@ module.exports = async (req, res) => {
         const access = await getPrivilegedAccess(req);
         if (access && /^https?:\/\//i.test(String(item['link download'] || ''))) {
           const now = Date.now();
-          downloadAccessToken = signAccessToken({
+          downloadAccessToken = await createDownloadSession(admin.database(), {
             uid: access.uid,
             slug,
             downloadUrl: String(item['link download']),
-            privileged: true,
+            bypass: true,
+            fastPrivileged: true,
             readyAt: now,
             expiresAt: now + PRIVILEGED_TOKEN_TTL,
-            issuedAt: now,
-            nonce: crypto.randomUUID()
+            createdAt: now
           });
+          waitUntil(cleanupExpiredDownloadSessions(admin.database()).catch((cleanupError) => {
+            console.error('download gate cleanup error:', cleanupError);
+          }));
         }
       } catch (error) {
         console.warn('Privileged detail access unavailable:', error.message || error);
