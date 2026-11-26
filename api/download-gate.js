@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
-const { waitUntil } = require('@vercel/functions');
-const { createDownloadSession, cleanupExpiredDownloadSessions } = require('../lib/download-gate-sessions');
+const { createGateToken } = require('../lib/download-gate-token');
 
 const OWNER = 'mayachan-fm';
 const REPO = 'Share';
@@ -118,19 +117,17 @@ module.exports = async (req, res) => {
 
     const waitSeconds = Math.floor(Math.random() * (WAIT_MAX - WAIT_MIN + 1)) + WAIT_MIN;
     const readyAt = now + waitSeconds * 1000;
-    const gateToken = await createDownloadSession(admin.database(), {
+    // User/Guest memakai token terenkripsi yang ditandatangani melalui AES-GCM.
+    // Tidak ada lagi sesi yang harus dibuat lalu dicari ulang di Firebase;
+    // status sekali-pakai baru dicatat secara atomik ketika token ditebus.
+    const gateToken = createGateToken({
       uid: user.uid,
       slug,
       downloadUrl: String(link),
       readyAt,
       expiresAt: now + SESSION_TTL,
-      bypass: false,
-      fastPrivileged: false,
-      createdAt: now
+      issuedAt: now
     });
-    waitUntil(cleanupExpiredDownloadSessions(admin.database()).catch((error) => {
-      console.error('download gate cleanup error:', error);
-    }));
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ok: true, gateToken, waitSeconds, bypass: false });

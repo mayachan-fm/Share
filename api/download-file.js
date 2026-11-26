@@ -1,5 +1,6 @@
 const admin = require('firebase-admin');
 const { readDownloadSession, consumeDownloadSession, cleanupExpiredDownloadSessions } = require('../lib/download-gate-sessions');
+const { openGateToken, isV2GateToken, consumeGateToken } = require('../lib/download-gate-token');
 const { waitUntil } = require('@vercel/functions');
 
 function getFirebaseAdmin() {
@@ -133,6 +134,38 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true, url: link, privileged: true });
     }
 
+    // Token v2 untuk Guest/User biasa tidak bergantung pada pembacaan node sesi
+    // Firebase. Payload dienkripsi di server, waktu tunggu diverifikasi di sini,
+    // dan pemakaian pertama dikunci dengan transaksi atomik.
+    if (isV2GateToken(gateToken)) {
+      const payload = openGateToken(gateToken);
+      if (payload.uid && payload.uid !== currentUid) {
+        return res.status(currentUid ? 403 : 401).json({
+          ok: false,
+          error: currentUid ? 'Token Download Gate bukan milik akun ini.' : 'Login diperlukan untuk menggunakan sesi download ini.'
+        });
+      }
+
+      const now = Date.now();
+      if (now >= payload.expiresAt) {
+        return res.status(410).json({ ok: false, error: 'Sesi Download Gate sudah kedaluwarsa. Silakan mulai download lagi.' });
+      }
+      if (now < payload.readyAt) {
+        const sisa = Math.max(1, Math.ceil((payload.readyAt - now) / 1000));
+        return res.status(403).json({ ok: false, error: `Download belum siap. Tunggu ${sisa} detik lagi.` });
+      }
+
+      await consumeGateToken(database, gateToken, payload.expiresAt);
+      await catatDownload(database, payload.slug);
+      waitUntil(cleanupExpiredDownloadSessions(database).catch((error) => {
+        console.error('download gate cleanup error:', error);
+      }));
+
+      res.setHeader('Cache-Control', 'no-store');
+      return res.status(200).json({ ok: true, url: payload.downloadUrl });
+    }
+
+    // Dukungan sementara untuk token sesi lama yang masih aktif saat deployment.
     const preview = await readDownloadSession(database, gateToken);
 
     // Setiap token yang dibuat untuk akun login terikat pada UID tersebut.
