@@ -1,5 +1,21 @@
 const admin = require('firebase-admin');
 function send(res, status, body) { res.status(status).json(body); }
+function safeInternalNotificationLink(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw || raw.length > 500 || /[\u0000-\u001f\u007f]/.test(raw)) return '';
+  try {
+    const url = new URL(raw, 'https://mc-share-internal.invalid/');
+    if (url.origin !== 'https://mc-share-internal.invalid') return '';
+    const path = url.pathname.replace(/^\/+/, '');
+    if (!['detail.html', 'index.html', 'profil.html'].includes(path)) return '';
+    return `${path}${url.search}${url.hash}`;
+  } catch (_) {
+    return '';
+  }
+}
+function isSafeFirebaseKey(value, max = 128) {
+  return typeof value === 'string' && value.length > 0 && value.length <= max && !/[.#$\/\[\]\u0000-\u001f\u007f]/.test(value);
+}
 function getFirebaseAdmin() {
   if (admin.apps.length) return admin.app();
   const privateKey = String(process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n');
@@ -31,44 +47,81 @@ module.exports = async (req, res) => {
     const clean = (v, max) => String(v ?? '').trim().slice(0, max);
 
     // ============================================================
-    // action=create — buat notifikasi untuk user lain (mis. balasan komentar).
-    // Server-side agar tidak terblokir aturan keamanan RTDB (notifikasi/{uid}
-    // hanya boleh ditulis pemiliknya). Dipanggil dari detail.js saat membalas.
+    // action=create — notifikasi hanya boleh dibuat untuk balasan komentar
+    // yang benar-benar tersimpan di Firebase. Target UID, teks, tipe, dan link
+    // tidak dipercaya dari client; semuanya diverifikasi/dibentuk di server.
     // ============================================================
     if (action === 'create') {
       if (req.method !== 'POST') return send(res, 405, { ok: false, error: 'Method tidak diizinkan.' });
       const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-      const targetUid = clean(body.targetUid, 180);
-      const tipe = clean(body.tipe || 'info', 40) || 'info';
-      const judul = clean(body.judul, 120);
-      const pesan = clean(body.pesan, 300);
-      const link = clean(body.link, 200);
-      if (!targetUid || !judul || !pesan) {
-        return send(res, 400, { ok: false, error: 'Data notifikasi tidak lengkap.' });
+      const addonId = clean(body.addonId, 120);
+      const parentId = clean(body.parentId, 128);
+      const replyId = clean(body.replyId, 128);
+      const detailSlug = clean(body.detailSlug || addonId, 160);
+      const namaAddon = clean(body.namaAddon, 120);
+      if (!isSafeFirebaseKey(addonId, 120) || !isSafeFirebaseKey(parentId) || !isSafeFirebaseKey(replyId) || !detailSlug) {
+        return send(res, 400, { ok: false, error: 'Referensi balasan komentar tidak valid.' });
+      }
+
+      const komentarRef = db.ref(`komentar/${addonId}`);
+      const [parentSnap, replySnap] = await Promise.all([
+        komentarRef.child(parentId).once('value'),
+        komentarRef.child(replyId).once('value')
+      ]);
+      if (!parentSnap.exists() || !replySnap.exists()) {
+        return send(res, 404, { ok: false, error: 'Komentar atau balasan tidak ditemukan.' });
+      }
+      const parentData = parentSnap.val() || {};
+      const replyData = replySnap.val() || {};
+      const targetUid = String(parentData.uid || '');
+      if (!targetUid || String(replyData.uid || '') !== user.uid || String(replyData.parentId || '') !== parentId) {
+        return send(res, 403, { ok: false, error: 'Balasan komentar tidak cocok dengan akun yang login.' });
       }
       if (targetUid === user.uid) {
         return send(res, 200, { ok: true, skipped: true, alasan: 'Tidak perlu notifikasi ke diri sendiri.' });
       }
-      // Rate limit sederhana: max 1 notifikasi per 5 detik per pengirim (anti-spam).
-      const rateRef = db.ref(`batas_notif/${user.uid}`);
+
+      const isiBalasan = clean(replyData.isi, 300);
+      if (!isiBalasan) return send(res, 400, { ok: false, error: 'Isi balasan tidak valid.' });
+      const namaPengirim = clean(user.name || replyData.username || user.email?.split('@')[0] || 'Pengguna', 80);
+      const cuplikan = isiBalasan.length > 80 ? isiBalasan.slice(0, 80) + '…' : isiBalasan;
+      const konteksAddon = namaAddon ? ` di addon “${namaAddon}”` : '';
+      const pesan = clean(`${namaPengirim} membalas komentarmu${konteksAddon}: “${cuplikan}”`, 500);
+      const link = `detail.html?slug=${encodeURIComponent(detailSlug)}`;
       const now = Date.now();
-      const rate = await rateRef.once('value');
-      const terakhir = Number(rate.val()) || 0;
-      if (now - terakhir < 5000) {
+      const notifId = `balasan_${replyId}`;
+      const notifRef = db.ref(`notifikasi/${targetUid}/${notifId}`);
+
+      // Permintaan ulang untuk balasan yang sama tidak membuat notifikasi duplikat.
+      if ((await notifRef.once('value')).exists()) {
+        return send(res, 200, { ok: true, duplicate: true, id: notifId });
+      }
+
+      // Rate limit atomik: maksimal satu notifikasi balasan per 5 detik per pengirim.
+      const rateRef = db.ref(`batas_notif/${user.uid}`);
+      const rateTx = await rateRef.transaction((current) => {
+        const terakhir = Number(current) || 0;
+        if (now - terakhir < 5000) return;
+        return now;
+      });
+      if (!rateTx.committed) {
         return send(res, 429, { ok: false, error: 'Terlalu cepat. Tunggu beberapa detik lagi.' });
       }
-      const notifRef = db.ref(`notifikasi/${targetUid}`).push();
-      await notifRef.set({
-        id: notifRef.key,
-        tipe,
-        judul,
+
+      const notif = {
+        id: notifId,
+        tipe: 'balasan_komentar',
+        judul: 'Balasan Komentar',
         pesan,
         link,
         waktu: now,
         dibaca: false
-      });
-      await rateRef.set(now);
-      return send(res, 201, { ok: true, id: notifRef.key });
+      };
+      const writeTx = await notifRef.transaction((current) => current ? undefined : notif);
+      if (!writeTx.committed) {
+        return send(res, 200, { ok: true, duplicate: true, id: notifId });
+      }
+      return send(res, 201, { ok: true, id: notifId });
     }
 
     // Report actions share this function to stay within the Vercel Hobby function limit.
@@ -219,11 +272,11 @@ module.exports = async (req, res) => {
       const raw = snap.val();
       if (!raw || typeof raw !== 'object') return send(res, 200, {ok:true, notifications:[]});
       const notifications = Object.entries(raw).map(([id, item]) => ({
-        id,
-        tipe: item?.tipe || 'info',
-        judul: item?.judul || 'Notifikasi',
-        pesan: item?.pesan || '',
-        link: item?.link || '',
+        id: clean(id, 180),
+        tipe: clean(item?.tipe || 'info', 40) || 'info',
+        judul: clean(item?.judul || 'Notifikasi', 120) || 'Notifikasi',
+        pesan: clean(item?.pesan || '', 500),
+        link: safeInternalNotificationLink(item?.link),
         waktu: Number(item?.waktu) || 0,
         dibaca: item?.dibaca === true
       })).sort((a,b) => b.waktu - a.waktu).slice(0, 50);

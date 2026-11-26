@@ -618,7 +618,8 @@ async function kirimBalasan(parentId, parentUsername, input, form) {
     const isi = input.value.trim();
     if (!isi || isi.length > 300 || !usuarioActual || !idAddonSekarang) return;
     try {
-        await push(ref(db, `komentar/${idAddonSekarang}`), {
+        const balasanRef = push(ref(db, `komentar/${idAddonSekarang}`));
+        await set(balasanRef, {
             isi,
             waktu: Date.now(),
             uid: usuarioActual.uid,
@@ -626,28 +627,26 @@ async function kirimBalasan(parentId, parentUsername, input, form) {
             parentId,
             replyTo: parentUsername
         });
-        // Kirim notifikasi ke penulis komentar induk (jika bukan diri sendiri).
-        // Lewat server (action=create) agar tidak terblokir aturan keamanan RTDB.
+        // Server memverifikasi bahwa balasan dan komentar induk benar-benar ada,
+        // lalu menentukan penerima notifikasi dari pemilik komentar induk.
+        // Kegagalan notifikasi tidak membatalkan balasan yang sudah tersimpan.
         try {
-            const parentSnap = await get(ref(db, `komentar/${idAddonSekarang}/${parentId}`));
-            const parentUid = parentSnap.val()?.uid;
-            if (parentUid && parentUid !== usuarioActual.uid) {
-                const namaPengirim = usuarioActual.displayName
-                    || (usuarioActual.email ? usuarioActual.email.split('@')[0] : 'Pengguna');
-                const cuplikan = isi.length > 80 ? isi.slice(0, 80) + '…' : isi;
-                const token = await usuarioActual.getIdToken();
-                await fetch('/api/notifications?action=create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                    body: JSON.stringify({
-                        action: 'create',
-                        targetUid: parentUid,
-                        tipe: 'balasan_komentar',
-                        judul: 'Balasan Komentar',
-                        pesan: `${namaPengirim} membalas komentarmu${namaAddonSekarang ? ` di addon “${namaAddonSekarang}”` : ''}: “${cuplikan}”`,
-                        link: `detail.html?slug=${encodeURIComponent(slugSekarang || idAddonSekarang)}`
-                    })
-                });
+            const token = await usuarioActual.getIdToken();
+            const response = await fetch('/api/notifications?action=create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({
+                    action: 'create',
+                    addonId: idAddonSekarang,
+                    parentId,
+                    replyId: balasanRef.key,
+                    detailSlug: slugSekarang || idAddonSekarang,
+                    namaAddon: namaAddonSekarang || ''
+                })
+            });
+            if (!response.ok) {
+                const result = await response.json().catch(() => ({}));
+                console.warn('Notifikasi balasan tidak terkirim:', result.error || response.status);
             }
         } catch (e) { console.warn('Gagal kirim notifikasi balasan:', e); }
         form.innerHTML = '';

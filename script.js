@@ -651,6 +651,24 @@ function ikonUntukTipe(tipe) {
     if (tipe === 'premium_revoke') return 'fa-ban';
     return 'fa-bell';
 }
+function escapeHtmlNotifikasi(value) {
+    return String(value ?? '').replace(/[&<>\"']/g, (char) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', "'": '&#39;'
+    }[char]));
+}
+function linkNotifikasiAman(value) {
+    const raw = String(value ?? '').trim();
+    if (!raw || raw.length > 500 || /[\u0000-\u001f\u007f]/.test(raw)) return '';
+    try {
+        const url = new URL(raw, window.location.origin);
+        if (url.origin !== window.location.origin) return '';
+        const path = url.pathname.replace(/^\/+/, '');
+        if (!['detail.html', 'index.html', 'profil.html'].includes(path)) return '';
+        return `${path}${url.search}${url.hash}`;
+    } catch (_) {
+        return '';
+    }
+}
 async function muatNotifikasiHeader() {
     if (!penggunaLogin) { if (badgeNotifEl) { badgeNotifEl.classList.remove('aktif'); badgeNotifEl.textContent = ''; } return; }
     try {
@@ -713,20 +731,25 @@ function renderIsiPanel() {
         list.innerHTML = `<div class="panel-notifikasi-kosong"><i class="fa fa-bell-slash"></i><br>Belum ada notifikasi.</div>`;
         return;
     }
-    list.innerHTML = daftarNotifikasiHeader.slice(0, 8).map(n => `
-        <div class="panel-notifikasi-item ${n.dibaca ? '' : 'belum-dibaca'}" data-link="${n.link ? encodeURIComponent(n.link) : ''}">
+    list.innerHTML = daftarNotifikasiHeader.slice(0, 8).map(n => {
+        const link = linkNotifikasiAman(n.link);
+        return `
+        <div class="panel-notifikasi-item ${n.dibaca ? '' : 'belum-dibaca'}" data-link="${link ? encodeURIComponent(link) : ''}">
             <div class="panel-notifikasi-ikon"><i class="fa ${ikonUntukTipe(n.tipe)}"></i></div>
             <div class="panel-notifikasi-isi">
-                <strong>${n.judul}</strong>
-                <p>${n.pesan}</p>
+                <strong>${escapeHtmlNotifikasi(n.judul)}</strong>
+                <p>${escapeHtmlNotifikasi(n.pesan)}</p>
                 <div class="panel-notifikasi-waktu">${formatWaktuNotifikasi(n.waktu)}</div>
             </div>
-        </div>`).join('');
+        </div>`;
+    }).join('');
     list.querySelectorAll('.panel-notifikasi-item').forEach(item => {
         item.addEventListener('click', () => {
-            const link = item.dataset.link;
+            let link = '';
+            try { link = decodeURIComponent(item.dataset.link || ''); } catch (_) {}
+            const safeLink = linkNotifikasiAman(link);
             tutupPanelNotifikasi();
-            if (link) window.location.href = decodeURIComponent(link);
+            if (safeLink) window.location.assign(safeLink);
         });
     });
 }

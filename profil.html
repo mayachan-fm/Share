@@ -170,6 +170,20 @@ import { ambilDataPremium, statusPremium } from "./premium.js";
 import { ambilNotifikasi, tandaiSemuaNotifikasiDibaca, jumlahNotifikasiBelumDibaca, hapusNotifikasi } from "./notifikasi.js";
 
 const appEl = document.getElementById("profil-app");
+// Link notifikasi hanya boleh membuka halaman internal yang dikenal.
+function linkNotifikasiAman(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw || raw.length > 500 || /[\u0000-\u001f\u007f]/.test(raw)) return '';
+  try {
+    const url = new URL(raw, window.location.origin);
+    if (url.origin !== window.location.origin) return '';
+    const path = url.pathname.replace(/^\/+/, '');
+    if (!['detail.html', 'index.html', 'profil.html'].includes(path)) return '';
+    return `${path}${url.search}${url.hash}`;
+  } catch (_) {
+    return '';
+  }
+}
 // Klik notifikasi dengan link → buka halaman addon terkait.
 async function hapusNotifikasiKlik(id, btn) {
   if (!id) return;
@@ -194,7 +208,10 @@ appEl.addEventListener("click", (e) => {
   const btnHapus = e.target.closest(".tombol-hapus-notif");
   if (btnHapus) { e.stopPropagation(); e.preventDefault(); hapusNotifikasiKlik(btnHapus.dataset.id, btnHapus); return; }
   const item = e.target.closest(".profil-notifikasi-item[data-link]");
-  if (item && item.dataset.link) window.location.href = item.dataset.link;
+  if (item && item.dataset.link) {
+    const safeLink = linkNotifikasiAman(item.dataset.link);
+    if (safeLink) window.location.assign(safeLink);
+  }
 });
 let mode = "login";
 let jenisLogin = "user";
