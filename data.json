@@ -4298,5 +4298,17 @@
     "ukuran": "925.84 KB",
     "tanggal unggah": "26 November 2026",
     "description": "Peti vanilla menampung 27 slot. Netherite Chest menampung 108. Mega Chest Add-On menambahkan delapan tingkatan yang dapat diupgrade dari Iron ke Netherite, dan peningkatan membuat item Anda tetap di tempatnya.\n\n- Delapan Rune Kekuatan\n- Magnet item: menarik tetesan dari 4 blok\n- Hopper mencapainya dari jarak 3 blok\n- Output Redstone diskalakan hingga seberapa penuhnya\n- Penyortiran sekali klik"
+  },
+  "rebuild": {
+    "slug": "rebuild",
+    "nama file": "Rebuild",
+    "type file": "Addon",
+    "kategori": "addon",
+    "link gambar": "https://cdn.phototourl.com/member/2026-11-26-f428314d-c850-4c89-9918-35451f05d8d8.jpg",
+    "link download": "https://github.com/mayachan-fm/Share/releases/download/1.0.0/Rebuild.addon.mcaddon",
+    "versi mc": "1.26+",
+    "ukuran": "519.25 KB",
+    "tanggal unggah": "26 November 2026",
+    "description": "Simpan dan muat bangunan Anda sebagai struktur yang dapat digunakan kembali! Pratinjau, putar, dan cerminkan, lalu buat ulang dengan material nyata di Survival atau tempatkan langsung di Creative. Rebuild juga mencakup Dimensi Plot terpisah dengan plot yang dilindungi, kolaborasi pemain, dan inventaris Survival dan Kreatif yang terpisah."
   }
 }
